@@ -1,0 +1,30 @@
+.badge-discount {
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 0.8rem;
+  color: white;
+  background-color: red;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 5px;
+}
+
+.badge-discount > .fa-tag {
+  font-size: 1rem; /* Adjust size of the icon */
+}
+
+.badge-discount.large{
+  font-size: 1.5rem;
+}
+
+@media (max-width:768px) {
+  .badge-discount {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+  }
+
+  .badge-discount > .fa-tag {
+    font-size: 0.9rem;
+  }
+}

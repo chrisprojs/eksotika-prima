@@ -1,0 +1,121 @@
+.searchProduct-container{
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.searchProduct-displayer{
+  width: 400px;
+}
+
+.searchProduct-image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* 1:1 Aspect Ratio */
+  overflow: hidden;
+}
+
+.searchProduct-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Optional: ensures image covers the container */
+}
+
+.searchProduct-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.searchProduct-title {
+  font-size: 1.5rem;
+  font-weight: var(--var-font-bold);
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+
+.searchProduct-price{
+  display: flex;
+  font-size: 2rem;
+  font-weight: var(--var-font-semibold);
+  margin-top: 0px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.searchProduct-fromPrice{
+  margin-left: 0.8rem;
+  font-size: 1rem;
+  color:#555;
+  text-decoration: line-through;
+}
+
+.searchProduct-variants {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping to the next line */
+  width: 100%;
+  column-gap: 4px;
+  row-gap: 4px; /* Add gap between rows */
+  margin-bottom: 5px;
+}
+
+.searchProduct-variants-badge{
+  background-color: #f0f0f0;
+  color: #555;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.searchProduct-variants-badge.selected {
+  background-color: #d1e7ff; /* Highlight color */
+  color: #003366; /* Text color */
+  border: 1px solid #003366; /* Optional: Add border */
+}
+
+.searchProduct-variants-image{
+  width: 50px;
+  height: 50px;
+}
+
+.searchProduct-mergeline{
+  display: flex;
+  width: 100%;
+  gap: 5rem;
+}
+
+.searchProduct-text {
+  font-size: 1rem;
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+
+.searchProduct-detail {
+  white-space: pre-line
+}
+
+@media (max-width:768px) {
+  .searchProduct-container{
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .searchProduct-displayer{
+    width: 60%;
+  }
+
+  .searchProduct-title {
+    font-size: 1.2rem;
+  }
+
+  .searchProduct-price{
+    font-size: 1.6rem;
+  }
+}

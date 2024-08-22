@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("PROD_DATABASE_URL")
+}
+
+model Product {
+  productId Int       @id @default(autoincrement())
+  title     String    @db.VarChar(255)
+  merk      String    @db.VarChar(255)
+  produsen  String    @db.VarChar(255)
+  detail    String    @db.Text
+  variants  Variant[]
+}
+
+model Variant {
+  variantId Int     @id @default(autoincrement())
+  size      String  @db.VarChar(255)
+  picture   String  @db.VarChar(255)
+  fromPrice Int     
+  price     Int
+  productId Int
+  product   Product @relation(fields: [productId], references: [productId], onDelete: Cascade)
+}

@@ -1,0 +1,93 @@
+.footer {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
+  height: 200px;
+  width: 100%;
+}
+
+.footer-box {
+  display: grid;
+  height: 50%;
+  justify-content: center;
+}
+
+.footer-icon-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-contact-column{
+  margin: 1px auto;
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.icon-logo {
+  text-decoration: none;
+}
+
+.icon-text{
+  margin: 0 15px;
+  color: white;
+  text-decoration: none;
+  align-items: center;
+}
+
+.icon-image{
+  width: 40px;
+  max-height: 100px;
+}
+
+.icon-image:hover{
+  opacity: 0.8;
+}
+
+.footer-phonenumber{
+  margin-left: 5px;
+}
+
+.footer-icon-text {
+  margin: 0;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.footer-icon-text:hover{
+  opacity: 0.8;
+}
+
+.footer-icon-text-box{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.footer-reminder {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+}
+
+.footer-reminder.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (max-width: 768px) {
+  .footer-box {
+    height: 80%;
+  }
+
+  .footer-icon-box {
+    display: grid;
+  }
+}
