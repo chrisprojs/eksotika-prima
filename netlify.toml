@@ -1,6 +1,0 @@
-[[plugins]]
-package = "@netlify/plugin-nextjs"
-
-[build]
-command = "npm install --prune && npm run build"
-publish = "/opt/build/repo/.next"
