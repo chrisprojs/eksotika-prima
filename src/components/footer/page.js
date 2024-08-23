@@ -26,8 +26,6 @@ function Footer() {
     };
   }, []);
 
-  console.log(isFooterPositioned)
-
   return (
     <>
       <div className="footer">

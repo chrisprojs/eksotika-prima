@@ -4,7 +4,6 @@ import { getProductById } from "@/fetch/getProductById";
 import Image from "next/image";
 import "./page.css";
 import Loading from "@/components/loading/page";
-import Reminder from "@/components/reminder/page";
 import DiscountBadge from "@/components/discount/page";
 
 export default function SearchProduct({ params }) {
