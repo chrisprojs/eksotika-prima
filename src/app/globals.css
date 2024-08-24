@@ -37,12 +37,6 @@ body{
   text-shadow: var(--var-text-shadow-heading);
 }
 
-.card-grid{
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  grid-gap: 20px;
-}
-
 .app-container {
   position: relative; /* Ensure this is relative so children can use absolute positioning */
   overflow: hidden;
