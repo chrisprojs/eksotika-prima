@@ -34,7 +34,7 @@ function Contact() {
               href={`tel:${ContactInformation.whatsappNumber}`}
               className="contact-info-link"
             >
-              <Image src='/asset/whatsapp-logo.png' alt="WhatsApp" className="contact-icon" width={100} height={100}/> {formatPhoneNumber(ContactInformation.whatsappNumber)}
+              <Image src='/asset/whatsapp-logo.png' alt="WhatsApp" className="contact-icon" width={100} height={100}/> {formatPhoneNumber(ContactInformation.whatsappNumber)} &#40;{ContactInformation.phoneNumberOwner}&#41;
             </a>
           </div>
         </div>

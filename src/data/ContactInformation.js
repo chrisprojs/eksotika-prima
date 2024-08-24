@@ -1,7 +1,8 @@
 export const ContactInformation = {
   tokopediaLink: "https://www.tokopedia.com/eksotikaprima",
   shopeeLink: "https://shopee.co.id/ivonrositawid",
-  whatsappNumber: "+6285179646836"
+  whatsappNumber: "+6285179646836",
+  phoneNumberOwner: "Chris"
 };
 
 export function formatPhoneNumber(phoneNumber) {

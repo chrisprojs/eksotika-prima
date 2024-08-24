@@ -44,7 +44,7 @@ function Footer() {
             <a href={`https://wa.me/${ContactInformation.whatsappNumber}`} target="_blank" rel="noreferrer" className="icon-text">
               <p className="footer-icon-text">
               <Image src='/asset/whatsapp-logo.png' alt="WhatsApp" className="icon-image" width={100} height={100}/>
-              <span className="footer-phonenumber">{formatPhoneNumber(ContactInformation.whatsappNumber)} &#40;Chris&#41;</span>
+              <span className="footer-phonenumber">{formatPhoneNumber(ContactInformation.whatsappNumber)} &#40;{ContactInformation.phoneNumberOwner}&#41;</span>
               </p>
             </a>
           </div>
