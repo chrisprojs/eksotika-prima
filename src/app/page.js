@@ -16,7 +16,7 @@ export default function Home() {
       </div>
       <div className='home-area-box'>
         <p className="home-area-text">
-          Makassar - Ambon
+          Jakarta
         </p>
       </div>
       <div className='page-container'>
