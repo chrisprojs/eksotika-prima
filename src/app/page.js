@@ -2,9 +2,27 @@ import "./page.css";
 import Image from 'next/image';
 import Card from "@/components/card/page";
 import { getAllProduct } from "@/fetch/getAllProduct";
+import Loading from "@/components/loading/page";
 
 export default async function Home() {
   const productList = await getAllProduct();
+
+  const loadCard = () => {
+    if(!productList){
+      return <Loading />;
+    }
+    else{
+      return(
+        <>
+          <div className="card-grid">
+            {productList.map((product) => (
+              <Card key={product.title} product={product} />
+            ))}
+          </div>
+        </>
+      )
+    }
+  }
 
   return (
     <>
@@ -19,11 +37,7 @@ export default async function Home() {
       </div>
       <div className='page-container'>
         <p className='page-heading'>Produk Kami</p>
-        <div className="card-grid">
-            {productList.map((product) => (
-              <Card key={product.title} product={product} />
-            ))}
-        </div>
+        {loadCard()}
       </div>
     </>
   );

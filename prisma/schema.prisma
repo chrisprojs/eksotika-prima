@@ -20,7 +20,7 @@ model Variant {
   variantId Int     @id @default(autoincrement())
   size      String  @db.VarChar(255)
   picture   String  @db.VarChar(255)
-  fromPrice Int     
+  fromPrice Int
   price     Int
   productId Int
   product   Product @relation(fields: [productId], references: [productId], onDelete: Cascade)
