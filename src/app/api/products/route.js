@@ -93,54 +93,54 @@ export async function GET(req){
   }
 }
 
-export async function PUT(req) {
-  const data = await req.json();
-  const url = new URL(req.url);
-  const product_id = url.searchParams.get("product_id")
+// export async function PUT(req) {
+//   const data = await req.json();
+//   const url = new URL(req.url);
+//   const product_id = url.searchParams.get("product_id")
   
-  if(product_id){
-    try{
-      const updatedProduct = await prisma.product.update({
-        where: {productId: parseInt(product_id,10)},
-        data: {
-          title: data.title || undefined,
-          merk: data.merk || undefined,
-          produsen: data.produsen || undefined,
-          detail: data.detail || undefined,
-          variants: data.variants
-            ? {
-                deleteMany: {},  // Delete existing variants
-                create: data.variants, // Create new variants
-              }
-          : undefined, 
-        },
-        include: {variants: true}
-      })
-      return new NextResponse(JSON.stringify(updatedProduct), { status: 200 });
-    } catch (error) {
-      console.error('Error updating product by id:', error);
-      return new NextResponse(JSON.stringify({ error: 'Error updating product by id' }), { status: 500 });
-    }
-  } else {
-    return new NextResponse(JSON.stringify({ error: 'Product ID is required for updating' }), { status: 400 });
-  }
-}
+//   if(product_id){
+//     try{
+//       const updatedProduct = await prisma.product.update({
+//         where: {productId: parseInt(product_id,10)},
+//         data: {
+//           title: data.title || undefined,
+//           merk: data.merk || undefined,
+//           produsen: data.produsen || undefined,
+//           detail: data.detail || undefined,
+//           variants: data.variants
+//             ? {
+//                 deleteMany: {},  // Delete existing variants
+//                 create: data.variants, // Create new variants
+//               }
+//           : undefined, 
+//         },
+//         include: {variants: true}
+//       })
+//       return new NextResponse(JSON.stringify(updatedProduct), { status: 200 });
+//     } catch (error) {
+//       console.error('Error updating product by id:', error);
+//       return new NextResponse(JSON.stringify({ error: 'Error updating product by id' }), { status: 500 });
+//     }
+//   } else {
+//     return new NextResponse(JSON.stringify({ error: 'Product ID is required for updating' }), { status: 400 });
+//   }
+// }
 
-export async function DELETE(req){
-  const url = new URL(req.url);
-  const product_id = url.searchParams.get("product_id")
+// export async function DELETE(req){
+//   const url = new URL(req.url);
+//   const product_id = url.searchParams.get("product_id")
 
-  if(product_id){
-    try{
-      await prisma.product.delete({
-        where: {productId: parseInt(product_id, 10)}
-      })
-      return new NextResponse(JSON.stringify("Deleted Successfully"), { status: 200 });
-    } catch (error) {
-      console.error('Error deleting product by id:', error);
-      return new NextResponse(JSON.stringify({ error: 'Error deleting product by id' }), { status: 500 });
-    }
-  } else {
-    return new NextResponse(JSON.stringify({ error: 'Product ID is required for deletion' }), { status: 400 });
-  }
-}
+//   if(product_id){
+//     try{
+//       await prisma.product.delete({
+//         where: {productId: parseInt(product_id, 10)}
+//       })
+//       return new NextResponse(JSON.stringify("Deleted Successfully"), { status: 200 });
+//     } catch (error) {
+//       console.error('Error deleting product by id:', error);
+//       return new NextResponse(JSON.stringify({ error: 'Error deleting product by id' }), { status: 500 });
+//     }
+//   } else {
+//     return new NextResponse(JSON.stringify({ error: 'Product ID is required for deletion' }), { status: 400 });
+//   }
+// }
