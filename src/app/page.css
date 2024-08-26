@@ -28,14 +28,15 @@
   font-size: 2vw;
 }
 
-.home-area-box{
+.home-location-box{
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.home-area-text{
-  margin: 0px;
+.home-location-text{
+  margin: 0px 50px;
+  text-align: center;
   font-size: 1rem;
   font-weight: var(--var-font-semibold);
   text-shadow: var(--var-text-shadow-heading);

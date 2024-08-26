@@ -14,9 +14,9 @@ export default function Home() {
           <p>Beli Banyak Nego Banyak!</p>
         </div>
       </div>
-      <div className='home-area-box'>
-        <p className="home-area-text">
-          Jakarta
+      <div className='home-location-box'>
+        <p className="home-location-text">
+          Metro Indah III Blok.C No.31A RT.1/RW.4, Papanggo, Tanjung Priok, Jakarta Utara, DKI Jakarta, 14340
         </p>
       </div>
       <div className='page-container'>
