@@ -17,11 +17,12 @@ model Product {
 }
 
 model Variant {
-  variantId Int     @id @default(autoincrement())
-  size      String  @db.VarChar(255)
-  picture   String  @db.VarChar(255)
-  fromPrice Int
-  price     Int
-  productId Int
-  product   Product @relation(fields: [productId], references: [productId], onDelete: Cascade)
+  variantId  Int     @id @default(autoincrement())
+  size       String  @db.VarChar(255)
+  picture    String  @db.VarChar(255)
+  fromPrice  Int
+  price      Int
+  dozenPrice Int?
+  productId  Int
+  product    Product @relation(fields: [productId], references: [productId], onDelete: Cascade)
 }

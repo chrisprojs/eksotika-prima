@@ -53,7 +53,7 @@
   text-decoration: line-through;
 }
 
-.searchProduct-variants {
+.searchProduct-badge-box {
   display: flex;
   flex-wrap: wrap; /* Allow wrapping to the next line */
   width: 100%;
@@ -62,7 +62,7 @@
   margin-bottom: 5px;
 }
 
-.searchProduct-variants-badge{
+.searchProduct-badge{
   background-color: #f0f0f0;
   color: #555;
   border-radius: 5px;
@@ -74,13 +74,13 @@
   gap: 10px;
 }
 
-.searchProduct-variants-badge.selected {
+.searchProduct-badge.selected {
   background-color: #d1e7ff; /* Highlight color */
   color: #003366; /* Text color */
   border: 1px solid #003366; /* Optional: Add border */
 }
 
-.searchProduct-variants-image{
+.searchProduct-badge-image{
   width: 50px;
   height: 50px;
 }

@@ -22,6 +22,7 @@ export async function POST(req) {
                   size: variant.size,
                   fromPrice: variant.fromPrice,
                   price: variant.price,
+                  dozenPrice: variant.dozenPrice || null,
                 })),
               },
             }
@@ -48,6 +49,7 @@ export async function POST(req) {
               size: variant.size,
               fromPrice: variant.fromPrice,
               price: variant.price,
+              dozenPrice: variant.dozenPrice || null,
             })),
           },
         },
