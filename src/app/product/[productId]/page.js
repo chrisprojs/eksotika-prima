@@ -10,6 +10,8 @@ export default function SearchProduct({ params }) {
   const { productId } = params;
   const [product, setProduct] = useState(null);
   const [selectedVariant, setSelectedVariant] = useState(null);
+  const [selectedPackage, setSelectedPackage] = useState(1);
+  const [selectedPrice, setSelectedPrice] = useState(0)
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -17,11 +19,12 @@ export default function SearchProduct({ params }) {
       if (foundProduct) {
         setProduct(foundProduct);
         setSelectedVariant((prev) => prev || foundProduct.variants[0]);
+        setSelectedPrice((prev) => prev || foundProduct.variants[0].price)
       }
     };
 
     fetchProduct();
-  }, [productId]);
+  }, [productId, selectedVariant]);
 
   const formatRupiah = (price) => {
     const formatted = new Intl.NumberFormat("id-ID", {
@@ -32,11 +35,26 @@ export default function SearchProduct({ params }) {
     return formatted.replace(/\s+/g, "");
   };
 
+  const changePrice = (packages = null, variants = null) => {
+    setSelectedVariant(variants)
+    setSelectedPackage(packages)
+
+    if(packages == 1){
+      setSelectedPrice(variants.price)
+    }
+    else if(packages == 12){
+      setSelectedPrice(variants.dozenPrice)
+    }
+  }
+
   if (!product || !selectedVariant) {
     return <Loading />;
-  }
-  else{
-    const discountPercentage = Math.round(((selectedVariant.fromPrice - selectedVariant.price) / selectedVariant.fromPrice) * 100);
+  } else {
+    const discountPercentage = Math.round(
+      (((selectedPackage * selectedVariant.fromPrice) - selectedPrice) /
+        (selectedPackage * selectedVariant.fromPrice)) *
+        100
+    );
     return (
       <div className="page-container searchProduct-container">
         <div className="searchProduct-displayer">
@@ -55,24 +73,54 @@ export default function SearchProduct({ params }) {
             {product.title} - {selectedVariant.size}
           </h1>
           <p className="searchProduct-price">
-            {formatRupiah(selectedVariant.price)} <DiscountBadge discountPercentage={discountPercentage} isLarge={true} /> <span className="searchProduct-fromPrice">{formatRupiah(selectedVariant.fromPrice)}</span>
+            {formatRupiah(selectedPrice)}{" "}
+            <DiscountBadge
+              discountPercentage={discountPercentage}
+              isLarge={true}
+            />{" "}
+            <span className="searchProduct-fromPrice">
+              {formatRupiah(selectedPackage * selectedVariant.fromPrice)}
+            </span>
           </p>
           <p className="searchProduct-text">
             <strong>Ukuran:</strong>
           </p>
-          <div className="searchProduct-variants">
+          <div className="searchProduct-badge-box">
+            <span
+              className={`searchProduct-badge ${
+                selectedPackage === 1 ? "selected" : ""
+              }`}
+              onClick={() => changePrice(1,selectedVariant)}
+            >
+              satuan (1pcs)
+            </span>
+            {selectedVariant.dozenPrice && (
+              <span
+                className={`searchProduct-badge ${
+                  selectedPackage === 12 ? "selected" : ""
+                }`}
+                onClick={() => changePrice(12,selectedVariant)}
+              >
+                lusin (12 pcs)
+              </span>
+            )}
+          </div>
+          <p className="searchProduct-text">
+            <strong>Paket:</strong>
+          </p>
+          <div className="searchProduct-badge-box">
             {product.variants.map((variant) => (
               <span
                 key={variant.size}
-                className={`searchProduct-variants-badge ${
+                className={`searchProduct-badge ${
                   selectedVariant.size === variant.size ? "selected" : ""
                 }`}
-                onClick={() => setSelectedVariant(variant)}
+                onClick={() => changePrice(selectedPackage,variant)}
               >
                 <Image
                   src={`/asset/product/${variant.picture}`}
                   alt={`product-${variant.size}`}
-                  className="searchProduct-variants-image"
+                  className="searchProduct-badge-image"
                   width={512}
                   height={512}
                 />
