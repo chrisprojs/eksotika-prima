@@ -2,7 +2,7 @@ import "./page.css";
 import Image from 'next/image';
 import CardLoad from "@/components/cardLoad/page";
 
-const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000" 
+const baseUrl = process.env.NEXT_PUBLIC_URL
 export const metadata = {
   title: "Supplier Minyak Gosok Terbesar Se-Indonesia | Eksotika Prima",
   description:
