@@ -30,6 +30,7 @@ export async function generateMetadata({ params, searchParams }) {
   const description = product.detail;
   const image = `${process.env.NEXT_PUBLIC_API_URL}/images/product/${product.title}/${searchParams.variant}`;
 
+  const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000"  
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_URL),
 
@@ -41,7 +42,7 @@ export async function generateMetadata({ params, searchParams }) {
       title: title,
       description: description,
       type: "website",
-      url: `${process.env.NEXT_PUBLIC_URL}/product/${productId}`,
+      url: `${baseUrl}/product/${productId}`,
       images: [{ url: image, alt: title }],
     },
 
@@ -53,7 +54,7 @@ export async function generateMetadata({ params, searchParams }) {
     },
 
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_URL}/product/${productId}`,
+      canonical: `${baseUrl}/product/${productId}`,
     },
   };
 }
