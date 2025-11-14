@@ -1,148 +1,63 @@
-"use client";
-import React, { useEffect, useState } from "react";
+// app/product/[productId]/page.jsx
 import { getProductById } from "@/fetch/getProductById";
-import Image from "next/image";
-import "./page.css";
-import Loading from "@/components/loading/page";
-import DiscountBadge from "@/components/discount/page";
+import SearchProductClient from "./SearchProductClient";
 
-export default function SearchProduct({ params }) {
+export async function generateMetadata({ params, searchParams }) {
   const { productId } = params;
-  const [product, setProduct] = useState(null);
-  const [selectedVariant, setSelectedVariant] = useState(null);
-  const [selectedPackage, setSelectedPackage] = useState(1);
-  const [selectedPrice, setSelectedPrice] = useState(0)
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const foundProduct = await getProductById(productId);
-      if (foundProduct) {
-        setProduct(foundProduct);
-        setSelectedVariant((prev) => prev || foundProduct.variants[0]);
-        setSelectedPrice((prev) => prev || foundProduct.variants[0].price)
-      }
+  const product = await getProductById(productId);
+
+  if (!product) {
+    return {
+      title: "Produk Tidak Ditemukan",
+      description: "Produk tidak tersedia atau telah dihapus.",
     };
+  }
 
-    fetchProduct();
-  }, [productId, selectedVariant]);
-
-  const formatRupiah = (price) => {
-    const formatted = new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    }).format(price);
-    return formatted.replace(/\s+/g, "");
+  const getTitleText = (product, variant, quantityOption) => {
+    if (!product || !variant) return "";
+    const quantityText =
+      quantityOption !== '1'
+        ? " - " + (quantityOption === '12' ? "lusin (12pcs)" : "")
+        : "";
+    return `${product.title} - ${variant}${quantityText}`;
   };
 
-  const changePrice = (packages = null, variants = null) => {
-    setSelectedVariant(variants)
-    setSelectedPackage(packages)
+  const variant = searchParams.variant || product.variants[0]?.size;
+  const quantity = searchParams.quantity;
 
-    if(packages == 1){
-      setSelectedPrice(variants.price)
-    }
-    else if(packages == 12){
-      setSelectedPrice(variants.dozenPrice)
-    }
-  }
+  const title = getTitleText(product, variant, quantity);
+  const description = product.detail;
+  const image = `${process.env.NEXT_PUBLIC_API_URL}/images/product/${product.title}/${searchParams.variant}`;
 
-  if (!product || !selectedVariant) {
-    return <Loading />;
-  } else {
-    const discountPercentage = Math.round(
-      (((selectedPackage * selectedVariant.fromPrice) - selectedPrice) /
-        (selectedPackage * selectedVariant.fromPrice)) *
-        100
-    );
-    return (
-      <div className="page-container searchProduct-container">
-        <div className="searchProduct-displayer">
-          <div className="searchProduct-image-container">
-            <Image
-              src={`/asset/product/${selectedVariant.picture}`}
-              alt={`product-${selectedVariant.size}`}
-              className="searchProduct-image"
-              width={512}
-              height={512}
-            />
-          </div>
-        </div>
-        <div className="searchProduct-box">
-          <h1 className="searchProduct-title">
-            {product.title} - {selectedVariant.size}
-          </h1>
-          <p className="searchProduct-price">
-            {formatRupiah(selectedPrice)}{" "}
-            <DiscountBadge
-              discountPercentage={discountPercentage}
-              isLarge={true}
-            />{" "}
-            <span className="searchProduct-fromPrice">
-              {formatRupiah(selectedPackage * selectedVariant.fromPrice)}
-            </span>
-          </p>
-          <p className="searchProduct-text">
-            <strong>Ukuran:</strong>
-          </p>
-          <div className="searchProduct-badge-box">
-            <span
-              className={`searchProduct-badge ${
-                selectedPackage === 1 ? "selected" : ""
-              }`}
-              onClick={() => changePrice(1,selectedVariant)}
-            >
-              satuan (1pcs)
-            </span>
-            {selectedVariant.dozenPrice && (
-              <span
-                className={`searchProduct-badge ${
-                  selectedPackage === 12 ? "selected" : ""
-                }`}
-                onClick={() => changePrice(12,selectedVariant)}
-              >
-                lusin (12 pcs)
-              </span>
-            )}
-          </div>
-          <p className="searchProduct-text">
-            <strong>Paket:</strong>
-          </p>
-          <div className="searchProduct-badge-box">
-            {product.variants.map((variant) => (
-              <span
-                key={variant.size}
-                className={`searchProduct-badge ${
-                  selectedVariant.size === variant.size ? "selected" : ""
-                }`}
-                onClick={() => changePrice(selectedPackage,variant)}
-              >
-                <Image
-                  src={`/asset/product/${variant.picture}`}
-                  alt={`product-${variant.size}`}
-                  className="searchProduct-badge-image"
-                  width={512}
-                  height={512}
-                />
-                {variant.size}
-              </span>
-            ))}
-          </div>
-          <div className="searchProduct-mergeline">
-            <p className="searchProduct-text">
-              <strong>Merk:</strong> {product.merk}
-            </p>
-            <p className="searchProduct-text">
-              <strong>Produsen:</strong> {product.produsen}
-            </p>
-          </div>
-          <p className="searchProduct-text">
-            <strong>Detail:</strong>
-            <br />
-            <span className="searchProduct-detail">{product.detail}</span>
-          </p>
-        </div>
-      </div>
-    );
-  }
+  return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_URL),
+
+    title: title,
+    description: description,
+    keywords: [product.title, product.merk, product.produsen],
+
+    openGraph: {
+      title: title,
+      description: description,
+      type: "website",
+      url: `${process.env.NEXT_PUBLIC_URL}/product/${productId}`,
+      images: [{ url: image, alt: title }],
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title: title,
+      description: description,
+      images: [image],
+    },
+
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_URL}/product/${productId}`,
+    },
+  };
+}
+
+export default async function SearchProduct({ params }) {
+  return <SearchProductClient params={params} />;
 }

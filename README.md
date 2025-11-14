@@ -2,6 +2,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+local db
+DATABASE_URL="sqlserver://eksotika-prima-database.mssql.somee.com;database=eksotika-prima-database;user=chrisang208_SQLLogin_1;password=uz1iihsijj;trustServerCertificate=true;encrypt=true;"
+
 First, run the development server:
 
 ```bash

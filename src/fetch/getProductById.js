@@ -8,7 +8,7 @@ export async function getProductById(productId) {
       const data = await response.json()
       return data
     }catch (error){
-      console.error('Failed to get all product', error);
+      console.error('Failed to get product by id', error);
       await new Promise(res => setTimeout(res, 1000));
       attempt++;
     }
