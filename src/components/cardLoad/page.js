@@ -6,12 +6,12 @@ import { getAllProduct } from '@/fetch/getAllProduct';
 import "./page.css"
 
 function CardLoad({searchTerm = ""}) {
-  const [productList, setProductList] = useState(null);
+  const [productList, setProductList] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const products = await getAllProduct();
-      setProductList(products);
+      setProductList(Array.isArray(products) ? products : []);
     };
 
     fetchData();
