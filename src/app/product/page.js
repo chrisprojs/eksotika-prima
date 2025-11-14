@@ -25,7 +25,7 @@ export const metadata = {
     title: "Cari Minyak Gosok Termurah Se-Indonesia | Eksotika Prima",
     description:
       "Cari minyak gosok termurah di Indonesia. Menyediakan minyak gosok berkualitas dengan harga termurah dan bisa nego untuk pembelian besar.",
-    url: `{baseUrl}/product`,
+    url: `${baseUrl}/product`,
     type: "website",
     images: [
       {

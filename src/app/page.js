@@ -22,6 +22,7 @@ export const metadata = {
     title: "Supplier Minyak Gosok Terbesar Se-Indonesia | Eksotika Prima",
     description:
       "Supplier minyak gosok terbesar di Indonesia. Harga termurah, kualitas terjamin, bisa nego untuk pembelian besar.",
+    url: `${baseUrl}`,
     siteName: "Eksotika Prima",
     type: "website",
     images: [
