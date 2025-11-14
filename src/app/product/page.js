@@ -3,8 +3,9 @@
 import "./page.css";
 import ProductClient from "./ProductClient";
 
+const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000"  
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_URL),
+  metadataBase: new URL(baseUrl),
 
   title: "Cari Minyak Gosok Termurah Se-Indonesia | Eksotika Prima",
   description:
@@ -24,11 +25,11 @@ export const metadata = {
     title: "Cari Minyak Gosok Termurah Se-Indonesia | Eksotika Prima",
     description:
       "Cari minyak gosok termurah di Indonesia. Menyediakan minyak gosok berkualitas dengan harga termurah dan bisa nego untuk pembelian besar.",
-    url: `${process.env.NEXT_PUBLIC_URL}/product`,
+    url: `{baseUrl}/product`,
     type: "website",
     images: [
       {
-        url: "http://localhost:3000/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg",
+        url: `${baseUrl}/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg`,
         alt: "Cari Minyak Gosok Termurah Se-Indonesia | Eksotika Prima",
       },
     ],
@@ -39,7 +40,7 @@ export const metadata = {
     title: "Cari Minyak Gosok Termurah Se-Indonesia | Eksotika Prima",
     description:
       "Supplier minyak gosok termurah. Kualitas terbaik & bisa nego pembelian besar.",
-    images: ["http://localhost:3000/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg"],
+    images: [`${baseUrl}/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg`],
   },
 };
 

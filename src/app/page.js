@@ -2,6 +2,7 @@ import "./page.css";
 import Image from 'next/image';
 import CardLoad from "@/components/cardLoad/page";
 
+const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000" 
 export const metadata = {
   title: "Supplier Minyak Gosok Terbesar Se-Indonesia | Eksotika Prima",
   description:
@@ -25,7 +26,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "http://localhost:3000/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg",
+        url: `${baseUrl}/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg`,
         alt: "Supplier Minyak Gosok Terbesar - Eksotika Prima",
       },
     ],
@@ -36,7 +37,7 @@ export const metadata = {
     title: "Supplier Minyak Gosok Terbesar Se-Indonesia | Eksotika Prima",
     description:
       "Supplier minyak gosok terbesar di Indonesia. Harga termurah, kualitas terjamin, bisa nego untuk pembelian besar.",
-    images: ["http://localhost:3000/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg"],
+    images: [`${baseUrl}/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg`],
   },
 };
 

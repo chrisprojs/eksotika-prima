@@ -131,13 +131,6 @@ export default function SearchProduct({ params }) {
     updateUrlParams(variants, quantitys);
   };
 
-  function encodeUrlPath(path) {
-    return path
-      .split('/')                   // keep folder structure
-      .map(encodeURIComponent)      // encode each segment
-      .join('/');                   // reconnect with slash
-  }
-
   if (!product || !selectedVariant) {
     return <Loading />;
   }
