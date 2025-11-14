@@ -3,8 +3,19 @@ import "./globals.css";
 import Navbar from "@/components/navbar/page";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-export const metadata ={
-  title: 'Eksotika Prima'
+export const metadata = {
+  authors: [{ name: "Eksotika Prima" }],
+  creator: "Eksotika Prima",
+  publisher: "Eksotika Prima",
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
 }
 
 export default function RootLayout({ children }) {  

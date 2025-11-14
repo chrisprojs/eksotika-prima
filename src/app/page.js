@@ -2,6 +2,44 @@ import "./page.css";
 import Image from 'next/image';
 import CardLoad from "@/components/cardLoad/page";
 
+export const metadata = {
+  title: "Supplier Minyak Gosok Terbesar Se-Indonesia | Eksotika Prima",
+  description:
+    "Supplier minyak gosok terbesar di Indonesia. Menyediakan minyak gosok berkualitas dengan harga termurah dan bisa nego untuk pembelian besar.",
+  keywords: [
+    "supplier minyak gosok",
+    "minyak gosok murah",
+    "pabrik minyak gosok",
+    "grosir minyak gosok",
+    "minyak gosok terbesar",
+    "Eksotika Prima",
+    "minyak urut",
+    "minyak pijat"
+  ],
+
+  openGraph: {
+    title: "Supplier Minyak Gosok Terbesar Se-Indonesia | Eksotika Prima",
+    description:
+      "Supplier minyak gosok terbesar di Indonesia. Harga termurah, kualitas terjamin, bisa nego untuk pembelian besar.",
+    siteName: "Eksotika Prima",
+    type: "website",
+    images: [
+      {
+        url: "http://localhost:3000/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg",
+        alt: "Supplier Minyak Gosok Terbesar - Eksotika Prima",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Supplier Minyak Gosok Terbesar Se-Indonesia | Eksotika Prima",
+    description:
+      "Supplier minyak gosok terbesar di Indonesia. Harga termurah, kualitas terjamin, bisa nego untuk pembelian besar.",
+    images: ["http://localhost:3000/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg"],
+  },
+};
+
 export default function Home() {
   return (
     <>

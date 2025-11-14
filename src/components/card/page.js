@@ -29,7 +29,7 @@ function Card({ product }) {
       <div className="card-fill">
         <div className='card-slider'>
           <div className='card-image-container'>
-            <Image src={`/asset/product/${product.variants[0].picture}`} alt={`product-${product.variants[0].size}`} className='card-image' width={512} height={512}/>
+            <Image src={`/api/images/product/${product.variants[0].picture}`} alt={`product-${product.variants[0].size}`} className='card-image' width={512} height={512}/>
           </div>
         </div>
         <p className="card-title">

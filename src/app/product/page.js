@@ -1,28 +1,48 @@
-"use client";
-import React, { useState } from "react";
+// app/product/page.jsx (server component)
+
 import "./page.css";
-import CardLoad from "@/components/cardLoad/page";
+import ProductClient from "./ProductClient";
 
-export default function Product() {
-  const [searchTerm, setSearchTerm] = useState("");
+export const metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_URL),
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  title: "Cari Minyak Gosok Termurah Se-Indonesia | Eksotika Prima",
+  description:
+    "Cari minyak gosok termurah di Indonesia. Menyediakan minyak gosok berkualitas dengan harga termurah dan bisa nego untuk pembelian besar.",
+  keywords: [
+    "supplier minyak gosok",
+    "minyak gosok murah",
+    "pabrik minyak gosok",
+    "grosir minyak gosok",
+    "minyak gosok terbesar",
+    "Eksotika Prima",
+    "minyak urut",
+    "minyak pijat",
+  ],
 
-  return (
-    <div className="page-container">
-      <div className="product-bar">
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className="product-input"
-        />
-      </div>
-      <p className="page-heading">Produk Kami</p>
-      <CardLoad searchTerm={searchTerm}/>
-    </div>
-  );
+  openGraph: {
+    title: "Cari Minyak Gosok Termurah Se-Indonesia | Eksotika Prima",
+    description:
+      "Cari minyak gosok termurah di Indonesia. Menyediakan minyak gosok berkualitas dengan harga termurah dan bisa nego untuk pembelian besar.",
+    url: `${process.env.NEXT_PUBLIC_URL}/product`,
+    type: "website",
+    images: [
+      {
+        url: "http://localhost:3000/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg",
+        alt: "Cari Minyak Gosok Termurah Se-Indonesia | Eksotika Prima",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Cari Minyak Gosok Termurah Se-Indonesia | Eksotika Prima",
+    description:
+      "Supplier minyak gosok termurah. Kualitas terbaik & bisa nego pembelian besar.",
+    images: ["http://localhost:3000/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg"],
+  },
+};
+
+export default function ProductPage() {
+  return <ProductClient />;
 }

@@ -3,9 +3,16 @@ import { ContactInformation, formatPhoneNumber } from '@/data/ContactInformation
 import Image from 'next/image'
 import './page.css'
 
+export const metadata = {
+  title: "Kontak Kami | Eksotika Prima",
+  description:
+    "Supplier minyak gosok terbesar di Indonesia. Menyediakan minyak gosok berkualitas dengan harga termurah dan bisa nego untuk pembelian besar.",
+};
+
 function Contact() {
   return (
-    <div className='page-container contact-container'>
+    <>
+      <div className='page-container contact-container'>
       <h1 className='contact-title'>Hubungi Kami</h1>
       <div className="contact-box">
         <div className="contact-info">
@@ -40,6 +47,7 @@ function Contact() {
         </div>
       </div>
     </div>
+    </>
   )
 }
 
