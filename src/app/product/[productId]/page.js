@@ -30,9 +30,9 @@ export async function generateMetadata({ params, searchParams }) {
   const description = product.detail;
   const image = `${process.env.NEXT_PUBLIC_API_URL}/images/product/${product.title}/${searchParams.variant}`;
 
-  const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000"  
+  const baseUrl = process.env.NEXT_PUBLIC_URL
   return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_URL),
+    metadataBase: new URL(baseUrl),
 
     title: title,
     description: description,

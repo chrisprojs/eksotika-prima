@@ -3,7 +3,7 @@
 import "./page.css";
 import ProductClient from "./ProductClient";
 
-const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000"  
+const baseUrl = process.env.NEXT_PUBLIC_URL
 export const metadata = {
   metadataBase: new URL(baseUrl),
 
