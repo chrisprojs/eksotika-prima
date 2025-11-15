@@ -16,10 +16,11 @@ export default function ProductClient() {
       <title>Cari Minyak Gosok Termurah Se-Indonesia | Eksotika Prima</title>
 
       <div className="page-container">
+        <h1 className="product-header">Cari Minyak Gosok Termurah Se-Indonesia</h1>
         <div className="product-bar">
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder="Cari Produk..."
             value={searchTerm}
             onChange={handleSearch}
             className="product-input"
