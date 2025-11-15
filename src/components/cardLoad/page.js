@@ -7,17 +7,20 @@ import "./page.css"
 
 function CardLoad({searchTerm = ""}) {
   const [productList, setProductList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       const products = await getAllProduct();
       setProductList(Array.isArray(products) ? products : []);
+      setIsLoading(false);
     };
 
     fetchData();
   }, []);
 
-  if(!productList){
+  if(isLoading){
     return <Loading />;
   }
   else{

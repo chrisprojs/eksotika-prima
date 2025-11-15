@@ -3,10 +3,40 @@ import { ContactInformation, formatPhoneNumber } from '@/data/ContactInformation
 import Image from 'next/image'
 import './page.css'
 
+const baseUrl = process.env.NEXT_PUBLIC_URL
 export const metadata = {
+  metadataBase: new URL(baseUrl),
+
   title: "Kontak Kami | Eksotika Prima",
   description:
-    "Supplier minyak gosok terbesar di Indonesia. Menyediakan minyak gosok berkualitas dengan harga termurah dan bisa nego untuk pembelian besar.",
+    "Kontak Kami | Eksotika Prima",
+  
+  openGraph: {
+    title: "Kontak Kami | Eksotika Prima",
+    description:
+      "Kontak Kami | Eksotika Prima",
+    url: `${baseUrl}`,
+    siteName: "Eksotika Prima",
+    type: "website",
+    images: [
+      {
+        url: `${baseUrl}/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg`,
+        alt: "Kontak Kami | Eksotika Prima",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Kontak Kami | Eksotika Prima",
+    description:
+      "Kontak Kami | Eksotika Prima",
+    images: [`${baseUrl}/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg`],
+  },
+
+  alternates: {
+    canonical: `${baseUrl}/contact`, // <-- add canonical here
+  },
 };
 
 function Contact() {
