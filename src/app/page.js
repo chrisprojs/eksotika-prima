@@ -47,9 +47,9 @@ export default function Home() {
     <>
       <div className='home-img-container'>
       <Image src="/asset/home_template_1.jpg" alt="home img template" className='home-img-template' width={1024} height={256}></Image>
-        <p className='home-img-text'>Supplier Minyak Gosok Terbesar Se-Indonesia<br/>
+        <h1 className='home-img-text'>Supplier Minyak Gosok Terbesar Se-Indonesia<br/>
           <span className='home-img-text2'>Harga Termurah, Bisa Nego</span>
-        </p>
+        </h1>
         <div className='home-blast-sign'>
           <p>Beli Banyak Nego Banyak!</p>
         </div>

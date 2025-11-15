@@ -27,7 +27,7 @@ function Navbar() {
               }`}
               onClick={() => setClicked(!isClicked)}
             >
-              Home
+              Beranda
             </Link>
           </li>
           <li className="navbar-link">
@@ -38,7 +38,7 @@ function Navbar() {
               }`}
               onClick={() => setClicked(!isClicked)}
             >
-              Product
+              Produk
             </Link>
           </li>
           <li className="navbar-link">
@@ -49,7 +49,7 @@ function Navbar() {
               }`}
               onClick={() => setClicked(!isClicked)}
             >
-              Contact
+              Kontak
             </Link>
           </li>
         </ul>
