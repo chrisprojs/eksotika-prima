@@ -40,6 +40,9 @@ export const metadata = {
       "Supplier minyak gosok terbesar di Indonesia. Harga termurah, kualitas terjamin, bisa nego untuk pembelian besar.",
     images: [`${baseUrl}/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg`],
   },
+  alternates: {
+    canonical: `${baseUrl}`, // <-- add canonical here
+  },
 };
 
 export default function Home() {

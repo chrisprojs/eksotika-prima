@@ -42,6 +42,10 @@ export const metadata = {
       "Supplier minyak gosok termurah. Kualitas terbaik & bisa nego pembelian besar.",
     images: [`${baseUrl}/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg`],
   },
+
+  alternates: {
+    canonical: `${baseUrl}/product`, // <-- add canonical here
+  },
 };
 
 export default function ProductPage() {
