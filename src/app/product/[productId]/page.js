@@ -1,6 +1,8 @@
 // app/product/[productId]/page.jsx
 import { getProductById } from "@/fetch/getProductById";
 import SearchProductClient from "./SearchProductClient";
+import ShopSection from "@/components/shopSection/page";
+import TestimoniSection from "@/components/testimoniSection/page";
 
 export async function generateMetadata({ params, searchParams }) {
   const { productId } = params;
@@ -60,5 +62,15 @@ export async function generateMetadata({ params, searchParams }) {
 }
 
 export default async function SearchProduct({ params }) {
-  return <SearchProductClient params={params} />;
+  return (
+  <>
+    <SearchProductClient params={params} />
+    <div className='page-container page-grey'>
+      <ShopSection/>
+    </div>
+    <div className="page-container">
+      <TestimoniSection/>
+    </div>
+  </>
+  );
 }

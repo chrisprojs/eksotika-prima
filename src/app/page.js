@@ -3,6 +3,7 @@ import Image from 'next/image';
 import CardLoad from "@/components/cardLoad/page";
 import ReasonSection from "@/components/reasonSection/page";
 import ShopSection from "@/components/shopSection/page";
+import TestimoniSection from "@/components/testimoniSection/page";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL
 export const metadata = {
@@ -52,9 +53,10 @@ export default function Home() {
     <>
       <div className='home-img-container'>
       <Image src="/asset/home_template_1.jpg" alt="home img template" className='home-img-template' width={1024} height={256}></Image>
-        <h1 className='home-img-text'>Supplier Minyak Gosok Terbesar Se-Indonesia<br/>
-          <span className='home-img-text2'>Harga Termurah, Bisa Nego</span>
-        </h1>
+        <div className='home-img-banner-text'>
+          <h1 className='home-img-text'>Supplier Minyak Gosok Terbesar Se-Indonesia</h1>
+          <h2 className='home-img-text2'>Harga Termurah, Bisa Nego</h2>
+        </div>
         <div className='home-blast-sign'>
           <p>Beli Banyak Nego Banyak!</p>
         </div>
@@ -73,6 +75,9 @@ export default function Home() {
       </div>
       <div className='page-container page-grey'>
         <ShopSection/>
+      </div>
+      <div className='page-container'>
+        <TestimoniSection/>
       </div>
     </>
   );
