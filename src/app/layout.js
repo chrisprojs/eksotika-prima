@@ -7,7 +7,9 @@ export const metadata = {
   authors: [{ name: "Eksotika Prima" }],
   creator: "Eksotika Prima",
   publisher: "Eksotika Prima",
-
+  icons: {
+    icon: "/favicon.ico",
+  },
   robots: {
     index: true,
     follow: true,
