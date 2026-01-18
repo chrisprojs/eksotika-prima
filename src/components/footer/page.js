@@ -5,7 +5,6 @@ import { ContactInformation, formatPhoneNumber } from "@/data/ContactInformation
 import Image from "next/image";
 import Reminder from "../reminder/page";
 
-
 function Footer() {
   const [isFooterPositioned, setIsFooterPositioned] = useState(false);
 
@@ -34,10 +33,13 @@ function Footer() {
         <div className="footer-icon-box">
           <div className="footer-contact-column">
             <a href={ContactInformation.tokopediaLink} target="_blank" rel="noreferrer" className="icon-logo">
-              <Image src='/asset/tokopedia-logo.png' alt="Tokopedia" className="icon-image" width={100} height={100}/>
+              <Image src={`/asset/ecommerce/tokopedia-logo.png`} alt="Tokopedia" className="icon-image" width={100} height={100}/>
             </a>
             <a href={ContactInformation.shopeeLink} target="_blank" rel="noreferrer" className="icon-logo">
-              <Image src='/asset/shopee-logo.png' alt="Shopee" className="icon-image" width={100} height={100}/>
+              <Image src={`/asset/ecommerce/shopee-logo.png`} alt="Shopee" className="icon-image" width={100} height={100}/>
+            </a>
+            <a href={ContactInformation.blibliLink} target="_blank" rel="noreferrer" className="icon-logo">
+              <Image src={`/asset/ecommerce/blibli-logo.png`} alt="Shopee" className="icon-image" width={100} height={100}/>
             </a>
           </div>
           <div className="footer-contact-column footer-icon-text-box">

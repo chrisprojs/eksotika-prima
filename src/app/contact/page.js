@@ -2,6 +2,7 @@ import React from 'react'
 import { ContactInformation, formatPhoneNumber } from '@/data/ContactInformation'
 import Image from 'next/image'
 import './page.css'
+import ReasonSection from '@/components/reasonSection/page'
 
 const baseUrl = process.env.NEXT_PUBLIC_URL
 export const metadata = {
@@ -42,7 +43,7 @@ export const metadata = {
 function Contact() {
   return (
     <>
-      <div className='page-container contact-container'>
+    <div className='page-container contact-container'>
       <h1 className='contact-title'>Hubungi Kami</h1>
       <div className="contact-box">
         <div className="contact-info">
@@ -53,7 +54,7 @@ function Contact() {
               rel="noopener noreferrer"
               className="contact-info-link"
             >
-              <Image src='/asset/tokopedia-logo.png' alt="Tokopedia" className="contact-icon" width={100} height={100}/> {ContactInformation.tokopediaLink}
+              <Image src='/asset/ecommerce/tokopedia-logo.png' alt="Tokopedia" className="contact-icon" width={100} height={100}/> {ContactInformation.tokopediaLink}
             </a>
           </div>
           <div>
@@ -63,12 +64,24 @@ function Contact() {
               rel="noopener noreferrer"
               className="contact-info-link"
             >
-              <Image src='/asset/shopee-logo.png' alt="Shopee" className="contact-icon" width={100} height={100}/> {ContactInformation.shopeeLink}
+              <Image src='/asset/ecommerce/shopee-logo.png' alt="Shopee" className="contact-icon" width={100} height={100}/> {ContactInformation.shopeeLink}
             </a>
           </div>
           <div>
             <a
-              href={`tel:${ContactInformation.whatsappNumber}`}
+              href={ContactInformation.blibliLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="contact-info-link"
+            >
+              <Image src='/asset/ecommerce/blibli-logo.png' alt="Blibli" className="contact-icon" width={100} height={100}/> {ContactInformation.blibliLink}
+            </a>
+          </div>
+          <div>
+            <a
+              href={`https://wa.me/${ContactInformation.whatsappNumber}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="contact-info-link"
             >
               <Image src='/asset/whatsapp-logo.png' alt="WhatsApp" className="contact-icon" width={100} height={100}/> {formatPhoneNumber(ContactInformation.whatsappNumber)} &#40;{ContactInformation.phoneNumberOwner}&#41;
@@ -76,6 +89,9 @@ function Contact() {
           </div>
         </div>
       </div>
+    </div>
+    <div className='page-container page-grey'>
+      <ReasonSection/>
     </div>
     </>
   )

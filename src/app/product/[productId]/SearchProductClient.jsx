@@ -6,6 +6,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import "./page.css";
 import Loading from "@/components/loading/page";
 import DiscountBadge from "@/components/discount/page";
+import ShopSection from "@/components/shopSection/page";
 
 export default function SearchProduct({ params }) {
   const { productId } = params;
@@ -240,6 +241,9 @@ export default function SearchProduct({ params }) {
             <span className="searchProduct-detail">{product.detail}</span>
           </p>
         </div>
+      </div>
+      <div className='page-container page-grey'>
+        <ShopSection/>
       </div>
     </>
   );

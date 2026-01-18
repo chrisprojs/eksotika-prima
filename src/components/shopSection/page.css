@@ -1,0 +1,160 @@
+.shop-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.shop-heading {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: var(--var-font-bold);
+  color: #2c3e50;
+  margin: 0px;
+  text-shadow: var(--var-text-shadow-heading);
+}
+
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.shop-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.shop-card {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+}
+
+.shop-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.shop-logo-container {
+  width: 100%;
+  max-width: 150px;
+  height: 150px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.shop-logo {
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.shop-platform {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.ecommerce-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.ecommerce-logo {
+  max-width: 100px;
+  height: auto;
+  object-fit: contain;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.ecommerce-logo:hover {
+  opacity: 1;
+}
+
+.shop-rating {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.rating-value {
+  font-size: 1.1rem;
+  font-weight: var(--var-font-bold);
+  color: #f39c12;
+}
+
+.rating-detail {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.shop-title {
+  font-size: 1.5rem;
+  font-weight: var(--var-font-bold);
+  color: #2c3e50;
+  margin-bottom: 15px;
+  text-shadow: var(--var-text-shadow-heading);
+}
+
+.shop-description {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .shop-section {
+    padding: 2% 5%;
+  }
+
+  .shop-heading {
+    font-size: 1.8rem;
+  }
+
+  .shop-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .shop-card {
+    padding: 25px;
+  }
+
+  .shop-logo-container {
+    max-width: 150px;
+    height: 120px;
+    margin-bottom: 15px;
+  }
+
+  .shop-title {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+  }
+
+  .shop-description {
+    font-size: 0.9rem;
+  }
+
+  .ecommerce-logos {
+    gap: 8px;
+  }
+
+  .ecommerce-logo {
+    max-width: 80px;
+  }
+}

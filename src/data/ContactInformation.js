@@ -1,6 +1,7 @@
 export const ContactInformation = {
   tokopediaLink: "https://www.tokopedia.com/eksotikaprima",
   shopeeLink: "https://shopee.co.id/ivonrositawid",
+  blibliLink: "https://www.blibli.com/merchant/eksotika-prima/EKP-60023",
   whatsappNumber: "+6285179646836",
   phoneNumberOwner: "Chris"
 };

@@ -1,6 +1,8 @@
 import "./page.css";
 import Image from 'next/image';
 import CardLoad from "@/components/cardLoad/page";
+import ReasonSection from "@/components/reasonSection/page";
+import ShopSection from "@/components/shopSection/page";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL
 export const metadata = {
@@ -65,6 +67,12 @@ export default function Home() {
       <div className='page-container'>
         <p className='page-heading'>Produk Kami</p>
         <CardLoad/>
+      </div>
+      <div className='page-container page-grey'>
+        <ReasonSection/>
+      </div>
+      <div className='page-container page-grey'>
+        <ShopSection/>
       </div>
     </>
   );
