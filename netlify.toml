@@ -4,6 +4,13 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  DATABASE_URL = "file:./prod.db"
+  NEXT_PUBLIC_API_URL = "https://eksotikaprima.netlify.app/api"
+  NEXT_PUBLIC_URL = "https://eksotikaprima.netlify.app"
+  ALLOWED_ORIGIN = "[\"https://eksotikaprima.netlify.app\"]"
+
+[functions]
+  included_files = ["prisma/prod.db"]
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
