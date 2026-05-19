@@ -2,8 +2,9 @@
 
 import "./page.css";
 import ProductClient from "./ProductClient";
+import { siteUrl } from "@/lib/site";
 
-const baseUrl = process.env.NEXT_PUBLIC_URL
+const baseUrl = siteUrl;
 export const metadata = {
   metadataBase: new URL(baseUrl),
 

@@ -3,8 +3,9 @@ import { ContactInformation, formatPhoneNumber } from '@/data/ContactInformation
 import Image from 'next/image'
 import './page.css'
 import ReasonSection from '@/components/reasonSection/page'
+import { siteUrl } from '@/lib/site'
 
-const baseUrl = process.env.NEXT_PUBLIC_URL
+const baseUrl = siteUrl;
 export const metadata = {
   metadataBase: new URL(baseUrl),
 

@@ -3,13 +3,15 @@ import { getProductById } from "@/fetch/getProductById";
 import SearchProductClient from "./SearchProductClient";
 import ShopSection from "@/components/shopSection/page";
 import TestimoniSection from "@/components/testimoniSection/page";
+import { apiUrl, siteUrl } from "@/lib/site";
 
 export async function generateMetadata({ params, searchParams }) {
-  const { productId } = params;
+  const { productId } = await params;
+  const query = await searchParams;
 
   const product = await getProductById(productId);
 
-  if (!product) {
+  if (!product || !Array.isArray(product.variants)) {
     return {
       title: "Produk Tidak Ditemukan",
       description: "Produk tidak tersedia atau telah dihapus.",
@@ -25,14 +27,17 @@ export async function generateMetadata({ params, searchParams }) {
     return `${product.title} - ${variant}${quantityText}`;
   };
 
-  const variant = searchParams.variant || product.variants[0]?.size;
-  const quantity = searchParams.quantity;
+  const variant = query?.variant || product.variants[0]?.size;
+  const quantity = query?.quantity;
 
   const title = getTitleText(product, variant, quantity);
   const description = product.detail;
-  const image = `${process.env.NEXT_PUBLIC_API_URL}/images/product/${product.title}/${searchParams.variant}`;
+  const selectedVariant = product.variants.find((item) => item.size === variant) || product.variants[0];
+  const image = selectedVariant
+    ? `${apiUrl}/images/product/${selectedVariant.picture}`
+    : `${siteUrl}/favicon.ico`;
 
-  const baseUrl = process.env.NEXT_PUBLIC_URL
+  const baseUrl = siteUrl;
   return {
     metadataBase: new URL(baseUrl),
 
@@ -62,9 +67,11 @@ export async function generateMetadata({ params, searchParams }) {
 }
 
 export default async function SearchProduct({ params }) {
+  const resolvedParams = await params;
+
   return (
   <>
-    <SearchProductClient params={params} />
+    <SearchProductClient params={resolvedParams} />
     <div className='page-container page-grey'>
       <ShopSection/>
     </div>

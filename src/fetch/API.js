@@ -1,1 +1,3 @@
-export const api_url = process.env.NEXT_PUBLIC_API_URL;
+import { apiUrl } from "@/lib/site";
+
+export const api_url = apiUrl;
