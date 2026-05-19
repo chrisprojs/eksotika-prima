@@ -3,23 +3,23 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model Product {
   productId Int       @id @default(autoincrement())
-  title     String    @db.VarChar(255)
-  merk      String    @db.VarChar(255)
-  produsen  String    @db.VarChar(255)
-  detail    String    @db.Text
+  title     String
+  merk      String
+  produsen  String
+  detail    String
   variants  Variant[]
 }
 
 model Variant {
   variantId  Int     @id @default(autoincrement())
-  size       String  @db.VarChar(255)
-  picture    String  @db.VarChar(255)
+  size       String
+  picture    String
   fromPrice  Int
   price      Int
   dozenPrice Int?

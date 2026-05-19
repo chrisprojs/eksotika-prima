@@ -4,9 +4,11 @@ import CardLoad from "@/components/cardLoad/page";
 import ReasonSection from "@/components/reasonSection/page";
 import ShopSection from "@/components/shopSection/page";
 import TestimoniSection from "@/components/testimoniSection/page";
+import { siteUrl } from "@/lib/site";
 
-const baseUrl = process.env.NEXT_PUBLIC_URL
+const baseUrl = siteUrl;
 export const metadata = {
+  metadataBase: new URL(baseUrl),
   title: "Supplier Minyak Gosok Terbesar Se-Indonesia | Eksotika Prima",
   description:
     "Supplier minyak gosok terbesar di Indonesia. Menyediakan minyak gosok berkualitas dengan harga termurah dan bisa nego untuk pembelian besar.",
@@ -25,7 +27,7 @@ export const metadata = {
     title: "Supplier Minyak Gosok Terbesar Se-Indonesia | Eksotika Prima",
     description:
       "Supplier minyak gosok terbesar di Indonesia. Harga termurah, kualitas terjamin, bisa nego untuk pembelian besar.",
-    url: `${baseUrl}`,
+    url: baseUrl,
     siteName: "Eksotika Prima",
     type: "website",
     images: [
@@ -44,7 +46,7 @@ export const metadata = {
     images: [`${baseUrl}/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg`],
   },
   alternates: {
-    canonical: `${baseUrl}`, // <-- add canonical here
+    canonical: baseUrl,
   },
 };
 

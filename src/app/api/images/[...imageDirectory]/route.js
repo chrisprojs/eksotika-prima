@@ -5,20 +5,19 @@ import path from "path";
 // Route: /api/images/<anything>/<anything>/<file>
 export async function GET(req, { params }) {
   try {
-    const segments = params.imageDirectory;
+    const { imageDirectory: segments } = await params;
 
     if (!segments || segments.length === 0) {
       return NextResponse.json({ error: "Path required" }, { status: 400 });
     }
 
-    // Convert array to actual nested path
-    const relativePath = segments.join("/");
+    const assetRoot = path.join(process.cwd(), "public", "asset");
+    const relativePath = path.normalize(segments.join(path.sep));
+    const filePath = path.join(assetRoot, relativePath);
 
-    // Prevent "../"
-    const sanitized = relativePath.replace(/\.\./g, "").replace(/^\//, "");
-
-    // 🔥 FINAL PATH → Always under public/asset
-    const filePath = path.join(process.cwd(), "public", "asset", sanitized);
+    if (!filePath.startsWith(assetRoot + path.sep)) {
+      return NextResponse.json({ error: "Invalid image path" }, { status: 400 });
+    }
 
     if (!fs.existsSync(filePath)) {
       return NextResponse.json({ error: "Image not found" }, { status: 404 });
