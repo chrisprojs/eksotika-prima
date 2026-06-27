@@ -93,3 +93,7 @@
     padding: 5px;
   }
 }
+
+.home-about-container {
+  display: block;
+}
