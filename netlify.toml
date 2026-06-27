@@ -8,5 +8,11 @@
 [functions]
   included_files = ["prisma/prod.db"]
 
+[[redirects]]
+  from = "https://www.eksotikaprima.netlify.app/*"
+  to = "https://eksotikaprima.netlify.app/:splat"
+  status = 301
+  force = true
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
