@@ -1,35 +1,30 @@
-import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { getAllProducts, getProductById } from "@/app/api/products/productService";
 
-export async function GET(req){
+export async function GET(req) {
   const url = new URL(req.url);
-  const product_id = url.searchParams.get('product_id');
+  const productId = url.searchParams.get("product_id");
 
-  if(product_id){
-    try{
-      const product = await prisma.product.findUnique({
-        where: {productId: parseInt(product_id,10)},
-        include: {variants: true}
-      });
-      if (product) {
-        return new NextResponse(JSON.stringify(product), { status: 200 });
-      } else {
-        return new NextResponse(JSON.stringify({ error: 'Product not found' }), { status: 404 });
+  if (productId) {
+    try {
+      const product = await getProductById(productId);
+
+      if (!product) {
+        return NextResponse.json({ error: "Product not found" }, { status: 404 });
       }
+
+      return NextResponse.json(product);
     } catch (error) {
-      console.error('Error getting product by id:', error);
-      return new NextResponse(JSON.stringify({ error: 'Error getting product by id' }), { status: 500 });
+      console.error("Error getting product by id:", error);
+      return NextResponse.json({ error: "Error getting product by id" }, { status: 500 });
     }
   }
-  else{
-    try{
-      const product = await prisma.product.findMany({
-        include: {variants: true}
-      })
-      return new NextResponse(JSON.stringify(product), { status: 200 });
-    } catch (error) {
-      console.error('Error getting products:', error);
-      return new NextResponse(JSON.stringify({ error: 'Error getting products' }), { status: 500 });
-    }
+
+  try {
+    const products = await getAllProducts();
+    return NextResponse.json(products);
+  } catch (error) {
+    console.error("Error getting products:", error);
+    return NextResponse.json({ error: "Error getting products" }, { status: 500 });
   }
 }

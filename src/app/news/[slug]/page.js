@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getPublishedNewsBySlug } from "@/lib/newsData";
+import { getPublishedNewsBySlug } from "@/app/api/news/newsService";
 import { cleanNewsHtml } from "@/lib/newsHtml";
 import { apiUrl, siteUrl } from "@/lib/site";
 import "./page.css";

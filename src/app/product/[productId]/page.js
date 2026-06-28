@@ -1,5 +1,5 @@
 // app/product/[productId]/page.jsx
-import { getProductById } from "@/fetch/getProductById";
+import { getProductById } from "@/app/api/products/productService";
 import SearchProductClient from "./SearchProductClient";
 import ShopSection from "@/components/shopSection/page";
 import TestimoniSection from "@/components/testimoniSection/page";
@@ -85,3 +85,4 @@ export default async function SearchProduct({ params }) {
   </>
   );
 }
+

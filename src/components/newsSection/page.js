@@ -1,6 +1,6 @@
 import Link from "next/link";
 import NewsCard from "@/components/newsCard/page";
-import { getNewsSectionByCategory } from "@/lib/newsData";
+import { getNewsSectionByCategory } from "@/app/api/news/newsService";
 import "./page.css";
 
 function NewsGroup({ title, newsList }) {
