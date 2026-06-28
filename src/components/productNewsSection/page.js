@@ -1,5 +1,5 @@
 import NewsCard from "@/components/newsCard/page";
-import { getLatestNewsByProductId } from "@/lib/newsData";
+import { getLatestNewsByProductId } from "@/app/api/news/newsService";
 import "./page.css";
 
 export default async function ProductNewsSection({ productId }) {

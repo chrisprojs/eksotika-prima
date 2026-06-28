@@ -1,49 +1,24 @@
-import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import {
+  createNews,
+  getPublishedNewsBySlug,
+  getPublishedNewsList,
+  updateNews,
+} from "@/app/api/news/newsService";
 
 function validateAdminKey(req) {
   const adminKey = req.headers.get("admin-key") || req.headers.get("authorization")?.replace("Bearer ", "");
   return Boolean(process.env.ADMIN_KEY && adminKey === process.env.ADMIN_KEY);
 }
 
-function getNewsData(data) {
-  return {
-    slug: data.slug,
-    title: data.title,
-    category: data.category || "Education",
-    summary: data.summary,
-    contentHtml: data.contentHtml,
-    coverImage: data.coverImage || null,
-    isPublished: data.isPublished ?? true,
-  };
-}
-
-function getProductLinks(productIds = []) {
-  return productIds.map((productId) => ({
-    product: {
-      connect: { productId: Number(productId) },
-    },
-  }));
-}
-
 export async function GET(req) {
   const url = new URL(req.url);
   const slug = url.searchParams.get("slug");
+  const now = new Date();
 
   try {
     if (slug) {
-      const news = await prisma.news.findUnique({
-        where: { slug },
-        include: {
-          products: {
-            include: {
-              product: {
-                include: { variants: true },
-              },
-            },
-          },
-        },
-      });
+      const news = await getPublishedNewsBySlug(slug, now);
 
       if (!news) {
         return NextResponse.json({ error: "News not found" }, { status: 404 });
@@ -52,19 +27,7 @@ export async function GET(req) {
       return NextResponse.json(news);
     }
 
-    const newsList = await prisma.news.findMany({
-      orderBy: { createdAt: "desc" },
-      include: {
-        products: {
-          include: {
-            product: {
-              include: { variants: true },
-            },
-          },
-        },
-      },
-    });
-
+    const newsList = await getPublishedNewsList(now);
     return NextResponse.json(newsList);
   } catch (error) {
     console.error("Error getting news:", error);
@@ -80,22 +43,7 @@ export async function POST(req) {
   const data = await req.json();
 
   try {
-    const news = await prisma.news.create({
-      data: {
-        ...getNewsData(data),
-        products: {
-          create: getProductLinks(data.productIds),
-        },
-      },
-      include: {
-        products: {
-          include: {
-            product: true,
-          },
-        },
-      },
-    });
-
+    const news = await createNews(data);
     return NextResponse.json(news, { status: 201 });
   } catch (error) {
     console.error("Error creating news:", error);
@@ -117,30 +65,10 @@ export async function PUT(req) {
   }
 
   try {
-    const news = await prisma.news.update({
-      where: { newsId },
-      data: {
-        ...getNewsData(data),
-        products: Array.isArray(data.productIds)
-          ? {
-              deleteMany: {},
-              create: getProductLinks(data.productIds),
-            }
-          : undefined,
-      },
-      include: {
-        products: {
-          include: {
-            product: true,
-          },
-        },
-      },
-    });
-
+    const news = await updateNews(newsId, data);
     return NextResponse.json(news);
   } catch (error) {
     console.error("Error updating news:", error);
     return NextResponse.json({ error: "Error updating news" }, { status: 500 });
   }
 }
-

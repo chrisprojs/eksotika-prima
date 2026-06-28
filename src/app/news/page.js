@@ -1,5 +1,5 @@
 import NewsCard from "@/components/newsCard/page";
-import { getPublishedNewsList } from "@/lib/newsData";
+import { getPublishedNewsList } from "@/app/api/news/newsService";
 import { siteUrl } from "@/lib/site";
 import "./page.css";
 import ShopSection from "@/components/shopSection/page";
