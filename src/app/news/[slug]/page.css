@@ -1,0 +1,160 @@
+.news-detail-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 28px;
+  align-items: start;
+}
+
+.news-detail-main {
+  min-width: 0;
+}
+
+.news-back-link {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: #208000;
+  text-decoration: none;
+  font-weight: var(--var-font-semibold);
+}
+
+.news-detail-date {
+  margin: 0 0 8px;
+  color: #777;
+}
+
+.news-detail-main h1 {
+  margin: 0 0 12px;
+  font-size: 34px;
+  line-height: 1.15;
+}
+
+.news-detail-summary {
+  margin: 0 0 22px;
+  color: #444;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.news-detail-cover {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 24px;
+}
+
+.news-html-content {
+  color: #222;
+  line-height: 1.75;
+}
+
+.news-html-content h2 {
+  margin: 28px 0 10px;
+  font-size: 26px;
+  line-height: 1.25;
+}
+
+.news-html-content h3 {
+  margin: 24px 0 8px;
+  font-size: 22px;
+}
+
+.news-html-content p,
+.news-html-content ul,
+.news-html-content ol,
+.news-html-content blockquote {
+  margin: 0 0 16px;
+}
+
+.news-html-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+.news-html-content a {
+  color: #208000;
+}
+
+.news-product-panel {
+  position: sticky;
+  top: 100px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 16px;
+  box-shadow: var(--var-bg-shadow);
+}
+
+.news-product-panel h2 {
+  margin: 0 0 14px;
+  font-size: 20px;
+}
+
+.news-product-empty {
+  margin: 0;
+  color: #666;
+  line-height: 1.5;
+}
+
+.news-product-list {
+  display: grid;
+  gap: 12px;
+}
+
+.news-product-card {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  gap: 12px;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid #e4e4e4;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.news-product-image {
+  width: 82px;
+  height: 82px;
+  object-fit: contain;
+  background: #f7f7f7;
+  border-radius: 5px;
+}
+
+.news-product-card h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.news-product-card p {
+  margin: 0 0 8px;
+  color: #222;
+  font-weight: var(--var-font-semibold);
+}
+
+.news-product-card span {
+  color: #208000;
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .news-detail-page {
+    grid-template-columns: 1fr;
+  }
+
+  .news-product-panel {
+    position: static;
+  }
+}
+
+@media (max-width: 560px) {
+  .news-detail-main h1 {
+    font-size: 28px;
+  }
+
+  .news-detail-summary {
+    font-size: 16px;
+  }
+}

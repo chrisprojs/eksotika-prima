@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -8,12 +9,13 @@ datasource db {
 }
 
 model Product {
-  productId Int       @id @default(autoincrement())
-  title     String
-  merk      String
-  produsen  String
-  detail    String
-  variants  Variant[]
+  productId    Int           @id @default(autoincrement())
+  title        String
+  merk         String
+  produsen     String
+  detail       String
+  variants     Variant[]
+  newsProducts NewsProduct[]
 }
 
 model Variant {
@@ -25,4 +27,27 @@ model Variant {
   dozenPrice Int?
   productId  Int
   product    Product @relation(fields: [productId], references: [productId], onDelete: Cascade)
+}
+
+model News {
+  newsId      Int           @id @default(autoincrement())
+  slug        String        @unique
+  title       String
+  category    String        @default("Education")
+  summary     String
+  contentHtml String
+  coverImage  String?
+  isPublished Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  products    NewsProduct[]
+}
+
+model NewsProduct {
+  newsId    Int
+  productId Int
+  news      News    @relation(fields: [newsId], references: [newsId], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [productId], onDelete: Cascade)
+
+  @@id([newsId, productId])
 }

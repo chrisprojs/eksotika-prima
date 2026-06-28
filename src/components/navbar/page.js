@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 function Navbar() {
   const [isClicked, setClicked] = useState(false);
   const location = usePathname();  // Get current location
+  const isProductPage = location === "/product" || location.startsWith("/product/");
 
   return (
     <nav className="navbar-bg">
@@ -34,11 +35,22 @@ function Navbar() {
             <Link
               href="/product"
               className={`navbar-link  ${
-                location === "/product" ? "active" : ""
+                isProductPage ? "active" : ""
               }`}
               onClick={() => setClicked(!isClicked)}
             >
               Produk
+            </Link>
+          </li>
+          <li className="navbar-link">
+            <Link
+              href="/news"
+              className={`navbar-link  ${
+                location === "/news" || location.startsWith("/news/") ? "active" : ""
+              }`}
+              onClick={() => setClicked(!isClicked)}
+            >
+              Berita
             </Link>
           </li>
           <li className="navbar-link">
@@ -62,3 +74,4 @@ function Navbar() {
 }
 
 export default Navbar;
+

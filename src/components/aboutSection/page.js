@@ -1,8 +1,7 @@
 import React from "react";
 import "./page.css";
 
-const aboutVideoUrl =
-  "https://v19-tkp-vod.tokopedia-static.net/b3a829119c302951572dcb937340f226/6a40461e/video/tos/alisg/tos-alisg-v-f466fc-sg/owYregQDnBlpTP8FECm04DQwCBnWfiig2FIbMU/?a=720074&bti=ZnVzc2Rnc253Zm0rYStmYmxsOg%3D%3D&&bt=472&ft=cAlnXYz7ThWHL2ReLGZmo0P&mime_type=video_mp4&rc=aTk1aTZkNjdnOTg6aWc7ZEBpMzxpOW45cm9ueDMzODRmNEAuMzMuLy9eXl8xMmFgXy9iYSNqcG5wMmQ0aTJgLS1kLy1zcw%3D%3D&vvpl=1&l=20260627235208ADC18846C229B70CA9D3&btag=e00078000";
+const aboutVideoUrl = "/asset/about_section_1.mp4";
 
 function AboutSection() {
   return (

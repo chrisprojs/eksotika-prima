@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import { siteUrl } from "@/lib/site";
 
 export default async function sitemap() {
-  const staticRoutes = ["", "/product", "/contact"].map((route) => ({
+  const staticRoutes = ["", "/product", "/news", "/contact"].map((route) => ({
     url: `${siteUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: "weekly",

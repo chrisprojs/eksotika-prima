@@ -3,6 +3,7 @@ import { getProductById } from "@/fetch/getProductById";
 import SearchProductClient from "./SearchProductClient";
 import ShopSection from "@/components/shopSection/page";
 import TestimoniSection from "@/components/testimoniSection/page";
+import ProductNewsSection from "@/components/productNewsSection/page";
 import { apiUrl, siteUrl } from "@/lib/site";
 
 export async function generateMetadata({ params, searchParams }) {
@@ -72,6 +73,9 @@ export default async function SearchProduct({ params }) {
   return (
   <>
     <SearchProductClient params={resolvedParams} />
+    <div className="page-container">
+      <ProductNewsSection productId={resolvedParams.productId}/>
+    </div>
     <div className='page-container page-grey'>
       <ShopSection/>
     </div>

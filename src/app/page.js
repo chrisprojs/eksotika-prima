@@ -5,6 +5,7 @@ import ReasonSection from "@/components/reasonSection/page";
 import AboutSection from "@/components/aboutSection/page";
 import ShopSection from "@/components/shopSection/page";
 import TestimoniSection from "@/components/testimoniSection/page";
+import NewsSection from "@/components/newsSection/page";
 import { siteUrl } from "@/lib/site";
 
 const baseUrl = siteUrl;
@@ -79,6 +80,9 @@ export default function Home() {
       <div className='page-container page-grey'>
         <ReasonSection/>
       </div>
+      <div className='page-container'>
+        <NewsSection/>
+      </div>
       <div className='page-container page-grey'>
         <ShopSection/>
       </div>
@@ -88,4 +92,3 @@ export default function Home() {
     </>
   );
 }
-

@@ -1,0 +1,35 @@
+.news-list-header {
+  max-width: 760px;
+  margin-bottom: 24px;
+}
+
+.news-list-header h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+  line-height: 1.15;
+}
+
+.news-list-header p,
+.news-empty {
+  margin: 0;
+  color: #555;
+  line-height: 1.6;
+}
+
+.news-list-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+@media (max-width: 900px) {
+  .news-list-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .news-list-grid {
+    grid-template-columns: 1fr;
+  }
+}
