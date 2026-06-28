@@ -2,8 +2,10 @@ import "./page.css";
 import Image from 'next/image';
 import CardLoad from "@/components/cardLoad/page";
 import ReasonSection from "@/components/reasonSection/page";
+import AboutSection from "@/components/aboutSection/page";
 import ShopSection from "@/components/shopSection/page";
 import TestimoniSection from "@/components/testimoniSection/page";
+import NewsSection from "@/components/newsSection/page";
 import { siteUrl } from "@/lib/site";
 
 const baseUrl = siteUrl;
@@ -68,12 +70,18 @@ export default function Home() {
           Metro Indah III Blok.C No.31A RT.1/RW.4, Papanggo, Tanjung Priok, Jakarta Utara, DKI Jakarta, 14340
         </p>
       </div>
+      <div className='page-container home-about-container'>
+        <AboutSection/>
+      </div>
       <div className='page-container'>
         <p className='page-heading'>Produk Kami</p>
         <CardLoad/>
       </div>
       <div className='page-container page-grey'>
         <ReasonSection/>
+      </div>
+      <div className='page-container'>
+        <NewsSection/>
       </div>
       <div className='page-container page-grey'>
         <ShopSection/>

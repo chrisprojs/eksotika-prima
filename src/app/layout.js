@@ -2,6 +2,7 @@ import Footer from "@/components/footer/page";
 import "./globals.css";
 import Navbar from "@/components/navbar/page";
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import Script from "next/script";
 
 export const metadata = {
   authors: [{ name: "Eksotika Prima" }],
@@ -24,6 +25,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="id">
       <body>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7470776396597629"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <div className="app-container">
           <Navbar/>
           <div className='page-layout'>

@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.6.0",
+    "@libsql/client": "^0.8.0",
+    "@prisma/adapter-libsql": "5.18.0",
     "@prisma/client": "^5.18.0",
     "next": "^16.2.6",
     "react": "^19.2.6",

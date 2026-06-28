@@ -1,0 +1,142 @@
+﻿.about-section,
+.home-about-container .about-section {
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(420px, 520px);
+  column-gap: 48px;
+  row-gap: 24px;
+  align-items: stretch;
+}
+
+.about-content,
+.home-about-container .about-content {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
+  min-width: 0;
+  max-width: 650px;
+}
+
+.about-label {
+  margin: 0 0 10px;
+  color: #c0392b;
+  font-size: 0.95rem;
+  font-weight: var(--var-font-bold);
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.about-heading {
+  margin: 0;
+  color: #253342;
+  font-size: 2.1rem;
+  line-height: 1.2;
+  font-weight: var(--var-font-bold);
+  text-shadow: var(--var-text-shadow-heading);
+}
+
+.about-description {
+  margin: 18px 0 0;
+  color: #4d5965;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.about-points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.about-points span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 8px 14px;
+  border: 1px solid #e4b04a;
+  border-radius: 8px;
+  background: #fff8e8;
+  color: #3c3324;
+  font-size: 0.95rem;
+  font-weight: var(--var-font-semibold);
+}
+
+.about-video-box,
+.home-about-container .about-video-box {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: stretch;
+  justify-self: end;
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #111827;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+}
+
+.about-video,
+.home-about-container .about-video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  background: #111827;
+}
+
+@media (max-width: 900px) {
+  .about-section,
+  .home-about-container .about-section {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .about-content,
+  .home-about-container .about-content,
+  .about-video-box,
+  .home-about-container .about-video-box {
+    grid-column: 1;
+  }
+
+  .about-content,
+  .home-about-container .about-content {
+    grid-row: 1;
+  }
+
+  .about-video-box,
+  .home-about-container .about-video-box {
+    grid-row: 2;
+    justify-self: start;
+    max-width: 640px;
+    aspect-ratio: 16 / 9;
+  }
+
+  .about-video,
+  .home-about-container .about-video {
+    position: static;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-heading {
+    font-size: 1.8rem;
+  }
+
+  .about-description {
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .about-points span {
+    min-height: 34px;
+    font-size: 0.9rem;
+  }
+}
