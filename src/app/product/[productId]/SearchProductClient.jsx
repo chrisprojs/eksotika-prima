@@ -1,36 +1,23 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getProductById } from "@/fetch/getProductById";
 import Image from "next/image";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import "./page.css";
 import Loading from "@/components/loading/page";
 import DiscountBadge from "@/components/discount/page";
 
-export default function SearchProduct({ params }) {
-  const { productId } = params;
+export default function SearchProduct({ product = null }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const [product, setProduct] = useState(null);
+  const [currentProduct] = useState(product);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [selectedPrice, setSelectedPrice] = useState(0);
 
-  // Fetch product data
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const foundProduct = await getProductById(productId);
-      if (foundProduct && !Array.isArray(foundProduct) && foundProduct.variants) {
-        setProduct(foundProduct);
-      }
-    };
-    fetchProduct();
-  }, [productId]);
-
   // Sync URL params with state
   useEffect(() => {
-    if (!product || !product.variants || product.variants.length === 0) return;
+    if (!currentProduct || !currentProduct.variants || currentProduct.variants.length === 0) return;
 
     const variantSizeParam = searchParams.get("variant");
     const variantSize = variantSizeParam
@@ -38,9 +25,9 @@ export default function SearchProduct({ params }) {
       : null;
     const quantityParam = searchParams.get("quantity");
 
-    let targetVariant = product.variants[0];
+    let targetVariant = currentProduct.variants[0];
     if (variantSize) {
-      const variantFromUrl = product.variants.find((v) => v.size === variantSize);
+      const variantFromUrl = currentProduct.variants.find((v) => v.size === variantSize);
       if (variantFromUrl) {
         targetVariant = variantFromUrl;
       }
@@ -71,7 +58,7 @@ export default function SearchProduct({ params }) {
       params.set("quantity", targetQuantity.toString());
       router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     }
-  }, [product, searchParams]);
+  }, [currentProduct, searchParams]);
 
   // Update price whenever variant or quantity changes
   useEffect(() => {
@@ -131,7 +118,7 @@ export default function SearchProduct({ params }) {
     updateUrlParams(variants, quantitys);
   };
 
-  if (!product || !selectedVariant) {
+  if (!currentProduct || !selectedVariant) {
     return <Loading />;
   }
 
@@ -142,7 +129,7 @@ export default function SearchProduct({ params }) {
       ? Math.round(((fromPriceTotal - selectedPrice) / fromPriceTotal) * 100)
       : 0;
 
-  const tagTitle = getTitleText(product, selectedVariant, selectedQuantity);
+  const tagTitle = getTitleText(currentProduct, selectedVariant, selectedQuantity);
 
   return (
     <>
@@ -205,7 +192,7 @@ export default function SearchProduct({ params }) {
           </p>
 
           <div className="searchProduct-badge-box">
-            {product.variants.map((variant) => (
+            {currentProduct.variants.map((variant) => (
               <span
                 key={variant.size}
                 className={`searchProduct-badge ${
@@ -227,20 +214,23 @@ export default function SearchProduct({ params }) {
 
           <div className="searchProduct-mergeline">
             <p className="searchProduct-text">
-              <strong>Merk:</strong> {product.merk}
+              <strong>Merk:</strong> {currentProduct.merk}
             </p>
             <p className="searchProduct-text">
-              <strong>Produsen:</strong> {product.produsen}
+              <strong>Produsen:</strong> {currentProduct.produsen}
             </p>
           </div>
 
           <p className="searchProduct-text">
             <strong>Detail:</strong>
             <br />
-            <span className="searchProduct-detail">{product.detail}</span>
+            <span className="searchProduct-detail">{currentProduct.detail}</span>
           </p>
         </div>
       </div>
     </>
   );
 }
+
+
+

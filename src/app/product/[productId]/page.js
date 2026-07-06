@@ -4,7 +4,9 @@ import SearchProductClient from "./SearchProductClient";
 import ShopSection from "@/components/shopSection/page";
 import TestimoniSection from "@/components/testimoniSection/page";
 import ProductNewsSection from "@/components/productNewsSection/page";
-import { apiUrl, siteUrl } from "@/lib/site";
+import { siteUrl } from "@/lib/site";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params, searchParams }) {
   const { productId } = await params;
@@ -35,7 +37,7 @@ export async function generateMetadata({ params, searchParams }) {
   const description = product.detail;
   const selectedVariant = product.variants.find((item) => item.size === variant) || product.variants[0];
   const image = selectedVariant
-    ? `${apiUrl}/images/product/${selectedVariant.picture}`
+    ? `${siteUrl}/api/images/product/${selectedVariant.picture}`
     : `${siteUrl}/favicon.ico`;
 
   const baseUrl = siteUrl;
@@ -69,10 +71,11 @@ export async function generateMetadata({ params, searchParams }) {
 
 export default async function SearchProduct({ params }) {
   const resolvedParams = await params;
+  const product = await getProductById(resolvedParams.productId);
 
   return (
   <>
-    <SearchProductClient params={resolvedParams} />
+    <SearchProductClient product={product} />
     <div className="page-container">
       <ProductNewsSection productId={resolvedParams.productId}/>
     </div>
@@ -85,4 +88,8 @@ export default async function SearchProduct({ params }) {
   </>
   );
 }
+
+
+
+
 
