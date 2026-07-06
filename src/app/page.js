@@ -8,6 +8,8 @@ import TestimoniSection from "@/components/testimoniSection/page";
 import NewsSection from "@/components/newsSection/page";
 import { siteUrl } from "@/lib/site";
 
+export const dynamic = "force-dynamic";
+
 const baseUrl = siteUrl;
 export const metadata = {
   metadataBase: new URL(baseUrl),
