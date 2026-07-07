@@ -6,7 +6,7 @@ import TestimoniSection from "@/components/testimoniSection/page";
 import ProductNewsSection from "@/components/productNewsSection/page";
 import { siteUrl } from "@/lib/site";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export async function generateMetadata({ params, searchParams }) {
   const { productId } = await params;

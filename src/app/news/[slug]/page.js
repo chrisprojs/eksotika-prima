@@ -5,7 +5,7 @@ import { cleanNewsHtml } from "@/lib/newsHtml";
 import { apiUrl, siteUrl } from "@/lib/site";
 import "./page.css";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 function formatDate(date) {
   return new Intl.DateTimeFormat("id-ID", {
