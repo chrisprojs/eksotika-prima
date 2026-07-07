@@ -4,7 +4,7 @@ import { siteUrl } from "@/lib/site";
 import "./page.css";
 import ShopSection from "@/components/shopSection/page";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata = {
   metadataBase: new URL(siteUrl),
