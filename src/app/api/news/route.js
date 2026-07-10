@@ -14,11 +14,12 @@ function validateAdminKey(req) {
 export async function GET(req) {
   const url = new URL(req.url);
   const slug = url.searchParams.get("slug");
+  const locale = url.searchParams.get("locale") || "id";
   const now = new Date();
 
   try {
     if (slug) {
-      const news = await getPublishedNewsBySlug(slug, now);
+      const news = await getPublishedNewsBySlug(slug, locale, now);
 
       if (!news) {
         return NextResponse.json({ error: "News not found" }, { status: 404 });
@@ -27,7 +28,7 @@ export async function GET(req) {
       return NextResponse.json(news);
     }
 
-    const newsList = await getPublishedNewsList(now);
+    const newsList = await getPublishedNewsList(locale, now);
     return NextResponse.json(newsList);
   } catch (error) {
     console.error("Error getting news:", error);
@@ -66,6 +67,11 @@ export async function PUT(req) {
 
   try {
     const news = await updateNews(newsId, data);
+
+    if (!news) {
+      return NextResponse.json({ error: "News not found" }, { status: 404 });
+    }
+
     return NextResponse.json(news);
   } catch (error) {
     console.error("Error updating news:", error);

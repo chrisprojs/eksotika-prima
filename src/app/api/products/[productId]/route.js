@@ -3,9 +3,11 @@ import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
   const { productId } = await params;
+  const url = new URL(req.url);
+  const locale = url.searchParams.get("locale") || "id";
 
   try {
-    const product = await getProductById(productId);
+    const product = await getProductById(productId, locale);
 
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });

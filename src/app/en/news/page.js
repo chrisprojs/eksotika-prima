@@ -4,15 +4,15 @@ import { siteUrl } from "@/lib/site";
 
 export const revalidate = 300;
 
-const meta = getTranslations("id").meta.news;
+const meta = getTranslations("en").meta.news;
 
 export const metadata = {
   metadataBase: new URL(siteUrl),
   title: meta.title,
   description: meta.description,
-  alternates: getMetadataAlternates("/news", "id"),
+  alternates: getMetadataAlternates("/news", "en"),
 };
 
-export default async function NewsPage() {
-  return <NewsListPage locale="id" />;
+export default async function EnglishNewsPage() {
+  return <NewsListPage locale="en" />;
 }

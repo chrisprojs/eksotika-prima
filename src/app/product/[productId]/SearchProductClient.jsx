@@ -1,21 +1,22 @@
-"use client";
+﻿"use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import "./page.css";
 import Loading from "@/components/loading/page";
 import DiscountBadge from "@/components/discount/page";
+import { formatIdr, getTranslations } from "@/lib/i18n";
 
-export default function SearchProduct({ product = null }) {
+export default function SearchProduct({ product = null, locale = "id" }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const text = getTranslations(locale).productDetail;
   const [currentProduct] = useState(product);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [selectedPrice, setSelectedPrice] = useState(0);
 
-  // Sync URL params with state
   useEffect(() => {
     if (!currentProduct || !currentProduct.variants || currentProduct.variants.length === 0) return;
 
@@ -58,9 +59,8 @@ export default function SearchProduct({ product = null }) {
       params.set("quantity", targetQuantity.toString());
       router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     }
-  }, [currentProduct, searchParams]);
+  }, [currentProduct, searchParams, pathname, router]);
 
-  // Update price whenever variant or quantity changes
   useEffect(() => {
     if (!selectedVariant) return;
     if (
@@ -77,26 +77,15 @@ export default function SearchProduct({ product = null }) {
     }
   }, [selectedVariant, selectedQuantity]);
 
-  const formatRupiah = (price) => {
-    const formatted = new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    }).format(price);
-    return formatted.replace(/\s+/g, "");
-  };
-
-  // Generate SEO title text
-  const getTitleText = (product, variant, quantityOption) => {
-    if (!product || !variant) return "";
+  const getTitleText = (productItem, variant, quantityOption) => {
+    if (!productItem || !variant) return "";
     const quantityText =
       quantityOption !== 1
-        ? " - " + (quantityOption === 12 ? "lusin (12pcs)" : "")
+        ? " - " + (quantityOption === 12 ? text.dozenSuffix : "")
         : "";
-    return `${product.title} - ${variant.size}${quantityText}`;
+    return `${productItem.title} - ${variant.size}${quantityText}`;
   };
 
-  // Update URL params when selection changes
   const updateUrlParams = (variant, quantityOption) => {
     const params = new URLSearchParams();
     params.set("variant", variant.size);
@@ -104,7 +93,6 @@ export default function SearchProduct({ product = null }) {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  // Handle variant or quantity change
   const changePrice = (quantitys = null, variants = null) => {
     setSelectedVariant(variants);
     setSelectedQuantity(quantitys);
@@ -122,7 +110,6 @@ export default function SearchProduct({ product = null }) {
     return <Loading />;
   }
 
-  // Calculate discount percentage
   const fromPriceTotal = selectedQuantity * selectedVariant.fromPrice;
   const discountPercentage =
     fromPriceTotal > 0
@@ -152,18 +139,18 @@ export default function SearchProduct({ product = null }) {
           </h1>
 
           <p className="searchProduct-price">
-            {formatRupiah(selectedPrice)}{" "}
+            {formatIdr(selectedPrice, locale)}{" "}
             <DiscountBadge
               discountPercentage={discountPercentage}
               isLarge={true}
             />{" "}
             <span className="searchProduct-fromPrice">
-              {formatRupiah(selectedQuantity * selectedVariant.fromPrice)}
+              {formatIdr(selectedQuantity * selectedVariant.fromPrice, locale)}
             </span>
           </p>
 
           <p className="searchProduct-text">
-            <strong>Ukuran:</strong>
+            <strong>{text.quantityLabel}</strong>
           </p>
 
           <div className="searchProduct-badge-box">
@@ -173,7 +160,7 @@ export default function SearchProduct({ product = null }) {
               }`}
               onClick={() => changePrice(1, selectedVariant)}
             >
-              satuan (1pcs)
+              {text.single}
             </span>
             {selectedVariant.dozenPrice && (
               <span
@@ -182,13 +169,13 @@ export default function SearchProduct({ product = null }) {
                 }`}
                 onClick={() => changePrice(12, selectedVariant)}
               >
-                lusin (12 pcs)
+                {text.dozen}
               </span>
             )}
           </div>
 
           <p className="searchProduct-text">
-            <strong>Paket:</strong>
+            <strong>{text.variantLabel}</strong>
           </p>
 
           <div className="searchProduct-badge-box">
@@ -214,15 +201,15 @@ export default function SearchProduct({ product = null }) {
 
           <div className="searchProduct-mergeline">
             <p className="searchProduct-text">
-              <strong>Merk:</strong> {currentProduct.merk}
+              <strong>{text.brandLabel}</strong> {currentProduct.merk}
             </p>
             <p className="searchProduct-text">
-              <strong>Produsen:</strong> {currentProduct.produsen}
+              <strong>{text.producerLabel}</strong> {currentProduct.produsen}
             </p>
           </div>
 
           <p className="searchProduct-text">
-            <strong>Detail:</strong>
+            <strong>{text.detailLabel}</strong>
             <br />
             <span className="searchProduct-detail">{currentProduct.detail}</span>
           </p>
@@ -231,6 +218,3 @@ export default function SearchProduct({ product = null }) {
     </>
   );
 }
-
-
-

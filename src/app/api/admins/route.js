@@ -1,142 +1,121 @@
 import prisma from "@/lib/prisma";
+import { updateProduct } from "@/app/api/products/productService";
+import { getProductLocalizedJsonCreateData } from "@/lib/dbLocalization";
 import { NextResponse } from "next/server";
 
-// Validate Admin key
 function validateAdminKey(req) {
-  const adminKey = req.headers.get('admin-key') || req.headers.get('authorization')?.replace('Bearer ', '');
-  const validAdminKey = process.env.ADMIN_KEY;
-  
-  if (!validAdminKey) {
-    console.error('ADMIN_KEY is not set in environment variables');
-    return false;
-  }
-  
-  if (!adminKey || adminKey !== validAdminKey) {
-    return false;
-  }
-  
-  return true;
+  const adminKey = req.headers.get("admin-key") || req.headers.get("authorization")?.replace("Bearer ", "");
+  return Boolean(process.env.ADMIN_KEY && adminKey === process.env.ADMIN_KEY);
+}
+
+function isValidProductPayload(product) {
+  return Boolean(
+    product &&
+      product.title !== undefined &&
+      product.merk !== undefined &&
+      typeof product.produsen === "string" &&
+      product.detail !== undefined &&
+      Array.isArray(product.variants)
+  );
+}
+
+function getVariantCreateData(variants = []) {
+  return variants.map((variant) => ({
+    picture: variant.picture,
+    size: variant.size,
+    fromPrice: variant.fromPrice,
+    price: variant.price,
+    dozenPrice: variant.dozenPrice || null,
+  }));
+}
+
+function getProductCreateData(product) {
+  return {
+    ...getProductLocalizedJsonCreateData(product),
+    produsen: product.produsen,
+    variants: {
+      create: getVariantCreateData(product.variants),
+    },
+  };
 }
 
 export async function POST(req) {
-  // Validate API key
   if (!validateAdminKey(req)) {
-    return new NextResponse(JSON.stringify({ error: 'Unauthorized: Invalid or missing Admin key' }), { 
-      status: 401,
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
+    return NextResponse.json(
+      { error: "Unauthorized: Invalid or missing Admin key" },
+      { status: 401 }
+    );
   }
 
   const data = await req.json();
   const url = new URL(req.url);
-  const post_many = (url.searchParams.get('post_many')) === 'true'
+  const postMany = url.searchParams.get("post_many") === "true";
 
-  if(post_many){
-    try{
+  if (postMany) {
+    if (!Array.isArray(data) || data.some((product) => !isValidProductPayload(product))) {
+      return NextResponse.json({ error: "Invalid product payload" }, { status: 400 });
+    }
+
+    try {
       await prisma.$transaction(
-        data.map((product) => 
+        data.map((product) =>
           prisma.product.create({
-            data: {
-              title: product.title,
-              merk: product.merk,
-              produsen: product.produsen,
-              detail: product.detail,
-              variants: {
-                create: product.variants.map(variant => ({
-                  picture: variant.picture,
-                  size: variant.size,
-                  fromPrice: variant.fromPrice,
-                  price: variant.price,
-                  dozenPrice: variant.dozenPrice || null,
-                })),
-              },
-            }
+            data: getProductCreateData(product),
           })
         )
-      )
-      return new NextResponse(JSON.stringify("Many Products Successfully Posted"), { status: 201 });
+      );
+
+      return NextResponse.json("Many Products Successfully Posted", { status: 201 });
     } catch (error) {
-      console.error('Error creating many products:', error);
-      return new NextResponse(JSON.stringify({ error: 'Error creating many products' }), { status: 500 });
+      console.error("Error creating many products:", error);
+      return NextResponse.json({ error: "Error creating many products" }, { status: 500 });
     }
   }
-  else{
-    try {
-      const product = await prisma.product.create({
-        data: {
-          title: data.title,
-          merk: data.merk,
-          produsen: data.produsen,
-          detail: data.detail,
-          variants: {
-            create: data.variants.map(variant => ({
-              picture: variant.picture,
-              size: variant.size,
-              fromPrice: variant.fromPrice,
-              price: variant.price,
-              dozenPrice: variant.dozenPrice || null,
-            })),
-          },
-        },
-      });
-      return new NextResponse(JSON.stringify(product), { status: 201 });
-    } catch (error) {
-      console.error('Error creating product:', error);
-      return new NextResponse(JSON.stringify({ error: 'Error creating product' }), { status: 500 });
-    }
+
+  if (!isValidProductPayload(data)) {
+    return NextResponse.json({ error: "Invalid product payload" }, { status: 400 });
+  }
+
+  try {
+    const product = await prisma.product.create({
+      data: getProductCreateData(data),
+      include: { variants: true },
+    });
+
+    return NextResponse.json(product, { status: 201 });
+  } catch (error) {
+    console.error("Error creating product:", error);
+    return NextResponse.json({ error: "Error creating product" }, { status: 500 });
   }
 }
 
-// export async function PUT(req) {
-//   const data = await req.json();
-//   const url = new URL(req.url);
-//   const product_id = url.searchParams.get("product_id")
-  
-//   if(product_id){
-//     try{
-//       const updatedProduct = await prisma.product.update({
-//         where: {productId: parseInt(product_id,10)},
-//         data: {
-//           title: data.title || undefined,
-//           merk: data.merk || undefined,
-//           produsen: data.produsen || undefined,
-//           detail: data.detail || undefined,
-//           variants: data.variants
-//             ? {
-//                 deleteMany: {},  // Delete existing variants
-//                 create: data.variants, // Create new variants
-//               }
-//           : undefined, 
-//         },
-//         include: {variants: true}
-//       })
-//       return new NextResponse(JSON.stringify(updatedProduct), { status: 200 });
-//     } catch (error) {
-//       console.error('Error updating product by id:', error);
-//       return new NextResponse(JSON.stringify({ error: 'Error updating product by id' }), { status: 500 });
-//     }
-//   } else {
-//     return new NextResponse(JSON.stringify({ error: 'Product ID is required for updating' }), { status: 400 });
-//   }
-// }
+export async function PUT(req) {
+  if (!validateAdminKey(req)) {
+    return NextResponse.json(
+      { error: "Unauthorized: Invalid or missing Admin key" },
+      { status: 401 }
+    );
+  }
 
-// export async function DELETE(req){
-//   const url = new URL(req.url);
-//   const product_id = url.searchParams.get("product_id")
+  const url = new URL(req.url);
+  const productId = url.searchParams.get("product_id") || url.searchParams.get("productId");
 
-//   if(product_id){
-//     try{
-//       await prisma.product.delete({
-//         where: {productId: parseInt(product_id, 10)}
-//       })
-//       return new NextResponse(JSON.stringify("Deleted Successfully"), { status: 200 });
-//     } catch (error) {
-//       console.error('Error deleting product by id:', error);
-//       return new NextResponse(JSON.stringify({ error: 'Error deleting product by id' }), { status: 500 });
-//     }
-//   } else {
-//     return new NextResponse(JSON.stringify({ error: 'Product ID is required for deletion' }), { status: 400 });
-//   }
-// }
+  if (!productId) {
+    return NextResponse.json({ error: "product_id is required" }, { status: 400 });
+  }
+
+  const data = await req.json();
+
+  try {
+    const product = await updateProduct(productId, data);
+
+    if (!product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(product);
+  } catch (error) {
+    console.error("Error updating product:", error);
+    return NextResponse.json({ error: "Error updating product" }, { status: 500 });
+  }
+}

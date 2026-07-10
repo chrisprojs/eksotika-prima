@@ -5,9 +5,9 @@
 export const revalidate = 300;
 
 export async function generateMetadata(props) {
-  return generateProductDetailMetadata({ ...props, locale: "id" });
+  return generateProductDetailMetadata({ ...props, locale: "en" });
 }
 
-export default async function SearchProduct(props) {
-  return <ProductDetailPage {...props} locale="id" />;
+export default async function EnglishSearchProduct(props) {
+  return <ProductDetailPage {...props} locale="en" />;
 }

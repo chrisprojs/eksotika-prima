@@ -4,10 +4,11 @@ import { getAllProducts, getProductById } from "@/app/api/products/productServic
 export async function GET(req) {
   const url = new URL(req.url);
   const productId = url.searchParams.get("product_id");
+  const locale = url.searchParams.get("locale") || "id";
 
   if (productId) {
     try {
-      const product = await getProductById(productId);
+      const product = await getProductById(productId, locale);
 
       if (!product) {
         return NextResponse.json({ error: "Product not found" }, { status: 404 });
@@ -21,7 +22,7 @@ export async function GET(req) {
   }
 
   try {
-    const products = await getAllProducts();
+    const products = await getAllProducts(locale);
     return NextResponse.json(products);
   } catch (error) {
     console.error("Error getting products:", error);
