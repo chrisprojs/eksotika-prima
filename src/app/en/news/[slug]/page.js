@@ -5,9 +5,9 @@
 export const revalidate = 300;
 
 export async function generateMetadata(props) {
-  return generateNewsDetailMetadata({ ...props, locale: "id" });
+  return generateNewsDetailMetadata({ ...props, locale: "en" });
 }
 
-export default async function NewsDetail(props) {
-  return <NewsDetailPage {...props} locale="id" />;
+export default async function EnglishNewsDetail(props) {
+  return <NewsDetailPage {...props} locale="en" />;
 }

@@ -1,19 +1,26 @@
-﻿import ContactPage from "@/app/contact/ContactPage";
+﻿import ProductClient from "@/app/product/ProductClient";
 import { getMetadataAlternates, getTranslations } from "@/lib/i18n";
 import { siteUrl } from "@/lib/site";
 
-const meta = getTranslations("id").meta.contact;
+const meta = getTranslations("en").meta.product;
 const imageUrl = `${siteUrl}/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg`;
 
 export const metadata = {
   metadataBase: new URL(siteUrl),
   title: meta.title,
   description: meta.description,
+  keywords: [
+    "rubbing oil supplier",
+    "cheap rubbing oil",
+    "massage oil supplier",
+    "wholesale rubbing oil",
+    "Eksotika Prima",
+    "herbal oil Indonesia",
+  ],
   openGraph: {
     title: meta.title,
     description: meta.description,
-    url: `${siteUrl}/contact`,
-    siteName: "Eksotika Prima",
+    url: `${siteUrl}/en/product`,
     type: "website",
     images: [
       {
@@ -25,12 +32,12 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: meta.title,
-    description: meta.description,
+    description: meta.twitterDescription,
     images: [imageUrl],
   },
-  alternates: getMetadataAlternates("/contact", "id"),
+  alternates: getMetadataAlternates("/product", "en"),
 };
 
-export default function Contact() {
-  return <ContactPage locale="id" />;
+export default function EnglishProductPage() {
+  return <ProductClient locale="en" />;
 }

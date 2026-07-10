@@ -1,9 +1,12 @@
-import React from "react";
+﻿import React from "react";
 import "./page.css";
+import { getTranslations } from "@/lib/i18n";
 
 const aboutVideoUrl = "/asset/about_section_1.mp4";
 
-function AboutSection() {
+function AboutSection({ locale = "id" }) {
+  const text = getTranslations(locale).about;
+
   return (
     <section
       className="about-section"
@@ -12,19 +15,19 @@ function AboutSection() {
       itemType="https://schema.org/Organization"
     >
       <div className="about-content">
-        <p className="about-label">Tentang Eksotika Prima</p>
+        <p className="about-label">{text.label}</p>
         <h2 id="about-heading" className="about-heading" itemProp="name">
-          Supplier Minyak Gosok Terpercaya di Indonesia
+          {text.heading}
         </h2>
-        <p className="about-description" itemProp="description">
-          Eksotika Prima adalah supplier minyak gosok, minyak urut, dan minyak pijat untuk kebutuhan pribadi, toko, reseller, dan pembelian grosir. Kami membantu pelanggan mendapatkan produk berkualitas dengan harga murah, packing aman, dan layanan cepat.
-          <br/><br/>
-          Produk-produk yang kami tawarkan diproduksi dengan standar kualitas yang baik dan menggabungkan bahan-bahan herbal pilihan yang telah lama dikenal dalam pengobatan tradisional Indonesia. Hal ini menjadikan produk Eksotika Prima sebagai pilihan bagi masyarakat yang menginginkan perawatan tubuh secara alami dengan kualitas yang terpercaya.
-        </p>
-        <div className="about-points" aria-label="Keunggulan Eksotika Prima">
-          <span>Harga grosir</span>
-          <span>Bisa nego</span>
-          <span>Siap kirim</span>
+        <div className="about-description" itemProp="description">
+          {text.description.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </div>
+        <div className="about-points" aria-label={text.pointsLabel}>
+          {text.points.map((point) => (
+            <span key={point}>{point}</span>
+          ))}
         </div>
       </div>
 
@@ -34,10 +37,10 @@ function AboutSection() {
           controls
           playsInline
           preload="metadata"
-          aria-label="Video profil Eksotika Prima supplier minyak gosok"
+          aria-label={text.videoLabel}
         >
           <source src={aboutVideoUrl} type="video/mp4" />
-          Browser Anda tidak bisa memutar video ini.
+          {text.videoFallback}
         </video>
       </div>
     </section>

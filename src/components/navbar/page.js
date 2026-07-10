@@ -1,77 +1,112 @@
 'use client'
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./page.css";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import {
+  getLocaleFromPathname,
+  getLocalizedPath,
+  getPathWithoutLocale,
+  getTranslations,
+} from "@/lib/i18n";
 
 function Navbar() {
   const [isClicked, setClicked] = useState(false);
-  const location = usePathname();  // Get current location
-  const isProductPage = location === "/product" || location.startsWith("/product/");
+  const location = usePathname() || "/";
+  const locale = getLocaleFromPathname(location);
+  const text = getTranslations(locale).nav;
+  const pathWithoutLocale = getPathWithoutLocale(location);
+  const isProductPage =
+    pathWithoutLocale === "/product" || pathWithoutLocale.startsWith("/product/");
+  const isNewsPage =
+    pathWithoutLocale === "/news" || pathWithoutLocale.startsWith("/news/");
+  const closeMenu = () => setClicked(false);
+  const localizedPath = (path) => getLocalizedPath(path, locale);
+
+  useEffect(() => {
+    document.documentElement.lang = getTranslations(locale).htmlLang;
+  }, [locale]);
 
   return (
     <nav className="navbar-bg">
       <div className="navbar-box">
-        <Link href="/"
-            className="navbar-logo"
-            onClick={() => setClicked(!isClicked)}>
-            <Image src="/asset/logo.jpg" alt="logo" className="navbar-logo-image" width={100} height={100} />
-            <p className='navbar-link'>Eksotika Prima</p>
+        <Link
+          href={localizedPath("/")}
+          className="navbar-logo"
+          onClick={closeMenu}
+        >
+          <Image src="/asset/logo.jpg" alt="logo" className="navbar-logo-image" width={100} height={100} />
+          <span className="navbar-logo-name">Eksotika Prima</span>
         </Link>
+
         <ul className={`navbar-menu ${isClicked ? "active" : ""}`}>
-          <li className="navbar-link">
+          <li className="navbar-item">
             <Link
-              href="/"
-              className={`navbar-link  ${
-                location === "/" ? "active" : ""
-              }`}
-              onClick={() => setClicked(!isClicked)}
+              href={localizedPath("/")}
+              className={`navbar-link ${pathWithoutLocale === "/" ? "active" : ""}`}
+              onClick={closeMenu}
             >
-              Beranda
+              {text.home}
             </Link>
           </li>
-          <li className="navbar-link">
+          <li className="navbar-item">
             <Link
-              href="/product"
-              className={`navbar-link  ${
-                isProductPage ? "active" : ""
-              }`}
-              onClick={() => setClicked(!isClicked)}
+              href={localizedPath("/product")}
+              className={`navbar-link ${isProductPage ? "active" : ""}`}
+              onClick={closeMenu}
             >
-              Produk
+              {text.products}
             </Link>
           </li>
-          <li className="navbar-link">
+          <li className="navbar-item">
             <Link
-              href="/news"
-              className={`navbar-link  ${
-                location === "/news" || location.startsWith("/news/") ? "active" : ""
-              }`}
-              onClick={() => setClicked(!isClicked)}
+              href={localizedPath("/news")}
+              className={`navbar-link ${isNewsPage ? "active" : ""}`}
+              onClick={closeMenu}
             >
-              Berita
+              {text.news}
             </Link>
           </li>
-          <li className="navbar-link">
+          <li className="navbar-item">
             <Link
-              href="/contact"
-              className={`navbar-link  ${
-                location === "/contact" ? "active" : ""
-              }`}
-              onClick={() => setClicked(!isClicked)}
+              href={localizedPath("/contact")}
+              className={`navbar-link ${pathWithoutLocale === "/contact" ? "active" : ""}`}
+              onClick={closeMenu}
             >
-              Kontak
+              {text.contact}
+            </Link>
+          </li>
+          <li className="navbar-item navbar-language" aria-label={text.languageLabel}>
+            <Link
+              href={getLocalizedPath(pathWithoutLocale, "id")}
+              className={`navbar-language-option ${locale === "id" ? "active" : ""}`}
+              onClick={closeMenu}
+            >
+              {text.indonesia}
+            </Link>
+            <span className="navbar-language-divider">/</span>
+            <Link
+              href={getLocalizedPath(pathWithoutLocale, "en")}
+              className={`navbar-language-option ${locale === "en" ? "active" : ""}`}
+              onClick={closeMenu}
+            >
+              {text.english}
             </Link>
           </li>
         </ul>
-        <div className="menu-icon" onClick={() => setClicked(!isClicked)}>
+
+        <button
+          type="button"
+          className="menu-icon"
+          onClick={() => setClicked(!isClicked)}
+          aria-label="Menu"
+        >
           <i className={`fa ${isClicked ? "fa-times" : "fa-bars"}`} />
-        </div>
+        </button>
       </div>
     </nav>
   );
 }
 
 export default Navbar;
-

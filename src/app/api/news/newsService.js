@@ -1,25 +1,111 @@
 import prisma from "@/lib/prisma";
+import {
+  getNewsLocalizedJsonCreateData,
+  getNewsLocalizedJsonUpdateData,
+  localizeNews,
+  localizeNewsList,
+} from "@/lib/dbLocalization";
+import { defaultLocale, normalizeLocale } from "@/lib/i18n";
 
-const productInclude = {
-  include: {
-    product: {
-      include: {
-        variants: true,
+const newsInclude = {
+  products: {
+    include: {
+      product: {
+        include: {
+          variants: true,
+        },
       },
     },
   },
 };
 
-const publicNewsInclude = {
-  products: productInclude,
+const localizedNewsSelect = {
+  slug: true,
+  title: true,
+  summary: true,
+  contentHtml: true,
 };
 
 function isMissingNewsTable(error) {
   return String(error?.message || "").includes("no such table: main.News");
 }
 
+function isPublicNewsIgnored() {
+  return process.env.IGNORE_PUBLIC_NEWS?.toLowerCase() === "true";
+}
+
+function resolveLocaleAndNow(localeOrNow = defaultLocale, maybeNow) {
+  if (localeOrNow instanceof Date) {
+    return { locale: defaultLocale, now: localeOrNow };
+  }
+
+  return {
+    locale: normalizeLocale(localeOrNow),
+    now: maybeNow || new Date(),
+  };
+}
+
+function getNewsWriteData(data, { partial = false, currentRecord = {} } = {}) {
+  const newsData = {};
+
+  if (!partial || data.category !== undefined) {
+    newsData.category = data.category || "Education";
+  }
+
+  if (!partial || data.coverImage !== undefined) {
+    newsData.coverImage = data.coverImage || null;
+  }
+
+  if (!partial || data.isPublished !== undefined) {
+    newsData.isPublished = data.isPublished ?? true;
+  }
+
+  return {
+    ...newsData,
+    ...(partial
+      ? getNewsLocalizedJsonUpdateData(data, currentRecord)
+      : getNewsLocalizedJsonCreateData(data)),
+  };
+}
+
+function getSlugJsonPath(locale = defaultLocale) {
+  return `$.${normalizeLocale(locale)}`;
+}
+
+async function findNewsIdByLocalizedSlug(slug, locale, now) {
+  const normalizedLocale = normalizeLocale(locale);
+  const slugJsonPath = getSlugJsonPath(normalizedLocale);
+  const allowPlainSlug = normalizedLocale === defaultLocale;
+
+  const rows = isPublicNewsIgnored()
+    ? await prisma.$queryRaw`
+        SELECT "newsId"
+        FROM "News"
+        WHERE (
+          (${allowPlainSlug} = 1 AND "slug" = ${slug})
+          OR (json_valid("slug") AND json_extract("slug", ${slugJsonPath}) = ${slug})
+        )
+        ORDER BY "createdAt" DESC
+        LIMIT 1
+      `
+    : await prisma.$queryRaw`
+        SELECT "newsId"
+        FROM "News"
+        WHERE "isPublished" = 1
+          AND "createdAt" <= ${now}
+          AND (
+            (${allowPlainSlug} = 1 AND "slug" = ${slug})
+            OR (json_valid("slug") AND json_extract("slug", ${slugJsonPath}) = ${slug})
+          )
+        ORDER BY "createdAt" DESC
+        LIMIT 1
+      `;
+
+  return rows[0]?.newsId || null;
+}
+
 export function getPublicNewsWhere(now = new Date()) {
-  if (process.env.IGNORE_PUBLIC_NEWS?.toLowerCase() === "true") {
+  if (isPublicNewsIgnored()) {
     return {};
   }
 
@@ -31,18 +117,6 @@ export function getPublicNewsWhere(now = new Date()) {
   };
 }
 
-export function getNewsData(data) {
-  return {
-    slug: data.slug,
-    title: data.title,
-    category: data.category || "Education",
-    summary: data.summary,
-    contentHtml: data.contentHtml,
-    coverImage: data.coverImage || null,
-    isPublished: data.isPublished ?? true,
-  };
-}
-
 export function getProductLinks(productIds = []) {
   return productIds.map((productId) => ({
     product: {
@@ -51,13 +125,20 @@ export function getProductLinks(productIds = []) {
   }));
 }
 
-export async function getPublishedNewsList(now = new Date()) {
+export async function getPublishedNewsList(
+  localeOrNow = defaultLocale,
+  maybeNow
+) {
+  const { locale, now } = resolveLocaleAndNow(localeOrNow, maybeNow);
+
   try {
-    return await prisma.news.findMany({
+    const newsList = await prisma.news.findMany({
       where: getPublicNewsWhere(now),
       orderBy: { createdAt: "desc" },
-      include: publicNewsInclude,
+      include: newsInclude,
     });
+
+    return localizeNewsList(newsList, locale);
   } catch (error) {
     if (!isMissingNewsTable(error)) {
       console.error("Failed to get news list:", error);
@@ -66,15 +147,26 @@ export async function getPublishedNewsList(now = new Date()) {
   }
 }
 
-export async function getPublishedNewsBySlug(slug, now = new Date()) {
+export async function getPublishedNewsBySlug(
+  slug,
+  localeOrNow = defaultLocale,
+  maybeNow
+) {
+  const { locale, now } = resolveLocaleAndNow(localeOrNow, maybeNow);
+
   try {
-    return await prisma.news.findFirst({
-      where: {
-        ...getPublicNewsWhere(now),
-        slug,
-      },
-      include: publicNewsInclude,
+    const newsId = await findNewsIdByLocalizedSlug(slug, locale, now);
+
+    if (!newsId) {
+      return null;
+    }
+
+    const news = await prisma.news.findUnique({
+      where: { newsId },
+      include: newsInclude,
     });
+
+    return localizeNews(news, locale);
   } catch (error) {
     if (!isMissingNewsTable(error)) {
       console.error("Failed to get news by slug:", error);
@@ -83,7 +175,12 @@ export async function getPublishedNewsBySlug(slug, now = new Date()) {
   }
 }
 
-export async function getNewsSectionByCategory(now = new Date()) {
+export async function getNewsSectionByCategory(
+  localeOrNow = defaultLocale,
+  maybeNow
+) {
+  const { locale, now } = resolveLocaleAndNow(localeOrNow, maybeNow);
+
   try {
     const [educationNews, crazyNews] = await Promise.all([
       prisma.news.findMany({
@@ -93,7 +190,7 @@ export async function getNewsSectionByCategory(now = new Date()) {
         },
         orderBy: { createdAt: "desc" },
         take: 3,
-        include: publicNewsInclude,
+        include: newsInclude,
       }),
       prisma.news.findMany({
         where: {
@@ -102,11 +199,14 @@ export async function getNewsSectionByCategory(now = new Date()) {
         },
         orderBy: { createdAt: "desc" },
         take: 3,
-        include: publicNewsInclude,
+        include: newsInclude,
       }),
     ]);
 
-    return { educationNews, crazyNews };
+    return {
+      educationNews: localizeNewsList(educationNews, locale),
+      crazyNews: localizeNewsList(crazyNews, locale),
+    };
   } catch (error) {
     if (!isMissingNewsTable(error)) {
       console.error("Failed to get news section:", error);
@@ -115,9 +215,15 @@ export async function getNewsSectionByCategory(now = new Date()) {
   }
 }
 
-export async function getLatestNewsByProductId(productId, now = new Date()) {
+export async function getLatestNewsByProductId(
+  productId,
+  localeOrNow = defaultLocale,
+  maybeNow
+) {
+  const { locale, now } = resolveLocaleAndNow(localeOrNow, maybeNow);
+
   try {
-    return await prisma.news.findMany({
+    const newsList = await prisma.news.findMany({
       where: {
         ...getPublicNewsWhere(now),
         products: {
@@ -128,8 +234,10 @@ export async function getLatestNewsByProductId(productId, now = new Date()) {
       },
       orderBy: { createdAt: "desc" },
       take: 3,
-      include: publicNewsInclude,
+      include: newsInclude,
     });
+
+    return localizeNewsList(newsList, locale);
   } catch (error) {
     if (!isMissingNewsTable(error)) {
       console.error("Failed to get product news:", error);
@@ -158,26 +266,32 @@ export async function getSitemapNewsList(now = new Date()) {
 export async function createNews(data) {
   return prisma.news.create({
     data: {
-      ...getNewsData(data),
+      ...getNewsWriteData(data),
       products: {
         create: getProductLinks(data.productIds),
       },
     },
-    include: {
-      products: {
-        include: {
-          product: true,
-        },
-      },
-    },
+    include: newsInclude,
   });
 }
 
 export async function updateNews(newsId, data) {
+  const currentNews = await prisma.news.findUnique({
+    where: { newsId },
+    select: localizedNewsSelect,
+  });
+
+  if (!currentNews) {
+    return null;
+  }
+
   return prisma.news.update({
     where: { newsId },
     data: {
-      ...getNewsData(data),
+      ...getNewsWriteData(data, {
+        partial: true,
+        currentRecord: currentNews,
+      }),
       products: Array.isArray(data.productIds)
         ? {
             deleteMany: {},
@@ -185,14 +299,6 @@ export async function updateNews(newsId, data) {
           }
         : undefined,
     },
-    include: {
-      products: {
-        include: {
-          product: true,
-        },
-      },
-    },
+    include: newsInclude,
   });
 }
-
-

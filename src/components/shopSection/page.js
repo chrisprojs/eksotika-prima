@@ -1,13 +1,16 @@
-import React from "react"
+﻿import React from "react"
 import Image from "next/image"
 import { ContactInformation } from "@/data/ContactInformation"
+import { getTranslations } from "@/lib/i18n"
 import "./page.css"
 
-function ShopSection() {
+function ShopSection({ locale = "id" }) {
+  const text = getTranslations(locale).shop
+
   return (
     <div className="shop-container">
-    <h2 className="shop-heading">Toko Kami Lainnya</h2>
-    <div className="shop-grid">
+      <h2 className="shop-heading">{text.heading}</h2>
+      <div className="shop-grid">
         <a 
           href={ContactInformation.tokopediaLink}
           target="_blank"
@@ -44,7 +47,7 @@ function ShopSection() {
             </div>
             <div className="shop-rating">
               <span className="rating-value">Rating 4.9/5.0</span>
-              <span className="rating-detail">26582 rating • 9990 ulasan</span>
+              <span className="rating-detail">{text.tokopediaDetail}</span>
             </div>
           </div>
         </a>
@@ -77,7 +80,7 @@ function ShopSection() {
             </div>
             <div className="shop-rating">
               <span className="rating-value">Rating 4.9/5.0</span>
-              <span className="rating-detail">35,5RB Penilaian</span>
+              <span className="rating-detail">{text.shopeeDetail}</span>
             </div>
           </div>
         </a>
@@ -110,11 +113,11 @@ function ShopSection() {
             </div>
             <div className="shop-rating">
               <span className="rating-value">Rating 4.9/5.0</span>
-              <span className="rating-detail">241 ulasan</span>
+              <span className="rating-detail">{text.blibliDetail}</span>
             </div>
           </div>
         </a>
-    </div>
+      </div>
     </div>
   );
 }

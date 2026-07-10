@@ -2,7 +2,7 @@
 import { getMetadataAlternates, getTranslations } from "@/lib/i18n";
 import { siteUrl } from "@/lib/site";
 
-const meta = getTranslations("id").meta.contact;
+const meta = getTranslations("en").meta.contact;
 const imageUrl = `${siteUrl}/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg`;
 
 export const metadata = {
@@ -12,7 +12,7 @@ export const metadata = {
   openGraph: {
     title: meta.title,
     description: meta.description,
-    url: `${siteUrl}/contact`,
+    url: `${siteUrl}/en/contact`,
     siteName: "Eksotika Prima",
     type: "website",
     images: [
@@ -28,9 +28,9 @@ export const metadata = {
     description: meta.description,
     images: [imageUrl],
   },
-  alternates: getMetadataAlternates("/contact", "id"),
+  alternates: getMetadataAlternates("/contact", "en"),
 };
 
-export default function Contact() {
-  return <ContactPage locale="id" />;
+export default function EnglishContact() {
+  return <ContactPage locale="en" />;
 }

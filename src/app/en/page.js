@@ -1,8 +1,10 @@
-﻿import ProductClient from "./ProductClient";
+﻿import HomePage from "@/app/HomePage";
 import { getMetadataAlternates, getTranslations } from "@/lib/i18n";
 import { siteUrl } from "@/lib/site";
 
-const meta = getTranslations("id").meta.product;
+export const revalidate = 300;
+
+const meta = getTranslations("en").meta.home;
 const imageUrl = `${siteUrl}/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg`;
 
 export const metadata = {
@@ -10,36 +12,35 @@ export const metadata = {
   title: meta.title,
   description: meta.description,
   keywords: [
-    "supplier minyak gosok",
-    "minyak gosok murah",
-    "pabrik minyak gosok",
-    "grosir minyak gosok",
-    "minyak gosok terbesar",
+    "rubbing oil supplier",
+    "cheap rubbing oil",
+    "massage oil supplier",
+    "wholesale rubbing oil",
     "Eksotika Prima",
-    "minyak urut",
-    "minyak pijat",
+    "herbal oil Indonesia",
   ],
   openGraph: {
     title: meta.title,
-    description: meta.description,
-    url: `${siteUrl}/product`,
+    description: meta.openGraphDescription,
+    url: `${siteUrl}/en`,
+    siteName: "Eksotika Prima",
     type: "website",
     images: [
       {
         url: imageUrl,
-        alt: meta.title,
+        alt: "Eksotika Prima rubbing oil supplier",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: meta.title,
-    description: meta.twitterDescription,
+    description: meta.openGraphDescription,
     images: [imageUrl],
   },
-  alternates: getMetadataAlternates("/product", "id"),
+  alternates: getMetadataAlternates("/", "en"),
 };
 
-export default function ProductPage() {
-  return <ProductClient locale="id" />;
+export default function EnglishHome() {
+  return <HomePage locale="en" />;
 }
