@@ -2,7 +2,7 @@
   generateProductDetailMetadata,
 } from "@/app/product/[productId]/ProductDetailPage";
 
-export const revalidate = 300;
+export const revalidate = 1800;
 
 export async function generateMetadata(props) {
   return generateProductDetailMetadata({ ...props, locale: "en" });
