@@ -2,7 +2,7 @@
   generateNewsDetailMetadata,
 } from "@/app/news/[slug]/NewsDetailPage";
 
-export const revalidate = 300;
+export const revalidate = 1800;
 
 export async function generateMetadata(props) {
   return generateNewsDetailMetadata({ ...props, locale: "id" });

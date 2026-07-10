@@ -2,7 +2,7 @@
 import { getMetadataAlternates, getTranslations } from "@/lib/i18n";
 import { siteUrl } from "@/lib/site";
 
-export const revalidate = 300;
+export const revalidate = 600;
 
 const meta = getTranslations("id").meta.home;
 const imageUrl = `${siteUrl}/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg`;

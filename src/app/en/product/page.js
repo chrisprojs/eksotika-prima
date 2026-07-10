@@ -2,6 +2,8 @@
 import { getMetadataAlternates, getTranslations } from "@/lib/i18n";
 import { siteUrl } from "@/lib/site";
 
+export const revalidate = 3600;
+
 const meta = getTranslations("en").meta.product;
 const imageUrl = `${siteUrl}/api/images/product/Minyak%20Cap%20Tawon%20Super/330%20ml.jpg`;
 
