@@ -147,6 +147,64 @@ export const dictionary = {
         },
       ],
     },
+    faq: {
+      label: "FAQ",
+      heading: "Pertanyaan yang Sering Ditanyakan",
+      description:
+        "Jawaban singkat untuk pelanggan, toko, reseller, dan pembeli grosir.",
+      items: [
+        {
+          question: "Apa itu Eksotika Prima?",
+          answer:
+            "Eksotika Prima adalah supplier produk minyak gosok dan produk kesehatan tradisional. Kami menyediakan produk untuk konsumen, toko, reseller, dan pembelian dalam jumlah besar. Kami melayani pelanggan di Indonesia dan pelanggan internasional sesuai aturan pengiriman yang berlaku.",
+        },
+        {
+          question: "Apa saja produk yang tersedia di Eksotika Prima?",
+          answer:
+            "Eksotika Prima menyediakan produk kesehatan tradisional dan perawatan tubuh, seperti minyak gosok, minyak angin, minyak telon, dan produk terkait lainnya. Produk tersedia dalam berbagai ukuran dan kemasan.",
+        },
+        {
+          question: "Apa saja jenis minyak gosok yang tersedia di Eksotika Prima?",
+          answer:
+            "Eksotika Prima menyediakan berbagai jenis minyak gosok dengan karakteristik dan manfaat yang berbeda. Setiap produk dibuat untuk memberi sensasi hangat dan nyaman saat digunakan. Informasi varian dan ukuran kemasan dapat dilihat pada halaman produk.",
+        },
+        {
+          question: "Bagaimana cara memesan produk di Eksotika Prima?",
+          answer:
+            "Pemesanan dapat dilakukan melalui WhatsApp yang tersedia di website resmi Eksotika Prima. Tim kami akan membantu memberi informasi produk, harga, jumlah pesanan, dan proses pengiriman.",
+        },
+        {
+          question: "Apakah Eksotika Prima melayani seluruh Indonesia?",
+          answer:
+            "Ya. Eksotika Prima melayani pengiriman produk ke berbagai wilayah di Indonesia. Layanan pengiriman dapat disesuaikan dengan lokasi tujuan dan jenis pesanan.",
+        },
+        {
+          question: "Apakah Eksotika Prima menerima pengiriman internasional?",
+          answer:
+            "Ya. Eksotika Prima dapat membantu pelanggan dari luar negeri sesuai aturan pengiriman yang berlaku. Untuk tujuan pengiriman, ketersediaan produk, dan syarat ekspor, pelanggan dapat menghubungi tim Eksotika Prima.",
+        },
+        {
+          question: "Bagaimana proses ekspor minyak gosok dari Indonesia?",
+          answer:
+            "Proses ekspor dimulai dari pemilihan produk, konfirmasi jumlah pesanan, persiapan dokumen ekspor sesuai negara tujuan, pengemasan, lalu pengiriman melalui laut atau udara. Tim Eksotika Prima dapat membantu memberi informasi sesuai kebutuhan pelanggan.",
+        },
+        {
+          question: "Apakah Eksotika Prima menyediakan harga grosir?",
+          answer:
+            "Ya. Eksotika Prima melayani pembelian dalam jumlah besar dengan harga yang lebih kompetitif dibandingkan pembelian satuan. Untuk harga grosir dan minimum pemesanan, pelanggan dapat menghubungi tim penjualan.",
+        },
+        {
+          question: "Di mana lokasi pusat Eksotika Prima?",
+          answer:
+            "Pusat operasional Eksotika Prima berlokasi di Metro Indah III Blok.C No.31A RT.1/RW.4, Papanggo, Tanjung Priok, Jakarta Utara, DKI Jakarta, 14340. Alamat lengkap, nomor telepon, dan WhatsApp dapat dilihat pada halaman Kontak.",
+        },
+        {
+          question: "Mengapa memilih Eksotika Prima sebagai supplier minyak gosok?",
+          answer:
+            "Eksotika Prima dikenal sebagai salah satu supplier minyak gosok terbesar di Indonesia. Kami memiliki banyak pilihan produk kesehatan tradisional, stok yang memadai, dan layanan untuk pembelian eceran maupun grosir.",
+        },
+      ],
+    },
     shop: {
       heading: "Toko Kami Lainnya",
       tokopediaDetail: "26582 rating - 9990 ulasan",
@@ -325,6 +383,64 @@ export const dictionary = {
           title: "Safe and Quality Packing",
           description:
             "We use safe and strong packaging so products arrive in good condition. Every order is packed neatly and protected from leaks or damage during delivery.",
+        },
+      ],
+    },
+    faq: {
+      label: "FAQ",
+      heading: "Frequently Asked Questions",
+      description:
+        "Short answers for customers, stores, resellers, and wholesale buyers.",
+      items: [
+        {
+          question: "What is Eksotika Prima?",
+          answer:
+            "Eksotika Prima is a supplier of medicated oils and traditional health products. We offer products for personal customers, stores, resellers, and bulk buyers. We serve customers across Indonesia and support international customers based on shipping rules.",
+        },
+        {
+          question: "What products are available at Eksotika Prima?",
+          answer:
+            "Eksotika Prima offers traditional health and body care products, including medicated oils, wind oils, telon oil, and other related products. Products are available in different sizes and packaging options.",
+        },
+        {
+          question: "What types of medicated oils are available at Eksotika Prima?",
+          answer:
+            "Eksotika Prima provides many types of medicated oils with different characteristics and benefits. Each product is made to give a warm and comfortable feeling. More details about variants and package sizes are available on the product pages.",
+        },
+        {
+          question: "How can I place an order with Eksotika Prima?",
+          answer:
+            "Orders can be placed through the WhatsApp contact on the official Eksotika Prima website. Our team will help with product information, pricing, order quantity, and shipping.",
+        },
+        {
+          question: "Does Eksotika Prima deliver throughout Indonesia?",
+          answer:
+            "Yes. Eksotika Prima delivers products to many areas in Indonesia. Shipping availability depends on the destination and the type of order.",
+        },
+        {
+          question: "Does Eksotika Prima offer international shipping?",
+          answer:
+            "Yes. Eksotika Prima can support international customers based on shipping rules. For destination countries, product availability, and export requirements, customers can contact our team directly.",
+        },
+        {
+          question: "What is the export process for medicated oils from Indonesia?",
+          answer:
+            "The export process usually starts with product selection, order quantity confirmation, export document preparation for the destination country, packing, and shipping by sea or air. The Eksotika Prima team can help explain the process based on customer needs.",
+        },
+        {
+          question: "Does Eksotika Prima offer wholesale pricing?",
+          answer:
+            "Yes. Eksotika Prima offers more competitive prices for bulk purchases than single-item purchases. For wholesale prices and minimum order quantities, customers can contact the sales team.",
+        },
+        {
+          question: "Where is Eksotika Prima located?",
+          answer:
+            "Eksotika Prima's main office is located at Metro Indah III Block C No. 31A, RT.1/RW.4, Papanggo, Tanjung Priok, North Jakarta, DKI Jakarta 14340, Indonesia. The full address, phone number, and WhatsApp contact are available on the Contact page.",
+        },
+        {
+          question: "Why choose Eksotika Prima as your medicated oil supplier?",
+          answer:
+            "Eksotika Prima is known as one of Indonesia's large medicated oil suppliers. We offer many traditional health products, good stock availability, and service for retail and wholesale purchases.",
         },
       ],
     },
