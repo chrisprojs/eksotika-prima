@@ -1,3 +1,4 @@
+import { jakartaTimeZone, parseUtcDate } from "@/lib/dateTime";
 import { siteUrl } from "@/lib/site";
 
 export const defaultLocale = "id";
@@ -78,8 +79,9 @@ export function formatLocalizedDate(date, locale = defaultLocale) {
       day: "numeric",
       month: "long",
       year: "numeric",
+      timeZone: jakartaTimeZone,
     }
-  ).format(new Date(date));
+  ).format(parseUtcDate(date));
 }
 
 const contactAddress =
@@ -117,7 +119,7 @@ export const dictionary = {
         "Eksotika Prima adalah supplier minyak gosok, minyak urut, dan minyak pijat untuk kebutuhan pribadi, toko, reseller, dan pembelian grosir. Kami membantu pelanggan mendapatkan produk berkualitas dengan harga murah, packing aman, dan layanan cepat.",
         "Produk-produk yang kami tawarkan diproduksi dengan standar kualitas yang baik dan menggabungkan bahan-bahan herbal pilihan yang telah lama dikenal dalam pengobatan tradisional Indonesia. Hal ini menjadikan produk Eksotika Prima sebagai pilihan bagi masyarakat yang menginginkan perawatan tubuh secara alami dengan kualitas yang terpercaya.",
       ],
-      points: ["Harga grosir", "Bisa nego", "Siap kirim"],
+      points: ["Harga grosir", "Bisa nego", "Siap Ekspor"],
       pointsLabel: "Keunggulan Eksotika Prima",
       videoLabel: "Video profil Eksotika Prima supplier minyak gosok",
       videoFallback: "Browser Anda tidak bisa memutar video ini.",
@@ -298,7 +300,7 @@ export const dictionary = {
         "Eksotika Prima supplies rubbing oil, massage oil, and herbal body care oil for personal use, shops, resellers, and wholesale buyers. We help customers get quality products with low prices, safe packing, and fast service.",
         "Our products are made with good quality standards and selected herbal ingredients that are well known in Indonesian traditional care. This makes Eksotika Prima a trusted choice for customers who want natural body care products.",
       ],
-      points: ["Wholesale price", "Can bargain", "Ready to ship"],
+      points: ["Wholesale price", "Can bargain", "Ready to export"],
       pointsLabel: "Eksotika Prima benefits",
       videoLabel: "Eksotika Prima rubbing oil supplier profile video",
       videoFallback: "Your browser cannot play this video.",
@@ -452,4 +454,3 @@ export const dictionary = {
 export function getTranslations(locale = defaultLocale) {
   return dictionary[normalizeLocale(locale)];
 }
-
