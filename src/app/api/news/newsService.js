@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import {
   getNewsLocalizedJsonCreateData,
@@ -30,8 +31,26 @@ function isMissingNewsTable(error) {
   return String(error?.message || "").includes("no such table: main.News");
 }
 
-function isPublicNewsIgnored() {
-  return process.env.IGNORE_PUBLIC_NEWS?.toLowerCase() === "true";
+function shouldIgnorePublicNewsFilter() {
+  return process.env.IGNORE_PUBLIC_NEWS?.trim().toLowerCase() === "true";
+}
+
+function toUtcSqlDate(date = new Date()) {
+  return date.toISOString().replace("T", " ").replace(/\.\d{3}Z$/, "");
+}
+
+function getPublicNewsCondition(now = new Date()) {
+  if (shouldIgnorePublicNewsFilter()) {
+    return null;
+  }
+
+  return Prisma.sql`n."isPublished" = 1 AND datetime(n."createdAt") <= datetime(${toUtcSqlDate(now)})`;
+}
+
+function getWhereSql(conditions = []) {
+  return conditions.length
+    ? Prisma.sql`WHERE ${Prisma.join(conditions, " AND ")}`
+    : Prisma.empty;
 }
 
 function resolveLocaleAndNow(localeOrNow = defaultLocale, maybeNow) {
@@ -72,49 +91,71 @@ function getSlugJsonPath(locale = defaultLocale) {
   return `$.${normalizeLocale(locale)}`;
 }
 
+async function getNewsIds({ now = new Date(), category, productId, limit } = {}) {
+  const publicCondition = getPublicNewsCondition(now);
+  const conditions = publicCondition ? [publicCondition] : [];
+  const productJoin = productId
+    ? Prisma.sql`INNER JOIN "NewsProduct" np ON np."newsId" = n."newsId"`
+    : Prisma.empty;
+  const limitSql = limit ? Prisma.sql`LIMIT ${limit}` : Prisma.empty;
+
+  if (category) {
+    conditions.push(Prisma.sql`n."category" = ${category}`);
+  }
+
+  if (productId) {
+    conditions.push(Prisma.sql`np."productId" = ${Number(productId)}`);
+  }
+
+  const rows = await prisma.$queryRaw`
+    SELECT n."newsId"
+    FROM "News" n
+    ${productJoin}
+    ${getWhereSql(conditions)}
+    ORDER BY datetime(n."createdAt") DESC
+    ${limitSql}
+  `;
+
+  return rows.map((row) => row.newsId);
+}
+
+async function getNewsByIds(newsIds = []) {
+  if (newsIds.length === 0) {
+    return [];
+  }
+
+  const order = new Map(newsIds.map((newsId, index) => [newsId, index]));
+  const newsList = await prisma.news.findMany({
+    where: {
+      newsId: { in: newsIds },
+    },
+    include: newsInclude,
+  });
+
+  return newsList.sort((a, b) => order.get(a.newsId) - order.get(b.newsId));
+}
+
 async function findNewsIdByLocalizedSlug(slug, locale, now) {
   const normalizedLocale = normalizeLocale(locale);
   const slugJsonPath = getSlugJsonPath(normalizedLocale);
-  const allowPlainSlug = normalizedLocale === defaultLocale;
+  const allowPlainSlug = normalizedLocale === defaultLocale ? 1 : 0;
+  const publicCondition = getPublicNewsCondition(now);
+  const conditions = publicCondition ? [publicCondition] : [];
 
-  const rows = isPublicNewsIgnored()
-    ? await prisma.$queryRaw`
-        SELECT "newsId"
-        FROM "News"
-        WHERE (
-          (${allowPlainSlug} = 1 AND "slug" = ${slug})
-          OR (json_valid("slug") AND json_extract("slug", ${slugJsonPath}) = ${slug})
-        )
-        ORDER BY "createdAt" DESC
-        LIMIT 1
-      `
-    : await prisma.$queryRaw`
-        SELECT "newsId"
-        FROM "News"
-        WHERE "isPublished" = 1
-          AND "createdAt" <= ${now}
-          AND (
-            (${allowPlainSlug} = 1 AND "slug" = ${slug})
-            OR (json_valid("slug") AND json_extract("slug", ${slugJsonPath}) = ${slug})
-          )
-        ORDER BY "createdAt" DESC
-        LIMIT 1
-      `;
+  conditions.push(Prisma.sql`(
+    (${allowPlainSlug} = 1 AND n."slug" = ${slug})
+    OR (json_valid(n."slug") AND json_extract(n."slug", ${slugJsonPath}) = ${slug})
+  )`);
+
+  const rows = await prisma.$queryRaw`
+    SELECT n."newsId"
+    FROM "News" n
+    ${getWhereSql(conditions)}
+    ORDER BY datetime(n."createdAt") DESC
+    LIMIT 1
+  `;
 
   return rows[0]?.newsId || null;
-}
-
-export function getPublicNewsWhere(now = new Date()) {
-  if (isPublicNewsIgnored()) {
-    return {};
-  }
-
-  return {
-    isPublished: true,
-    createdAt: {
-      lte: now,
-    },
-  };
 }
 
 export function getProductLinks(productIds = []) {
@@ -132,11 +173,8 @@ export async function getPublishedNewsList(
   const { locale, now } = resolveLocaleAndNow(localeOrNow, maybeNow);
 
   try {
-    const newsList = await prisma.news.findMany({
-      where: getPublicNewsWhere(now),
-      orderBy: { createdAt: "desc" },
-      include: newsInclude,
-    });
+    const newsIds = await getNewsIds({ now });
+    const newsList = await getNewsByIds(newsIds);
 
     return localizeNewsList(newsList, locale);
   } catch (error) {
@@ -182,25 +220,13 @@ export async function getNewsSectionByCategory(
   const { locale, now } = resolveLocaleAndNow(localeOrNow, maybeNow);
 
   try {
+    const [educationNewsIds, crazyNewsIds] = await Promise.all([
+      getNewsIds({ now, category: "Education", limit: 3 }),
+      getNewsIds({ now, category: "Crazy News", limit: 3 }),
+    ]);
     const [educationNews, crazyNews] = await Promise.all([
-      prisma.news.findMany({
-        where: {
-          ...getPublicNewsWhere(now),
-          category: "Education",
-        },
-        orderBy: { createdAt: "desc" },
-        take: 3,
-        include: newsInclude,
-      }),
-      prisma.news.findMany({
-        where: {
-          ...getPublicNewsWhere(now),
-          category: "Crazy News",
-        },
-        orderBy: { createdAt: "desc" },
-        take: 3,
-        include: newsInclude,
-      }),
+      getNewsByIds(educationNewsIds),
+      getNewsByIds(crazyNewsIds),
     ]);
 
     return {
@@ -223,19 +249,8 @@ export async function getLatestNewsByProductId(
   const { locale, now } = resolveLocaleAndNow(localeOrNow, maybeNow);
 
   try {
-    const newsList = await prisma.news.findMany({
-      where: {
-        ...getPublicNewsWhere(now),
-        products: {
-          some: {
-            productId: Number(productId),
-          },
-        },
-      },
-      orderBy: { createdAt: "desc" },
-      take: 3,
-      include: newsInclude,
-    });
+    const newsIds = await getNewsIds({ now, productId, limit: 3 });
+    const newsList = await getNewsByIds(newsIds);
 
     return localizeNewsList(newsList, locale);
   } catch (error) {
@@ -248,15 +263,15 @@ export async function getLatestNewsByProductId(
 
 export async function getSitemapNewsList(now = new Date()) {
   try {
-    return await prisma.news.findMany({
-      where: getPublicNewsWhere(now),
-      select: {
-        slug: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-      orderBy: { updatedAt: "desc" },
-    });
+    const publicCondition = getPublicNewsCondition(now);
+    const rows = await prisma.$queryRaw`
+      SELECT n."slug", n."createdAt", n."updatedAt"
+      FROM "News" n
+      ${getWhereSql(publicCondition ? [publicCondition] : [])}
+      ORDER BY datetime(n."updatedAt") DESC
+    `;
+
+    return rows;
   } catch (error) {
     console.error("Failed to build news sitemap:", error);
     return [];

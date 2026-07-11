@@ -1,10 +1,11 @@
-﻿import Image from "next/image";
+import Image from "next/image";
 import CardLoad from "@/components/cardLoad/page";
 import ReasonSection from "@/components/reasonSection/page";
 import AboutSection from "@/components/aboutSection/page";
 import ShopSection from "@/components/shopSection/page";
 import TestimoniSection from "@/components/testimoniSection/page";
 import NewsSection from "@/components/newsSection/page";
+import FaqSection from "@/components/faqSection/page";
 import { getTranslations } from "@/lib/i18n";
 import "@/app/page.css";
 
@@ -44,6 +45,9 @@ export default function HomePage({ locale = "id" }) {
       </div>
       <div className="page-container">
         <TestimoniSection locale={locale}/>
+      </div>
+      <div className="page-container page-grey">
+        <FaqSection locale={locale}/>
       </div>
     </>
   );

@@ -49,7 +49,6 @@ function localizedProductSitemapEntries(product) {
 
   return supportedLocales.map((locale) => ({
     url: getLocalizedUrl(localizedPaths[locale], locale),
-    lastModified: product.updatedAt || product.createdAt,
     changeFrequency: "monthly",
     priority: 0.7,
     alternates: alternatesForLocalizedPaths(localizedPaths),
@@ -77,20 +76,16 @@ function localizedNewsSitemapEntries(news) {
 export default async function sitemap() {
   const buildTime = new Date();
 
-  let products = [];
-  let newsList = [];
-
-  try {
-    products = await getSitemapProducts();
-  } catch (error) {
-    console.error("Failed to build product sitemap:", error);
-  }
-
-  newsList = await getSitemapNewsList(buildTime);
+  const [products, newsList] = await Promise.all([
+    getSitemapProducts().catch((error) => {
+      console.error("Failed to build product sitemap:", error);
+      return [];
+    }),
+    getSitemapNewsList(buildTime),
+  ]);
 
   const latestNewsDate = newsList[0]?.updatedAt || newsList[0]?.createdAt;
   const homepageLastModified = latestNewsDate || buildTime;
-  const latestProductDate = products[0]?.updatedAt ?? buildTime;
   const newsPageLastModified = latestNewsDate || buildTime;
 
   const staticRoutes = [
@@ -100,7 +95,6 @@ export default async function sitemap() {
       priority: 1,
     }),
     ...localizedSitemapEntries("/product", {
-      lastModified: latestProductDate,
       changeFrequency: "monthly",
       priority: 0.8,
     }),
