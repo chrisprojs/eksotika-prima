@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import Footer from "@/components/footer/page";
 import "./globals.css";
 import Navbar from "@/components/navbar/page";
@@ -21,9 +22,12 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const requestHeaders = await headers();
+  const locale = requestHeaders.get("x-site-locale") === "en" ? "en" : "id";
+
   return (
-    <html lang="id">
+    <html lang={locale}>
       <head>
         <script
           async
