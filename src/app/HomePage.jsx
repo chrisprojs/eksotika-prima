@@ -16,7 +16,15 @@ export default function HomePage({ locale = "id" }) {
   return (
     <>
       <div className="home-img-container">
-        <Image src="/asset/home_template_1.jpg" alt="Eksotika Prima" className="home-img-template" width={1024} height={256} />
+        <Image
+          src="/asset/home_template_1.jpg"
+          alt="Eksotika Prima"
+          className="home-img-template"
+          width={1024}
+          height={256}
+          sizes="100vw"
+          priority
+        />
         <div className="home-img-banner-text">
           <h1 className="home-img-text">{text.heroTitle}</h1>
           <h2 className="home-img-text2">{text.heroSubtitle}</h2>

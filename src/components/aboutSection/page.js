@@ -1,8 +1,8 @@
-﻿import React from "react";
+import React from "react";
 import "./page.css";
 import { getTranslations } from "@/lib/i18n";
 
-const aboutVideoUrl = "/asset/about_section_1.mp4";
+const aboutYoutubeUrl = "https://www.youtube.com/embed/CkJjPNbH2K8";
 
 function AboutSection({ locale = "id" }) {
   const text = getTranslations(locale).about;
@@ -32,16 +32,14 @@ function AboutSection({ locale = "id" }) {
       </div>
 
       <div className="about-video-box">
-        <video
+        <iframe
           className="about-video"
-          controls
-          playsInline
-          preload="metadata"
+          src={aboutYoutubeUrl}
+          title={text.videoLabel}
           aria-label={text.videoLabel}
-        >
-          <source src={aboutVideoUrl} type="video/mp4" />
-          {text.videoFallback}
-        </video>
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        />
       </div>
     </section>
   );

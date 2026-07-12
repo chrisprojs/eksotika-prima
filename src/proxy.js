@@ -1,11 +1,7 @@
 import { NextResponse } from "next/server";
 
-export function middleware(req) {
-  const requestHeaders = new Headers(req.headers);
+export function proxy(req) {
   const pathname = req.nextUrl.pathname;
-  const locale = pathname === "/en" || pathname.startsWith("/en/") ? "en" : "id";
-
-  requestHeaders.set("x-site-locale", locale);
 
   if (pathname.startsWith("/api/")) {
     const allowedOrigins = JSON.parse(
@@ -19,13 +15,10 @@ export function middleware(req) {
     }
   }
 
-  return NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|asset).*)"],
+  matcher: ["/api/:path*"],
 };
+

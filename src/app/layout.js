@@ -1,8 +1,7 @@
-import { headers } from "next/headers";
+import Script from "next/script";
 import Footer from "@/components/footer/page";
 import "./globals.css";
 import Navbar from "@/components/navbar/page";
-import "@fortawesome/fontawesome-free/css/all.min.css";
 
 export const metadata = {
   authors: [{ name: "Eksotika Prima" }],
@@ -22,25 +21,20 @@ export const metadata = {
   },
 };
 
-export default async function RootLayout({ children }) {
-  const requestHeaders = await headers();
-  const locale = requestHeaders.get("x-site-locale") === "en" ? "en" : "id";
-
+export default function RootLayout({ children }) {
   return (
-    <html lang={locale}>
-      <head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7470776396597629"
-          crossOrigin="anonymous"
-        />
-      </head>
+    <html lang="id" suppressHydrationWarning>
       <body>
         <div className="app-container">
           <Navbar />
           <div className="page-layout">{children}</div>
           <Footer />
         </div>
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7470776396597629"
+          strategy="lazyOnload"
+          crossOrigin="anonymous"
+        />
       </body>
     </html>
   );
