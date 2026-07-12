@@ -25,6 +25,19 @@ function getProductPrice(product, locale, text) {
     : `${formatIdr(minPrice, locale)} - ${formatIdr(maxPrice, locale)}`;
 }
 
+function getNewsCoverImageUrl(coverImage) {
+  const image = String(coverImage || "").trim();
+
+  if (!image) return null;
+
+  try {
+    const safeImage = image.startsWith("//") ? `https:${image}` : image;
+    return encodeURI(new URL(safeImage, siteUrl).toString());
+  } catch {
+    return null;
+  }
+}
+
 export async function generateNewsDetailMetadata({ params, locale = "id" }) {
   const { slug } = await params;
   const news = await getPublishedNewsBySlug(slug, locale);
@@ -39,6 +52,15 @@ export async function generateNewsDetailMetadata({ params, locale = "id" }) {
   }
 
   const pagePath = `/news/${news.slug}`;
+  const coverImageUrl = getNewsCoverImageUrl(news.coverImage);
+  const coverImage = coverImageUrl
+    ? {
+        url: coverImageUrl,
+        width: 1200,
+        height: 630,
+        alt: news.title,
+      }
+    : null;
 
   return {
     metadataBase: new URL(siteUrl),
@@ -49,7 +71,13 @@ export async function generateNewsDetailMetadata({ params, locale = "id" }) {
       description: news.summary,
       type: "article",
       url: getLocalizedUrl(pagePath, locale),
-      images: news.coverImage ? [{ url: news.coverImage, alt: news.title }] : [],
+      images: coverImage ? [coverImage] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: news.title,
+      description: news.summary,
+      images: coverImageUrl ? [coverImageUrl] : [],
     },
     alternates: getMetadataAlternates(pagePath, locale),
   };
@@ -65,6 +93,7 @@ export default async function NewsDetailPage({ params, locale = "id" }) {
   }
 
   const relatedProducts = news.products.map((item) => item.product);
+  const coverImageUrl = getNewsCoverImageUrl(news.coverImage);
 
   return (
     <main className="page-container news-detail-page">
@@ -74,8 +103,8 @@ export default async function NewsDetailPage({ params, locale = "id" }) {
         <h1>{news.title}</h1>
         <p className="news-detail-summary">{news.summary}</p>
 
-        {news.coverImage ? (
-          <img src={news.coverImage} alt={news.title} className="news-detail-cover" />
+        {coverImageUrl ? (
+          <img src={coverImageUrl} alt={news.title} className="news-detail-cover" />
         ) : null}
 
         <div
