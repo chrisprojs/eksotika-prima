@@ -13,6 +13,7 @@ import {
 } from "@/lib/i18n";
 import { htmlToPlainText } from "@/lib/newsHtml";
 import { siteUrl } from "@/lib/site";
+import { getAbsoluteProductImageSrc } from "@/lib/productImageSrc";
 import FaqSection from "@/components/faqSection/page";
 
 function getSingleSearchParam(value) {
@@ -91,7 +92,7 @@ function getProductDescription(product, variantSize, locale) {
 }
 
 function getProductImageUrl(picture) {
-  return encodeURI(`${siteUrl}/api/images/product/${picture}`);
+  return getAbsoluteProductImageSrc(picture, siteUrl);
 }
 
 function getOfferPrice(price) {
@@ -284,3 +285,5 @@ export default async function ProductDetailPage({ params, searchParams, locale =
     </>
   );
 }
+
+
