@@ -14,7 +14,7 @@ export default async function ProductNewsSection({ productId, locale = "id" }) {
   return (
     <section className="product-news-section">
       <div className="product-news-header">
-        <p className="page-heading">{text.productSectionHeading}</p>
+        <h2 className="page-heading">{text.productSectionHeading}</h2>
         <p className="product-news-text">{text.productSectionText}</p>
       </div>
       <div className="product-news-grid">

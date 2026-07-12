@@ -1,0 +1,142 @@
+.export-shipping-section {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(420px, 520px);
+  column-gap: 48px;
+  row-gap: 24px;
+  align-items: stretch;
+}
+
+.export-shipping-content {
+  align-self: start;
+  min-width: 0;
+  max-width: 650px;
+}
+
+.export-shipping-label {
+  margin: 0 0 10px;
+  color: #c0392b;
+  font-size: 0.95rem;
+  font-weight: var(--var-font-bold);
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.export-shipping-heading {
+  margin: 0;
+  color: #253342;
+  font-size: 2.1rem;
+  line-height: 1.2;
+  font-weight: var(--var-font-bold);
+  text-shadow: var(--var-text-shadow-heading);
+}
+
+.export-shipping-description {
+  margin: 18px 0 0;
+  color: #4d5965;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.export-shipping-description p {
+  margin: 0 0 12px;
+}
+
+.export-shipping-description p:last-child {
+  margin-bottom: 0;
+}
+
+.export-shipping-regions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.export-shipping-regions span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 8px 14px;
+  border: 1px solid #e4b04a;
+  border-radius: 8px;
+  background: #fff8e8;
+  color: #3c3324;
+  font-size: 0.95rem;
+  font-weight: var(--var-font-semibold);
+}
+
+.export-shipping-visual {
+  align-self: stretch;
+  justify-self: end;
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  min-height: 360px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #111827;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+}
+
+.export-shipping-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.export-shipping-note {
+  display: grid;
+  gap: 4px;
+  margin-top: 22px;
+  padding: 14px 16px;
+  border-left: 4px solid #e4b04a;
+  border-radius: 8px;
+  background: #fff;
+  color: #253342;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.export-shipping-note strong {
+  font-size: 1rem;
+}
+
+.export-shipping-note span {
+  color: #4d5965;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+  .export-shipping-section {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .export-shipping-visual {
+    justify-self: start;
+    max-width: 640px;
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 768px) {
+  .export-shipping-heading {
+    font-size: 1.8rem;
+  }
+
+  .export-shipping-description {
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .export-shipping-regions span {
+    min-height: 34px;
+    font-size: 0.9rem;
+  }
+
+  .export-shipping-visual {
+    min-height: 260px;
+  }
+}
