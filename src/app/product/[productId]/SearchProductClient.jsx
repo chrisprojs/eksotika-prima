@@ -6,6 +6,7 @@ import "./page.css";
 import Loading from "@/components/loading/page";
 import DiscountBadge from "@/components/discount/page";
 import { formatIdr, getTranslations } from "@/lib/i18n";
+import { cleanProductHtml } from "@/lib/newsHtml";
 import { ContactInformation } from "@/data/ContactInformation";
 
 const WHOLESALE_QUANTITY = "wholesale";
@@ -139,6 +140,7 @@ export default function SearchProduct({ product = null, locale = "id" }) {
   const buyWhatsAppUrl = `https://wa.me/${getWhatsAppNumber(
     ContactInformation.whatsappNumber
   )}?text=${encodeURIComponent(buyMessage)}`;
+  const detailHtml = cleanProductHtml(currentProduct.detail ?? "");
 
   return (
     <>
@@ -263,11 +265,14 @@ export default function SearchProduct({ product = null, locale = "id" }) {
             </p>
           </div>
 
-          <p className="searchProduct-text">
+          <div className="searchProduct-text">
             <strong>{text.detailLabel}</strong>
             <br />
-            <span className="searchProduct-detail">{currentProduct.detail}</span>
-          </p>
+            <div
+              className="searchProduct-detail"
+              dangerouslySetInnerHTML={{ __html: detailHtml }}
+            />
+          </div>
         </div>
       </div>
     </>

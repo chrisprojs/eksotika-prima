@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPublishedNewsBySlug } from "@/app/api/news/newsService";
-import { localizeNewsHtml } from "@/lib/newsHtml";
+import { htmlToPlainText, localizeNewsHtml } from "@/lib/newsHtml";
 import { apiUrl, siteUrl } from "@/lib/site";
 import {
   formatIdr,
@@ -36,6 +36,43 @@ function getNewsCoverImageUrl(coverImage) {
   } catch {
     return null;
   }
+}
+
+function getNewsJsonLd(news, pagePath, coverImageUrl, locale) {
+  const articleBody = htmlToPlainText(news.contentHtml);
+  const image = coverImageUrl ? [coverImageUrl] : undefined;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "@id": `${getLocalizedUrl(pagePath, locale)}#article`,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": getLocalizedUrl(pagePath, locale),
+    },
+    headline: news.title,
+    description: news.summary,
+    image,
+    datePublished: new Date(news.createdAt).toISOString(),
+    dateModified: new Date(news.updatedAt || news.createdAt).toISOString(),
+    author: {
+      "@type": "Organization",
+      name: "Eksotika Prima",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Eksotika Prima",
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteUrl}/asset/logo.jpg`,
+      },
+    },
+    articleBody,
+  };
+}
+
+function stringifyJsonLd(data) {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
 }
 
 export async function generateNewsDetailMetadata({ params, locale = "id" }) {
@@ -94,9 +131,15 @@ export default async function NewsDetailPage({ params, locale = "id" }) {
 
   const relatedProducts = news.products.map((item) => item.product);
   const coverImageUrl = getNewsCoverImageUrl(news.coverImage);
+  const pagePath = `/news/${news.slug}`;
+  const newsJsonLd = getNewsJsonLd(news, pagePath, coverImageUrl, locale);
 
   return (
     <main className="page-container news-detail-page">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: stringifyJsonLd(newsJsonLd) }}
+      />
       <article className="news-detail-main">
         <Link href={getLocalizedPath("/news", locale)} className="news-back-link">{text.backToNews}</Link>
         <p className="news-detail-date">{formatLocalizedDate(news.createdAt, locale)}</p>

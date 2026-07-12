@@ -1,19 +1,31 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export function middleware(req) {
-  const allowedOrigins = JSON.parse(
-    process.env.ALLOWED_ORIGIN || "[]"
-  );
+  const requestHeaders = new Headers(req.headers);
+  const pathname = req.nextUrl.pathname;
+  const locale = pathname === "/en" || pathname.startsWith("/en/") ? "en" : "id";
 
-  const origin = req.headers.get("origin");
+  requestHeaders.set("x-site-locale", locale);
 
-  if (origin && !allowedOrigins.includes(origin)) {
-    return new NextResponse("Bad Request", { status: 400 });
+  if (pathname.startsWith("/api/")) {
+    const allowedOrigins = JSON.parse(
+      process.env.ALLOWED_ORIGIN || "[]"
+    );
+
+    const origin = req.headers.get("origin");
+
+    if (origin && !allowedOrigins.includes(origin)) {
+      return new NextResponse("Bad Request", { status: 400 });
+    }
   }
 
-  return NextResponse.next();
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 export const config = {
-  matcher: ["/api/:path*"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|asset).*)"],
 };
