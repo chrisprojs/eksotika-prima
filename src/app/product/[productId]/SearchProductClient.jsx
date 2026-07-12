@@ -6,23 +6,34 @@ import "./page.css";
 import Loading from "@/components/loading/page";
 import DiscountBadge from "@/components/discount/page";
 import { formatIdr, getTranslations } from "@/lib/i18n";
+import { ContactInformation } from "@/data/ContactInformation";
+
+const WHOLESALE_QUANTITY = "wholesale";
 
 function getFirstVariant(product) {
   return Array.isArray(product?.variants) ? product.variants[0] || null : null;
 }
 
 function getValidQuantity(quantity, variant) {
+  if (quantity === WHOLESALE_QUANTITY) return WHOLESALE_QUANTITY;
+
   return quantity === 12 && variant?.dozenPrice ? 12 : 1;
 }
 
 function getVariantPrice(variant, quantity) {
   if (!variant) return 0;
 
+  if (quantity === WHOLESALE_QUANTITY) return null;
+
   if (quantity === 12 && variant.dozenPrice !== undefined && variant.dozenPrice !== null) {
     return variant.dozenPrice;
   }
 
   return variant.price ?? 0;
+}
+
+function getWhatsAppNumber(phoneNumber = "") {
+  return phoneNumber.replace(/\D/g, "");
 }
 
 export default function SearchProduct({ product = null, locale = "id" }) {
@@ -54,7 +65,10 @@ export default function SearchProduct({ product = null, locale = "id" }) {
       }
     }
 
-    const parsedQuantity = quantityParam ? parseInt(quantityParam, 10) : 1;
+    const parsedQuantity =
+      quantityParam === WHOLESALE_QUANTITY
+        ? WHOLESALE_QUANTITY
+        : parseInt(quantityParam, 10);
     const targetQuantity = getValidQuantity(parsedQuantity, targetVariant);
 
     setSelectedVariant(targetVariant);
@@ -70,10 +84,15 @@ export default function SearchProduct({ product = null, locale = "id" }) {
 
   const getTitleText = (productItem, variant, quantityOption) => {
     if (!productItem || !variant) return "";
-    const quantityText =
-      quantityOption !== 1
-        ? " - " + (quantityOption === 12 ? text.dozenSuffix : "")
-        : "";
+    let quantityText = "";
+
+    if (quantityOption === 12) {
+      quantityText = ` - ${text.dozenSuffix}`;
+    }
+
+    if (quantityOption === WHOLESALE_QUANTITY) {
+      quantityText = ` - ${text.wholesaleSuffix}`;
+    }
     return `${productItem.title} - ${variant.size}${quantityText}`;
   };
 
@@ -90,13 +109,36 @@ export default function SearchProduct({ product = null, locale = "id" }) {
     return <Loading />;
   }
 
-  const fromPriceTotal = selectedQuantity * (selectedVariant.fromPrice || 0);
+  const isWholesale = selectedQuantity === WHOLESALE_QUANTITY;
+  const fromPriceTotal = isWholesale
+    ? 0
+    : selectedQuantity * (selectedVariant.fromPrice || 0);
   const discountPercentage =
-    fromPriceTotal > 0
+    !isWholesale && fromPriceTotal > 0
       ? Math.round(((fromPriceTotal - selectedPrice) / fromPriceTotal) * 100)
       : 0;
 
   const tagTitle = getTitleText(currentProduct, selectedVariant, selectedQuantity);
+  const selectedQuantityText = isWholesale
+    ? text.wholesaleSuffix
+    : selectedQuantity === 12
+      ? text.dozenSuffix
+      : text.single;
+  const selectedPriceText = isWholesale
+    ? text.wholesalePriceText
+    : formatIdr(selectedPrice, locale);
+  const buyMessage =
+    typeof text.buyWhatsAppMessage === "function"
+      ? text.buyWhatsAppMessage(
+          currentProduct.title,
+          selectedVariant.size,
+          selectedQuantityText,
+          selectedPriceText
+        )
+      : `Halo, saya mau beli ${currentProduct.title} - ${selectedVariant.size} (${selectedQuantityText}). Harga: ${selectedPriceText}.`;
+  const buyWhatsAppUrl = `https://wa.me/${getWhatsAppNumber(
+    ContactInformation.whatsappNumber
+  )}?text=${encodeURIComponent(buyMessage)}`;
 
   return (
     <>
@@ -119,16 +161,40 @@ export default function SearchProduct({ product = null, locale = "id" }) {
             {tagTitle}
           </h1>
 
-          <p className="searchProduct-price">
-            {formatIdr(selectedPrice, locale)}{" "}
-            <DiscountBadge
-              discountPercentage={discountPercentage}
-              isLarge={true}
-            />{" "}
-            <span className="searchProduct-fromPrice">
-              {formatIdr(fromPriceTotal, locale)}
-            </span>
-          </p>
+          {isWholesale ? (
+            <div className="searchProduct-price-box">
+              <p className="searchProduct-price searchProduct-price-negotiate">
+                {text.wholesalePriceText}
+              </p>
+            </div>
+          ) : (
+            <p className="searchProduct-price">
+              {formatIdr(selectedPrice, locale)}{" "}
+              <DiscountBadge
+                discountPercentage={discountPercentage}
+                isLarge={true}
+              />{" "}
+              <span className="searchProduct-fromPrice">
+                {formatIdr(fromPriceTotal, locale)}
+              </span>
+            </p>
+          )}
+
+          <a
+            href={buyWhatsAppUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="searchProduct-whatsapp"
+          >
+            <Image
+              src="/asset/whatsapp-logo.png"
+              alt="WhatsApp"
+              className="searchProduct-whatsapp-icon"
+              width={100}
+              height={100}
+            />
+            {text.buyWhatsAppButton}
+          </a>
 
           <p className="searchProduct-text">
             <strong>{text.quantityLabel}</strong>
@@ -153,6 +219,14 @@ export default function SearchProduct({ product = null, locale = "id" }) {
                 {text.dozen}
               </span>
             )}
+            <span
+              className={`searchProduct-badge ${
+                selectedQuantity === WHOLESALE_QUANTITY ? "selected" : ""
+              }`}
+              onClick={() => changePrice(WHOLESALE_QUANTITY, selectedVariant)}
+            >
+              {text.wholesale}
+            </span>
           </div>
 
           <p className="searchProduct-text">

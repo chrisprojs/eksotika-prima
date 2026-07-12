@@ -292,6 +292,13 @@ export const dictionary = {
       single: "satuan (1pcs)",
       dozen: "lusin (12 pcs)",
       dozenSuffix: "lusin (12pcs)",
+      wholesale: "grosir",
+      wholesaleSuffix: "grosir",
+      wholesalePriceText: "Harga grosir nego via WhatsApp",
+      buyWhatsAppButton: "Beli via WhatsApp",
+      buyWhatsAppMessage(productTitle, variantSize, quantityText, priceText) {
+        return `Halo, saya mau beli ${productTitle} - ${variantSize} (${quantityText}). Harga: ${priceText}.`;
+      },
       notFoundTitle: "Produk Tidak Ditemukan",
       notFoundDescription: "Produk tidak tersedia atau telah dihapus.",
     },
@@ -550,6 +557,13 @@ export const dictionary = {
       single: "single (1pc)",
       dozen: "dozen (12 pcs)",
       dozenSuffix: "dozen (12pcs)",
+      wholesale: "wholesale",
+      wholesaleSuffix: "wholesale",
+      wholesalePriceText: "Wholesale price: negotiate via WhatsApp",
+      buyWhatsAppButton: "Buy via WhatsApp",
+      buyWhatsAppMessage(productTitle, variantSize, quantityText, priceText) {
+        return `Hello, I want to buy ${productTitle} - ${variantSize} (${quantityText}). Price: ${priceText}.`;
+      },
       notFoundTitle: "Product Not Found",
       notFoundDescription: "This product is not available or has been removed.",
     },

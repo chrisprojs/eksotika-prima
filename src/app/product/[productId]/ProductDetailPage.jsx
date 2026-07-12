@@ -43,7 +43,15 @@ function shortenDescription(value, maxLength = 155) {
 
 function getTitleText(product, variantSize, quantity, text) {
   if (!product || !variantSize) return product?.title || "";
-  const quantityText = quantity === "12" ? ` - ${text.dozenSuffix}` : "";
+  let quantityText = "";
+
+  if (quantity === "12") {
+    quantityText = ` - ${text.dozenSuffix}`;
+  }
+
+  if (quantity === "wholesale") {
+    quantityText = ` - ${text.wholesaleSuffix}`;
+  }
   return `${product.title} - ${variantSize}${quantityText}`;
 }
 
@@ -85,7 +93,11 @@ export async function generateProductDetailMetadata({
   const selectedVariant =
     product.variants.find((variant) => variant.size === requestedVariant) ||
     product.variants[0];
-  const quantity = getSingleSearchParam(query?.quantity) === "12" ? "12" : "1";
+  const requestedQuantity = getSingleSearchParam(query?.quantity);
+  const quantity =
+    requestedQuantity === "12" || requestedQuantity === "wholesale"
+      ? requestedQuantity
+      : "1";
   const pagePath = `/product/${productId}`;
   const title = getTitleText(product, selectedVariant?.size, quantity, text);
   const description = getProductDescription(
