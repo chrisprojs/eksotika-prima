@@ -124,6 +124,25 @@ export const dictionary = {
       videoLabel: "Video profil Eksotika Prima supplier minyak gosok",
       videoFallback: "Browser Anda tidak bisa memutar video ini.",
     },
+    exportShipping: {
+      label: "Layanan Ekspor",
+      heading: "Melayani Pengiriman Minyak ke Berbagai Negara",
+      description: [
+        "Eksotika Prima melayani kebutuhan pengiriman produk minyak gosok, minyak urut, dan produk kesehatan tradisional untuk pembeli internasional. Kami dapat membantu pelanggan, toko, reseller, dan pembeli grosir yang ingin mengirim produk ke luar Indonesia.",
+        "Area tujuan dapat mencakup Asia Tenggara, Asia Timur, Timur Tengah, Afrika, dan wilayah lain sesuai aturan pengiriman yang berlaku. Tim kami membantu memberi informasi stok, packing, jumlah pesanan, dan proses pengiriman.",
+      ],
+      regionsLabel: "Wilayah tujuan ekspor",
+      regions: [
+        "Asia Tenggara",
+        "Asia Timur",
+        "Timur Tengah",
+        "Afrika",
+        "Lain-lain",
+      ],
+      noteTitle: "Siap Bantu Ekspor",
+      noteText: "Diskusikan negara tujuan, jumlah pesanan, dan kebutuhan packing dengan tim kami.",
+      imageAlt: "Produk minyak Eksotika Prima siap untuk pengiriman ekspor",
+    },
     reason: {
       heading: "Alasan Belanja di Toko Kami",
       cards: [
@@ -273,6 +292,13 @@ export const dictionary = {
       single: "satuan (1pcs)",
       dozen: "lusin (12 pcs)",
       dozenSuffix: "lusin (12pcs)",
+      wholesale: "grosir",
+      wholesaleSuffix: "grosir",
+      wholesalePriceText: "Harga grosir nego via WhatsApp",
+      buyWhatsAppButton: "Beli via WhatsApp",
+      buyWhatsAppMessage(productTitle, variantSize, quantityText, priceText) {
+        return `Halo, saya mau beli ${productTitle} - ${variantSize} (${quantityText}). Harga: ${priceText}.`;
+      },
       notFoundTitle: "Produk Tidak Ditemukan",
       notFoundDescription: "Produk tidak tersedia atau telah dihapus.",
     },
@@ -362,6 +388,25 @@ export const dictionary = {
       pointsLabel: "Eksotika Prima benefits",
       videoLabel: "Eksotika Prima rubbing oil supplier profile video",
       videoFallback: "Your browser cannot play this video.",
+    },
+    exportShipping: {
+      label: "Export Service",
+      heading: "Shipping Oil Products to Many Countries",
+      description: [
+        "Eksotika Prima supports international shipping needs for rubbing oil, massage oil, and traditional health products. We can help customers, stores, resellers, and wholesale buyers who want to send products outside Indonesia.",
+        "Destination areas may include Southeast Asia, East Asia, the Middle East, Africa, and other regions based on available shipping rules. Our team helps with stock information, packing, order quantity, and shipping process details.",
+      ],
+      regionsLabel: "Export destination regions",
+      regions: [
+        "Southeast Asia",
+        "East Asia",
+        "Middle East",
+        "Africa",
+        "Others",
+      ],
+      noteTitle: "Export Support Ready",
+      noteText: "Discuss destination country, order quantity, and packing needs with our team.",
+      imageAlt: "Eksotika Prima oil products ready for export shipping",
     },
     reason: {
       heading: "Why Shop With Us",
@@ -512,6 +557,13 @@ export const dictionary = {
       single: "single (1pc)",
       dozen: "dozen (12 pcs)",
       dozenSuffix: "dozen (12pcs)",
+      wholesale: "wholesale",
+      wholesaleSuffix: "wholesale",
+      wholesalePriceText: "Wholesale price: negotiate via WhatsApp",
+      buyWhatsAppButton: "Buy via WhatsApp",
+      buyWhatsAppMessage(productTitle, variantSize, quantityText, priceText) {
+        return `Hello, I want to buy ${productTitle} - ${variantSize} (${quantityText}). Price: ${priceText}.`;
+      },
       notFoundTitle: "Product Not Found",
       notFoundDescription: "This product is not available or has been removed.",
     },

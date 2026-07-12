@@ -8,6 +8,7 @@ import NewsSection from "@/components/newsSection/page";
 import FaqSection from "@/components/faqSection/page";
 import { getTranslations } from "@/lib/i18n";
 import "@/app/page.css";
+import ExportShippingSection from "@/components/exportShippingSection/page";
 
 export default function HomePage({ locale = "id" }) {
   const text = getTranslations(locale).home;
@@ -33,6 +34,9 @@ export default function HomePage({ locale = "id" }) {
       <div className="page-container">
         <p className="page-heading">{text.productsHeading}</p>
         <CardLoad locale={locale}/>
+      </div>
+      <div className="page-container">
+        <ExportShippingSection locale={locale} />
       </div>
       <div className="page-container page-grey">
         <ReasonSection locale={locale}/>

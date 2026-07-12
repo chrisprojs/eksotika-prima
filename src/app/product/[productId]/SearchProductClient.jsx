@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
@@ -6,25 +6,56 @@ import "./page.css";
 import Loading from "@/components/loading/page";
 import DiscountBadge from "@/components/discount/page";
 import { formatIdr, getTranslations } from "@/lib/i18n";
+import { ContactInformation } from "@/data/ContactInformation";
+
+const WHOLESALE_QUANTITY = "wholesale";
+
+function getFirstVariant(product) {
+  return Array.isArray(product?.variants) ? product.variants[0] || null : null;
+}
+
+function getValidQuantity(quantity, variant) {
+  if (quantity === WHOLESALE_QUANTITY) return WHOLESALE_QUANTITY;
+
+  return quantity === 12 && variant?.dozenPrice ? 12 : 1;
+}
+
+function getVariantPrice(variant, quantity) {
+  if (!variant) return 0;
+
+  if (quantity === WHOLESALE_QUANTITY) return null;
+
+  if (quantity === 12 && variant.dozenPrice !== undefined && variant.dozenPrice !== null) {
+    return variant.dozenPrice;
+  }
+
+  return variant.price ?? 0;
+}
+
+function getWhatsAppNumber(phoneNumber = "") {
+  return phoneNumber.replace(/\D/g, "");
+}
 
 export default function SearchProduct({ product = null, locale = "id" }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const text = getTranslations(locale).productDetail;
+  const firstVariant = getFirstVariant(product);
   const [currentProduct] = useState(product);
-  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [selectedVariant, setSelectedVariant] = useState(firstVariant);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
-  const [selectedPrice, setSelectedPrice] = useState(0);
+  const [selectedPrice, setSelectedPrice] = useState(() =>
+    getVariantPrice(firstVariant, 1)
+  );
 
   useEffect(() => {
     if (!currentProduct || !currentProduct.variants || currentProduct.variants.length === 0) return;
 
-    const variantSizeParam = searchParams.get("variant");
-    const variantSize = variantSizeParam
-      ? decodeURIComponent(variantSizeParam.replace(/\+/g, " "))
-      : null;
+    const variantSize = searchParams.get("variant");
     const quantityParam = searchParams.get("quantity");
+
+    if (!variantSize && !quantityParam) return;
 
     let targetVariant = currentProduct.variants[0];
     if (variantSize) {
@@ -34,89 +65,80 @@ export default function SearchProduct({ product = null, locale = "id" }) {
       }
     }
 
-    let targetQuantity = quantityParam ? parseInt(quantityParam, 10) : 1;
-    if (targetQuantity !== 1 && targetQuantity !== 12) {
-      targetQuantity = 1;
-    }
+    const parsedQuantity =
+      quantityParam === WHOLESALE_QUANTITY
+        ? WHOLESALE_QUANTITY
+        : parseInt(quantityParam, 10);
+    const targetQuantity = getValidQuantity(parsedQuantity, targetVariant);
 
     setSelectedVariant(targetVariant);
     setSelectedQuantity(targetQuantity);
-
-    if (targetQuantity === 12 && targetVariant.dozenPrice) {
-      setSelectedPrice(targetVariant.dozenPrice);
-    } else if (targetVariant.price !== undefined) {
-      setSelectedPrice(targetVariant.price);
-    }
-
-    if (
-      !variantSize ||
-      !quantityParam ||
-      variantSize !== targetVariant.size ||
-      parseInt(quantityParam, 10) !== targetQuantity
-    ) {
-      const params = new URLSearchParams();
-      params.set("variant", targetVariant.size);
-      params.set("quantity", targetQuantity.toString());
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-    }
+    setSelectedPrice(getVariantPrice(targetVariant, targetQuantity));
+    router.replace(pathname, { scroll: false });
   }, [currentProduct, searchParams, pathname, router]);
 
   useEffect(() => {
     if (!selectedVariant) return;
-    if (
-      selectedQuantity === 12 &&
-      selectedVariant.dozenPrice !== undefined &&
-      selectedVariant.dozenPrice !== null
-    ) {
-      setSelectedPrice(selectedVariant.dozenPrice);
-    } else if (
-      selectedVariant.price !== undefined &&
-      selectedVariant.price !== null
-    ) {
-      setSelectedPrice(selectedVariant.price);
-    }
+    setSelectedPrice(getVariantPrice(selectedVariant, selectedQuantity));
   }, [selectedVariant, selectedQuantity]);
 
   const getTitleText = (productItem, variant, quantityOption) => {
     if (!productItem || !variant) return "";
-    const quantityText =
-      quantityOption !== 1
-        ? " - " + (quantityOption === 12 ? text.dozenSuffix : "")
-        : "";
+    let quantityText = "";
+
+    if (quantityOption === 12) {
+      quantityText = ` - ${text.dozenSuffix}`;
+    }
+
+    if (quantityOption === WHOLESALE_QUANTITY) {
+      quantityText = ` - ${text.wholesaleSuffix}`;
+    }
     return `${productItem.title} - ${variant.size}${quantityText}`;
   };
 
-  const updateUrlParams = (variant, quantityOption) => {
-    const params = new URLSearchParams();
-    params.set("variant", variant.size);
-    params.set("quantity", quantityOption.toString());
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-  };
+  const changePrice = (quantityOption = 1, variant = null) => {
+    const targetVariant = variant || selectedVariant;
+    const targetQuantity = getValidQuantity(quantityOption, targetVariant);
 
-  const changePrice = (quantitys = null, variants = null) => {
-    setSelectedVariant(variants);
-    setSelectedQuantity(quantitys);
-
-    if (quantitys === 12 && variants.dozenPrice) {
-      setSelectedPrice(variants.dozenPrice);
-    } else {
-      setSelectedPrice(variants.price);
-    }
-
-    updateUrlParams(variants, quantitys);
+    setSelectedVariant(targetVariant);
+    setSelectedQuantity(targetQuantity);
+    setSelectedPrice(getVariantPrice(targetVariant, targetQuantity));
   };
 
   if (!currentProduct || !selectedVariant) {
     return <Loading />;
   }
 
-  const fromPriceTotal = selectedQuantity * selectedVariant.fromPrice;
+  const isWholesale = selectedQuantity === WHOLESALE_QUANTITY;
+  const fromPriceTotal = isWholesale
+    ? 0
+    : selectedQuantity * (selectedVariant.fromPrice || 0);
   const discountPercentage =
-    fromPriceTotal > 0
+    !isWholesale && fromPriceTotal > 0
       ? Math.round(((fromPriceTotal - selectedPrice) / fromPriceTotal) * 100)
       : 0;
 
   const tagTitle = getTitleText(currentProduct, selectedVariant, selectedQuantity);
+  const selectedQuantityText = isWholesale
+    ? text.wholesaleSuffix
+    : selectedQuantity === 12
+      ? text.dozenSuffix
+      : text.single;
+  const selectedPriceText = isWholesale
+    ? text.wholesalePriceText
+    : formatIdr(selectedPrice, locale);
+  const buyMessage =
+    typeof text.buyWhatsAppMessage === "function"
+      ? text.buyWhatsAppMessage(
+          currentProduct.title,
+          selectedVariant.size,
+          selectedQuantityText,
+          selectedPriceText
+        )
+      : `Halo, saya mau beli ${currentProduct.title} - ${selectedVariant.size} (${selectedQuantityText}). Harga: ${selectedPriceText}.`;
+  const buyWhatsAppUrl = `https://wa.me/${getWhatsAppNumber(
+    ContactInformation.whatsappNumber
+  )}?text=${encodeURIComponent(buyMessage)}`;
 
   return (
     <>
@@ -125,10 +147,11 @@ export default function SearchProduct({ product = null, locale = "id" }) {
           <div className="searchProduct-image-container">
             <Image
               src={`/asset/product/${selectedVariant.picture}`}
-              alt={`product-${selectedVariant.size}`}
+              alt={`${currentProduct.title} ${selectedVariant.size}`}
               className="searchProduct-image"
               width={512}
               height={512}
+              priority
             />
           </div>
         </div>
@@ -138,16 +161,40 @@ export default function SearchProduct({ product = null, locale = "id" }) {
             {tagTitle}
           </h1>
 
-          <p className="searchProduct-price">
-            {formatIdr(selectedPrice, locale)}{" "}
-            <DiscountBadge
-              discountPercentage={discountPercentage}
-              isLarge={true}
-            />{" "}
-            <span className="searchProduct-fromPrice">
-              {formatIdr(selectedQuantity * selectedVariant.fromPrice, locale)}
-            </span>
-          </p>
+          {isWholesale ? (
+            <div className="searchProduct-price-box">
+              <p className="searchProduct-price searchProduct-price-negotiate">
+                {text.wholesalePriceText}
+              </p>
+            </div>
+          ) : (
+            <p className="searchProduct-price">
+              {formatIdr(selectedPrice, locale)}{" "}
+              <DiscountBadge
+                discountPercentage={discountPercentage}
+                isLarge={true}
+              />{" "}
+              <span className="searchProduct-fromPrice">
+                {formatIdr(fromPriceTotal, locale)}
+              </span>
+            </p>
+          )}
+
+          <a
+            href={buyWhatsAppUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="searchProduct-whatsapp"
+          >
+            <Image
+              src="/asset/whatsapp-logo.png"
+              alt="WhatsApp"
+              className="searchProduct-whatsapp-icon"
+              width={100}
+              height={100}
+            />
+            {text.buyWhatsAppButton}
+          </a>
 
           <p className="searchProduct-text">
             <strong>{text.quantityLabel}</strong>
@@ -172,6 +219,14 @@ export default function SearchProduct({ product = null, locale = "id" }) {
                 {text.dozen}
               </span>
             )}
+            <span
+              className={`searchProduct-badge ${
+                selectedQuantity === WHOLESALE_QUANTITY ? "selected" : ""
+              }`}
+              onClick={() => changePrice(WHOLESALE_QUANTITY, selectedVariant)}
+            >
+              {text.wholesale}
+            </span>
           </div>
 
           <p className="searchProduct-text">
@@ -189,7 +244,7 @@ export default function SearchProduct({ product = null, locale = "id" }) {
               >
                 <Image
                   src={`/api/images/product/${variant.picture}`}
-                  alt={`product-${variant.size}`}
+                  alt={`${currentProduct.title} ${variant.size}`}
                   className="searchProduct-badge-image"
                   width={512}
                   height={512}

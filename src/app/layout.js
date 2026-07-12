@@ -9,6 +9,7 @@ export const metadata = {
   publisher: "Eksotika Prima",
   icons: {
     icon: "/favicon.ico",
+    apple: "/asset/logo.jpg",
   },
   robots: {
     index: true,
