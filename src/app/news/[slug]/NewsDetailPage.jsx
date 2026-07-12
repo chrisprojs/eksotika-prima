@@ -164,9 +164,7 @@ export default async function NewsDetailPage({ params, locale = "id" }) {
           <div className="news-product-list">
             {relatedProducts.map((product) => {
               const firstVariant = product.variants[0];
-              const imageUrl = firstVariant
-                ? `${apiUrl}/images/product/${firstVariant.picture}`
-                : "/favicon.ico";
+              const imageUrl = firstVariant.picture
 
               return (
                 <Link href={getLocalizedPath(`/product/${product.productId}`, locale)} className="news-product-card" key={product.productId}>
