@@ -10,8 +10,24 @@
   border-radius: 5px;
 }
 
-.badge-discount > .fa-tag {
-  font-size: 1rem; /* Adjust size of the icon */
+.badge-discount-icon {
+  position: relative;
+  width: 0.8rem;
+  height: 0.8rem;
+  background-color: currentColor;
+  border-radius: 2px 2px 2px 0;
+  transform: rotate(-45deg);
+}
+
+.badge-discount-icon::after {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 3px;
+  height: 3px;
+  background-color: red;
+  border-radius: 50%;
+  content: "";
 }
 
 .badge-discount.large{
@@ -24,7 +40,8 @@
     padding: 2px 6px;
   }
 
-  .badge-discount > .fa-tag {
-    font-size: 0.9rem;
+  .badge-discount-icon {
+    width: 0.7rem;
+    height: 0.7rem;
   }
 }

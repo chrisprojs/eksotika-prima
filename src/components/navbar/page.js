@@ -102,7 +102,7 @@ function Navbar() {
           onClick={() => setClicked(!isClicked)}
           aria-label="Menu"
         >
-          <i className={`fa ${isClicked ? "fa-times" : "fa-bars"}`} />
+          <span className={`menu-icon-symbol ${isClicked ? "close" : "open"}`} aria-hidden="true" />
         </button>
       </div>
     </nav>
