@@ -8,6 +8,7 @@ import DiscountBadge from "@/components/discount/page";
 import { formatIdr, getTranslations } from "@/lib/i18n";
 import { cleanProductHtml } from "@/lib/newsHtml";
 import { ContactInformation } from "@/data/ContactInformation";
+import { getProductImageSrc } from "@/lib/productImageSrc";
 
 const WHOLESALE_QUANTITY = "wholesale";
 
@@ -148,7 +149,7 @@ export default function SearchProduct({ product = null, locale = "id" }) {
         <div className="searchProduct-displayer">
           <div className="searchProduct-image-container">
             <Image
-              src={`/asset/product/${selectedVariant.picture}`}
+              src={getProductImageSrc(selectedVariant.picture)}
               alt={`${currentProduct.title} ${selectedVariant.size}`}
               className="searchProduct-image"
               width={512}
@@ -245,7 +246,7 @@ export default function SearchProduct({ product = null, locale = "id" }) {
                 onClick={() => changePrice(selectedQuantity, variant)}
               >
                 <Image
-                  src={`/api/images/product/${variant.picture}`}
+                  src={getProductImageSrc(variant.picture)}
                   alt={`${currentProduct.title} ${variant.size}`}
                   className="searchProduct-badge-image"
                   width={512}
@@ -278,3 +279,4 @@ export default function SearchProduct({ product = null, locale = "id" }) {
     </>
   );
 }
+

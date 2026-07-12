@@ -1,9 +1,10 @@
-﻿import React from "react";
+import React from "react";
 import "./page.css";
 import Link from "next/link";
 import Image from "next/image";
 import DiscountBadge from "../discount/page";
 import { formatIdr, getLocalizedPath } from "@/lib/i18n";
+import { getProductImageSrc } from "@/lib/productImageSrc";
 
 function Card({ product, locale = "id" }) {
   const prices = product.variants.map((variant) => variant.price);
@@ -30,7 +31,7 @@ function Card({ product, locale = "id" }) {
       <div className="card-fill">
         <div className="card-slider">
           <div className="card-image-container">
-            <Image src={`/api/images/product/${product.variants[0].picture}`} alt={`product-${product.variants[0].size}`} className="card-image" width={512} height={512}/>
+            <Image src={getProductImageSrc(product.variants[0].picture)} alt={`product-${product.variants[0].size}`} className="card-image" width={512} height={512}/>
           </div>
         </div>
         <p className="card-title">
@@ -59,3 +60,4 @@ function Card({ product, locale = "id" }) {
 }
 
 export default Card;
+
