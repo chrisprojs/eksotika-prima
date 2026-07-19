@@ -1,50 +1,16 @@
 import { getLocalizedPath } from "@/lib/i18n";
 
 const NEWS_ALLOWED_TAGS = new Set([
-  "p",
-  "br",
-  "strong",
-  "b",
-  "em",
-  "i",
-  "ul",
-  "ol",
-  "li",
-  "a",
-  "h2",
-  "h3",
-  "img",
+  "p", "br", "div", "span", "strong", "b", "em", "i", "u", "s", "mark", "small", "sub", "sup",
+  "ul", "ol", "li", "dl", "dt", "dd", "a", "blockquote", "q", "cite", "code", "pre", "hr",
+  "figure", "figcaption", "h1", "h2", "h3", "h4", "h5", "h6",
+  "table", "caption", "thead", "tbody", "tfoot", "tr", "th", "td", "img",
 ]);
 
-const PRODUCT_ALLOWED_TAGS = new Set([
-  "p",
-  "br",
-  "strong",
-  "b",
-  "em",
-  "i",
-  "ul",
-  "ol",
-  "li",
-  "a",
-]);
+const PRODUCT_ALLOWED_TAGS = NEWS_ALLOWED_TAGS;
 
 const VOID_TAGS = new Set(["br", "img"]);
-const BLOCK_TAGS = new Set([
-  "p",
-  "br",
-  "ul",
-  "ol",
-  "li",
-  "h1",
-  "h2",
-  "h3",
-  "h4",
-  "h5",
-  "h6",
-  "div",
-  "img",
-]);
+const BLOCK_TAGS = NEWS_ALLOWED_TAGS;
 
 const HTML_ENTITY_MAP = {
   amp: "&",
