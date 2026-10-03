@@ -283,6 +283,9 @@ export const dictionary = {
       searchPlaceholder: "Cari Produk...",
     },
     productDetail: {
+      priceTypeLabel: "Jenis Harga:",
+      importPrice: "Harga Impor",
+      localPrice: "Harga Lokal",
       quantityLabel: "Ukuran:",
       variantLabel: "Paket:",
       brandLabel: "Merk:",
@@ -552,6 +555,9 @@ export const dictionary = {
       searchPlaceholder: "Search products...",
     },
     productDetail: {
+      priceTypeLabel: "Price Type:",
+      importPrice: "Import Price",
+      localPrice: "Local Price",
       quantityLabel: "Quantity:",
       variantLabel: "Package:",
       brandLabel: "Brand:",

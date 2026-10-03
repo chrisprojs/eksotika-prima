@@ -56,6 +56,9 @@ export default function SearchProduct({ product = null, locale = "id" }) {
   const [currentProduct] = useState(product);
   const [selectedVariant, setSelectedVariant] = useState(firstVariant);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+  // Default price type is always "import" regardless of locale; the user can
+  // switch between import and local pricing via the toggle below.
+  const [priceType, setPriceType] = useState("import");
   const [selectedPrice, setSelectedPrice] = useState(() =>
     getVariantPrice(firstVariant, 1)
   );
@@ -93,7 +96,10 @@ export default function SearchProduct({ product = null, locale = "id" }) {
       setSelectedQuantity(targetQuantity);
       setSelectedPrice(getVariantPrice(targetVariant, targetQuantity, priceType));
     }
-  }, [currentProduct, searchParams, priceType, firstVariant]); // Removed selectedVariant, selectedQuantity from deps to avoid loops
+    // priceType intentionally omitted: the price toggle recomputes selectedPrice
+    // in the effect below without re-running URL reconciliation.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentProduct, searchParams, firstVariant]); // Removed selectedVariant, selectedQuantity from deps to avoid loops
 
   useEffect(() => {
     if (!selectedVariant) return;
@@ -254,6 +260,29 @@ export default function SearchProduct({ product = null, locale = "id" }) {
             />
             {text.buyWhatsAppButton}
           </a>
+
+          <p className="searchProduct-text">
+            <strong>{text.priceTypeLabel}</strong>
+          </p>
+
+          <div className="searchProduct-badge-box">
+            <span
+              className={`searchProduct-badge ${
+                priceType === "import" ? "selected" : ""
+              }`}
+              onClick={() => setPriceType("import")}
+            >
+              {text.importPrice}
+            </span>
+            <span
+              className={`searchProduct-badge ${
+                priceType === "local" ? "selected" : ""
+              }`}
+              onClick={() => setPriceType("local")}
+            >
+              {text.localPrice}
+            </span>
+          </div>
 
           <p className="searchProduct-text">
             <strong>{text.quantityLabel}</strong>
