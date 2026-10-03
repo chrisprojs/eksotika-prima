@@ -4,7 +4,7 @@ import { getPublishedNewsBySlug } from "@/app/api/news/newsService";
 import { htmlToPlainText, localizeNewsHtml } from "@/lib/newsHtml";
 import { apiUrl, siteUrl } from "@/lib/site";
 import {
-  formatIdr,
+  formatCurrency,
   formatLocalizedDate,
   getLocalizedPath,
   getLocalizedUrl,
@@ -14,15 +14,16 @@ import {
 import "@/app/news/[slug]/page.css";
 
 function getProductPrice(product, locale, text) {
-  const prices = product.variants.map((variant) => variant.price);
+  const importCurrency = product.importCurrency || "IDR";
+  const prices = product.variants.map((variant) => variant.importPrice);
   if (prices.length === 0) return text.priceUnavailable;
 
   const minPrice = Math.min(...prices);
   const maxPrice = Math.max(...prices);
 
   return minPrice === maxPrice
-    ? formatIdr(minPrice, locale)
-    : `${formatIdr(minPrice, locale)} - ${formatIdr(maxPrice, locale)}`;
+    ? formatCurrency(minPrice, importCurrency)
+    : `${formatCurrency(minPrice, importCurrency)} - ${formatCurrency(maxPrice, importCurrency)}`;
 }
 
 function getNewsCoverImageUrl(coverImage) {

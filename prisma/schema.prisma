@@ -19,14 +19,16 @@ model Product {
 }
 
 model Variant {
-  variantId  Int     @id @default(autoincrement())
-  size       String
-  picture    String
-  fromPrice  Int
-  price      Int
-  dozenPrice Int?
-  productId  Int
-  product    Product @relation(fields: [productId], references: [productId], onDelete: Cascade)
+  variantId        Int     @id @default(autoincrement())
+  size             String
+  picture          String
+  fromPrice        Int
+  price            Int
+  dozenPrice       Int?
+  importPrice      Int?
+  importDozenPrice Int?
+  productId        Int
+  product          Product @relation(fields: [productId], references: [productId], onDelete: Cascade)
 }
 
 model News {
@@ -50,4 +52,9 @@ model NewsProduct {
   product   Product @relation(fields: [productId], references: [productId], onDelete: Cascade)
 
   @@id([newsId, productId])
+}
+
+model AppConfig {
+  key   String @id
+  value String
 }

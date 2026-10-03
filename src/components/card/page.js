@@ -3,11 +3,12 @@ import "./page.css";
 import Link from "next/link";
 import Image from "next/image";
 import DiscountBadge from "../discount/page";
-import { formatIdr, getLocalizedPath } from "@/lib/i18n";
+import { formatCurrency, getLocalizedPath } from "@/lib/i18n";
 import { getProductImageSrc } from "@/lib/productImageSrc";
 
 function Card({ product, locale = "id" }) {
-  const prices = product.variants.map((variant) => variant.price);
+  const importCurrency = product.importCurrency || "IDR";
+  const prices = product.variants.map((variant) => variant.importPrice || variant.price);
   const minPrice = Math.min(...prices);
   const maxPrice = Math.max(...prices);
 
@@ -19,12 +20,12 @@ function Card({ product, locale = "id" }) {
 
   const priceText =
     minPrice === maxPrice
-      ? formatIdr(minPrice, locale)
-      : `${formatIdr(minPrice, locale)}-${formatIdr(maxPrice, locale)}`;
+      ? formatCurrency(minPrice, importCurrency)
+      : `${formatCurrency(minPrice, importCurrency)}-${formatCurrency(maxPrice, importCurrency)}`;
   const fromPriceText =
     minFromPrice === maxFromPrice
-      ? formatIdr(minFromPrice, locale)
-      : `${formatIdr(minFromPrice, locale)}-${formatIdr(maxFromPrice, locale)}`;
+      ? formatCurrency(minFromPrice, importCurrency)
+      : `${formatCurrency(minFromPrice, importCurrency)}-${formatCurrency(maxFromPrice, importCurrency)}`;
 
   return (
     <Link href={getLocalizedPath(`/product/${product.productId}`, locale)} className="card-container">

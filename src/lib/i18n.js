@@ -56,20 +56,15 @@ export function getMetadataAlternates(path = "/", locale = defaultLocale) {
   };
 }
 
-export function formatIdr(price, locale = defaultLocale) {
-  if (normalizeLocale(locale) === englishLocale) {
-    return `IDR ${new Intl.NumberFormat("en-US", {
-      maximumFractionDigits: 0,
-    }).format(price)}`;
-  }
+export function formatCurrency(price, currency = "IDR") {
+  // IDR is a whole-unit currency; foreign currencies (e.g. USD) keep up to two
+  // decimals so small converted amounts stay readable.
+  const fractionDigits = currency === "IDR" ? 0 : 2;
 
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
+  return `${new Intl.NumberFormat("en-US", {
     minimumFractionDigits: 0,
-  })
-    .format(price)
-    .replace(/\s+/g, "");
+    maximumFractionDigits: fractionDigits,
+  }).format(price)} ${currency}`;
 }
 
 export function formatLocalizedDate(date, locale = defaultLocale) {

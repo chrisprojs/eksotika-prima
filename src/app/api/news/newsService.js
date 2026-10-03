@@ -7,6 +7,11 @@ import {
   localizeNewsList,
 } from "@/lib/dbLocalization";
 import { defaultLocale, normalizeLocale } from "@/lib/i18n";
+import {
+  getImportCurrency,
+  getImportConversionRate,
+  applyImportCurrencyToProducts,
+} from "@/lib/currency";
 
 const newsInclude = {
   products: {
@@ -158,6 +163,39 @@ async function findNewsIdByLocalizedSlug(slug, locale, now) {
   return rows[0]?.newsId || null;
 }
 
+async function applyImportCurrencyToNews(news, rate, importCurrency) {
+  if (!news || !Array.isArray(news.products) || news.products.length === 0) {
+    return news;
+  }
+
+  const products = news.products.map((product) => product?.product);
+  const convertedProducts = await applyImportCurrencyToProducts(products, {
+    rate,
+    importCurrency,
+  });
+
+  return {
+    ...news,
+    products: news.products.map((item, index) => ({
+      ...item,
+      product: convertedProducts[index],
+    })),
+  };
+}
+
+async function applyImportCurrencyToNewsList(newsList = [], locale = defaultLocale) {
+  if (!Array.isArray(newsList) || newsList.length === 0) {
+    return newsList;
+  }
+
+  const importCurrency = getImportCurrency(locale);
+  const rate = await getImportConversionRate(locale);
+
+  return Promise.all(
+    newsList.map((news) => applyImportCurrencyToNews(news, rate, importCurrency))
+  );
+}
+
 export function getProductLinks(productIds = []) {
   return productIds.map((productId) => ({
     product: {
@@ -176,7 +214,10 @@ export async function getPublishedNewsList(
     const newsIds = await getNewsIds({ now });
     const newsList = await getNewsByIds(newsIds);
 
-    return localizeNewsList(newsList, locale);
+    return applyImportCurrencyToNewsList(
+      localizeNewsList(newsList, locale),
+      locale
+    );
   } catch (error) {
     if (!isMissingNewsTable(error)) {
       console.error("Failed to get news list:", error);
@@ -204,7 +245,11 @@ export async function getPublishedNewsBySlug(
       include: newsInclude,
     });
 
-    return localizeNews(news, locale);
+    const localizedNews = localizeNews(news, locale);
+    const importCurrency = getImportCurrency(locale);
+    const rate = await getImportConversionRate(locale);
+
+    return applyImportCurrencyToNews(localizedNews, rate, importCurrency);
   } catch (error) {
     if (!isMissingNewsTable(error)) {
       console.error("Failed to get news by slug:", error);
@@ -229,9 +274,14 @@ export async function getNewsSectionByCategory(
       getNewsByIds(crazyNewsIds),
     ]);
 
+    const [localizedEducationNews, localizedCrazyNews] = await Promise.all([
+      applyImportCurrencyToNewsList(localizeNewsList(educationNews, locale), locale),
+      applyImportCurrencyToNewsList(localizeNewsList(crazyNews, locale), locale),
+    ]);
+
     return {
-      educationNews: localizeNewsList(educationNews, locale),
-      crazyNews: localizeNewsList(crazyNews, locale),
+      educationNews: localizedEducationNews,
+      crazyNews: localizedCrazyNews,
     };
   } catch (error) {
     if (!isMissingNewsTable(error)) {
@@ -252,7 +302,10 @@ export async function getLatestNewsByProductId(
     const newsIds = await getNewsIds({ now, productId, limit: 3 });
     const newsList = await getNewsByIds(newsIds);
 
-    return localizeNewsList(newsList, locale);
+    return applyImportCurrencyToNewsList(
+      localizeNewsList(newsList, locale),
+      locale
+    );
   } catch (error) {
     if (!isMissingNewsTable(error)) {
       console.error("Failed to get product news:", error);

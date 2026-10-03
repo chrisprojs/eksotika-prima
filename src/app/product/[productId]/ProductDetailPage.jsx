@@ -105,18 +105,21 @@ function getOfferPrice(price) {
 function getProductOffers(product, pagePath, locale, text) {
   const pageUrl = getLocalizedUrl(pagePath, locale);
   const variants = Array.isArray(product?.variants) ? product.variants : [];
+  // Offer prices are derived from the import price, which follows the locale
+  // currency (IDR for Bahasa, USD for English).
+  const offerCurrency = product?.importCurrency || "IDR";
 
   return variants.flatMap((variant) => {
     const baseOffer = {
       "@type": "Offer",
       url: pageUrl,
-      priceCurrency: "IDR",
+      priceCurrency: offerCurrency,
       availability: "https://schema.org/InStock",
       itemCondition: "https://schema.org/NewCondition",
     };
     const offers = [];
-    const singlePrice = getOfferPrice(variant.price);
-    const dozenPrice = getOfferPrice(variant.dozenPrice);
+    const singlePrice = getOfferPrice(variant.importPrice || variant.price);
+    const dozenPrice = getOfferPrice(variant.importDozenPrice || variant.dozenPrice);
 
     if (singlePrice) {
       offers.push({

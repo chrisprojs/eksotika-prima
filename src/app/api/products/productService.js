@@ -5,6 +5,10 @@ import {
   localizeProducts,
 } from "@/lib/dbLocalization";
 import { defaultLocale } from "@/lib/i18n";
+import {
+  applyImportCurrency,
+  applyImportCurrencyToProducts,
+} from "@/lib/currency";
 
 const productInclude = {
   variants: true,
@@ -25,7 +29,9 @@ export async function getAllProducts(locale = defaultLocale) {
     include: productInclude,
   });
 
-  return localizeProducts(products, locale);
+  const localizedProducts = localizeProducts(products, locale);
+
+  return applyImportCurrencyToProducts(localizedProducts, locale);
 }
 
 export async function getProductById(productId, locale = defaultLocale) {
@@ -40,7 +46,9 @@ export async function getProductById(productId, locale = defaultLocale) {
     include: productInclude,
   });
 
-  return localizeProduct(product, locale);
+  const localizedProduct = localizeProduct(product, locale);
+
+  return applyImportCurrency(localizedProduct, locale);
 }
 
 export async function updateProduct(productId, data) {
