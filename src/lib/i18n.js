@@ -114,29 +114,33 @@ export const dictionary = {
         "Eksotika Prima adalah supplier minyak gosok, minyak urut, dan minyak pijat untuk kebutuhan pribadi, toko, reseller, dan pembelian grosir. Kami membantu pelanggan mendapatkan produk berkualitas dengan harga murah, packing aman, dan layanan cepat.",
         "Produk-produk yang kami tawarkan diproduksi dengan standar kualitas yang baik dan menggabungkan bahan-bahan herbal pilihan yang telah lama dikenal dalam pengobatan tradisional Indonesia. Hal ini menjadikan produk Eksotika Prima sebagai pilihan bagi masyarakat yang menginginkan perawatan tubuh secara alami dengan kualitas yang terpercaya.",
       ],
-      points: ["Harga grosir", "Bisa nego", "Siap Ekspor"],
+      points: ["Harga grosir", "Bisa nego", "Siap Impor"],
       pointsLabel: "Keunggulan Eksotika Prima",
       videoLabel: "Video profil Eksotika Prima supplier minyak gosok",
       videoFallback: "Browser Anda tidak bisa memutar video ini.",
     },
-    exportShipping: {
-      label: "Layanan Ekspor",
+    importShipping: {
+      label: "Layanan Impor",
       heading: "Melayani Pengiriman Minyak ke Berbagai Negara",
       description: [
         "Eksotika Prima melayani kebutuhan pengiriman produk minyak gosok, minyak urut, dan produk kesehatan tradisional untuk pembeli internasional. Kami dapat membantu pelanggan, toko, reseller, dan pembeli grosir yang ingin mengirim produk ke luar Indonesia.",
-        "Area tujuan dapat mencakup Asia Tenggara, Asia Timur, Timur Tengah, Afrika, dan wilayah lain sesuai aturan pengiriman yang berlaku. Tim kami membantu memberi informasi stok, packing, jumlah pesanan, dan proses pengiriman.",
+        "Area tujuan dapat mencakup Amerika Serikat, Eropa, Australia, Asia Tenggara, Asia Timur, Timur Tengah, Afrika, Amerika Latin, dan wilayah lain sesuai aturan pengiriman yang berlaku. Tim kami membantu memberi informasi stok, packing, jumlah pesanan, dan proses pengiriman.",
       ],
-      regionsLabel: "Wilayah tujuan ekspor",
+      regionsLabel: "Wilayah tujuan impor",
       regions: [
+        "Amerika Serikat",
+        "Eropa",
+        "Australia",
         "Asia Tenggara",
         "Asia Timur",
         "Timur Tengah",
         "Afrika",
+        "Amerika Latin",
         "Lain-lain",
       ],
-      noteTitle: "Siap Bantu Ekspor",
+      noteTitle: "Siap Bantu Impor",
       noteText: "Diskusikan negara tujuan, jumlah pesanan, dan kebutuhan packing dengan tim kami.",
-      imageAlt: "Produk minyak Eksotika Prima siap untuk pengiriman ekspor",
+      imageAlt: "Produk minyak Eksotika Prima siap untuk pengiriman impor",
     },
     reason: {
       heading: "Alasan Belanja di Toko Kami",
@@ -195,12 +199,12 @@ export const dictionary = {
         {
           question: "Apakah Eksotika Prima menerima pengiriman internasional?",
           answer:
-            "Ya. Eksotika Prima dapat membantu pelanggan dari luar negeri sesuai aturan pengiriman yang berlaku. Untuk tujuan pengiriman, ketersediaan produk, dan syarat ekspor, pelanggan dapat menghubungi tim Eksotika Prima.",
+            "Ya. Eksotika Prima dapat membantu pelanggan dari luar negeri sesuai aturan pengiriman yang berlaku. Untuk tujuan pengiriman, ketersediaan produk, dan syarat impor, pelanggan dapat menghubungi tim Eksotika Prima.",
         },
         {
-          question: "Bagaimana proses ekspor minyak gosok dari Indonesia?",
+          question: "Bagaimana proses impor minyak gosok dari Indonesia?",
           answer:
-            "Proses ekspor dimulai dari pemilihan produk, konfirmasi jumlah pesanan, persiapan dokumen ekspor sesuai negara tujuan, pengemasan, lalu pengiriman melalui laut atau udara. Tim Eksotika Prima dapat membantu memberi informasi sesuai kebutuhan pelanggan.",
+            "Proses impor dimulai dari pemilihan produk, konfirmasi jumlah pesanan, persiapan dokumen impor sesuai negara tujuan, pengemasan, lalu pengiriman melalui laut atau udara. Tim Eksotika Prima dapat membantu memberi informasi sesuai kebutuhan pelanggan.",
         },
         {
           question: "Apakah Eksotika Prima menyediakan harga grosir?",
@@ -366,7 +370,7 @@ export const dictionary = {
       prompt: "Want to bargain or buy? Please contact:",
     },
     home: {
-      heroTitle: "Indonesia's Large Rubbing Oil Supplier",
+      heroTitle: "Indonesia's Large Massage Oil Supplier",
       heroSubtitle: "Low Prices, Open to Bargain",
       blast: "Buy More, Bargain More!",
       location: contactAddress,
@@ -374,34 +378,38 @@ export const dictionary = {
     },
     about: {
       label: "About Eksotika Prima",
-      heading: "Trusted Rubbing Oil Supplier in Indonesia",
+      heading: "Trusted Massage Oil Supplier in Indonesia",
       description: [
-        "Eksotika Prima supplies rubbing oil, massage oil, and herbal body care oil for personal use, shops, resellers, and wholesale buyers. We help customers get quality products with low prices, safe packing, and fast service.",
+        "Eksotika Prima supplies massage oil and herbal body care oil for personal use, shops, resellers, and wholesale buyers. We help customers get quality products with low prices, safe packing, and fast service.",
         "Our products are made with good quality standards and selected herbal ingredients that are well known in Indonesian traditional care. This makes Eksotika Prima a trusted choice for customers who want natural body care products.",
       ],
-      points: ["Wholesale price", "Can bargain", "Ready to export"],
+      points: ["Wholesale price", "Can bargain", "Ready to import"],
       pointsLabel: "Eksotika Prima benefits",
-      videoLabel: "Eksotika Prima rubbing oil supplier profile video",
+      videoLabel: "Eksotika Prima massage oil supplier profile video",
       videoFallback: "Your browser cannot play this video.",
     },
-    exportShipping: {
-      label: "Export Service",
+    importShipping: {
+      label: "Import Service",
       heading: "Shipping Oil Products to Many Countries",
       description: [
-        "Eksotika Prima supports international shipping needs for rubbing oil, massage oil, and traditional health products. We can help customers, stores, resellers, and wholesale buyers who want to send products outside Indonesia.",
-        "Destination areas may include Southeast Asia, East Asia, the Middle East, Africa, and other regions based on available shipping rules. Our team helps with stock information, packing, order quantity, and shipping process details.",
+        "Eksotika Prima supports international shipping needs for massage oil and traditional health products. We can help customers, stores, resellers, and wholesale buyers who want to send products outside Indonesia.",
+        "Destination areas may include USA, Europe, Australia, Southeast Asia, East Asia, the Middle East, Africa, Latin America, and other regions based on available shipping rules. Our team helps with stock information, packing, order quantity, and shipping process details.",
       ],
-      regionsLabel: "Export destination regions",
+      regionsLabel: "Import destination regions",
       regions: [
+        "USA",
+        "Europe",
+        "Australia",
         "Southeast Asia",
         "East Asia",
         "Middle East",
         "Africa",
+        "Latin America",
         "Others",
       ],
-      noteTitle: "Export Support Ready",
+      noteTitle: "Import Support Ready",
       noteText: "Discuss destination country, order quantity, and packing needs with our team.",
-      imageAlt: "Eksotika Prima oil products ready for export shipping",
+      imageAlt: "Eksotika Prima oil products ready for import shipping",
     },
     reason: {
       heading: "Why Shop With Us",
@@ -435,17 +443,17 @@ export const dictionary = {
         {
           question: "What is Eksotika Prima?",
           answer:
-            "Eksotika Prima is a supplier of medicated oils and traditional health products. We offer products for personal customers, stores, resellers, and bulk buyers. We serve customers across Indonesia and support international customers based on shipping rules.",
+            "Eksotika Prima is a supplier of massage oils and traditional health products. We offer products for personal customers, stores, resellers, and bulk buyers. We serve customers across Indonesia and support international customers based on shipping rules.",
         },
         {
           question: "What products are available at Eksotika Prima?",
           answer:
-            "Eksotika Prima offers traditional health and body care products, including medicated oils, wind oils, telon oil, and other related products. Products are available in different sizes and packaging options.",
+            "Eksotika Prima offers traditional health and body care products, including massage oils, wind oils, telon oil, and other related products. Products are available in different sizes and packaging options.",
         },
         {
-          question: "What types of medicated oils are available at Eksotika Prima?",
+          question: "What types of massage oils are available at Eksotika Prima?",
           answer:
-            "Eksotika Prima provides many types of medicated oils with different characteristics and benefits. Each product is made to give a warm and comfortable feeling. More details about variants and package sizes are available on the product pages.",
+            "Eksotika Prima provides many types of massage oils with different characteristics and benefits. Each product is made to give a warm and comfortable feeling. More details about variants and package sizes are available on the product pages.",
         },
         {
           question: "How can I place an order with Eksotika Prima?",
@@ -460,12 +468,12 @@ export const dictionary = {
         {
           question: "Does Eksotika Prima offer international shipping?",
           answer:
-            "Yes. Eksotika Prima can support international customers based on shipping rules. For destination countries, product availability, and export requirements, customers can contact our team directly.",
+            "Yes. Eksotika Prima can support international customers based on shipping rules. For destination countries, product availability, and import requirements, customers can contact our team directly.",
         },
         {
-          question: "What is the export process for medicated oils from Indonesia?",
+          question: "What is the import process for massage oils from Indonesia?",
           answer:
-            "The export process usually starts with product selection, order quantity confirmation, export document preparation for the destination country, packing, and shipping by sea or air. The Eksotika Prima team can help explain the process based on customer needs.",
+            "The import process usually starts with product selection, order quantity confirmation, import document preparation for the destination country, packing, and shipping by sea or air. The Eksotika Prima team can help explain the process based on customer needs.",
         },
         {
           question: "Does Eksotika Prima offer wholesale pricing?",
@@ -478,9 +486,9 @@ export const dictionary = {
             "Eksotika Prima's main office is located at Metro Indah III Block C No. 31A, RT.1/RW.4, Papanggo, Tanjung Priok, North Jakarta, DKI Jakarta 14340, Indonesia. The full address, phone number, and WhatsApp contact are available on the Contact page.",
         },
         {
-          question: "Why choose Eksotika Prima as your medicated oil supplier?",
+          question: "Why choose Eksotika Prima as your massage oil supplier?",
           answer:
-            "Eksotika Prima is known as one of Indonesia's large medicated oil suppliers. We offer many traditional health products, good stock availability, and service for retail and wholesale purchases.",
+            "Eksotika Prima is known as one of Indonesia's large massage oil suppliers. We offer many traditional health products, good stock availability, and service for retail and wholesale purchases.",
         },
       ],
     },
@@ -514,7 +522,7 @@ export const dictionary = {
           name: "Yoko R.",
           image: "/asset/testimoni_face/3.jpg",
           comment:
-            "I like Beruang rubbing oil. I have ordered many times. After rubbing it on my feet, I can sleep better.",
+            "I like Beruang massage oil. I have ordered many times. After massage it on my feet, I can sleep better.",
         },
         {
           id: 4,
@@ -540,7 +548,7 @@ export const dictionary = {
       ],
     },
     productList: {
-      heading: "Find Affordable Rubbing Oil Products",
+      heading: "Find Affordable Massage Oil Products",
       searchPlaceholder: "Search products...",
     },
     productDetail: {
@@ -589,18 +597,18 @@ export const dictionary = {
     },
     meta: {
       home: {
-        title: "Indonesia Rubbing Oil Supplier | Eksotika Prima",
+        title: "Indonesia Massage Oil Supplier | Eksotika Prima",
         description:
-          "Eksotika Prima supplies quality rubbing oil and massage oil in Indonesia with low prices, safe packing, and wholesale order support.",
+          "Eksotika Prima supplies quality massage oil in Indonesia with low prices, safe packing, and wholesale order support.",
         openGraphDescription:
-          "Quality rubbing oil supplier in Indonesia. Low prices, trusted quality, and wholesale orders can be discussed.",
+          "Quality massage oil supplier in Indonesia. Low prices, trusted quality, and wholesale orders can be discussed.",
       },
       product: {
-        title: "Find Affordable Rubbing Oil Products | Eksotika Prima",
+        title: "Find Affordable Massage Oil Products | Eksotika Prima",
         description:
-          "Find quality rubbing oil products from Eksotika Prima. Low prices, safe packing, and wholesale orders can be discussed.",
+          "Find quality massage oil products from Eksotika Prima. Low prices, safe packing, and wholesale orders can be discussed.",
         twitterDescription:
-          "Quality rubbing oil products with low prices and wholesale order support.",
+          "Quality massage oil products with low prices and wholesale order support.",
       },
       contact: {
         title: "Contact Us | Eksotika Prima",
