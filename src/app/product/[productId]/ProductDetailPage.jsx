@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getProductById } from "@/app/api/products/productService";
 import SearchProductClient from "@/app/product/[productId]/SearchProductClient";
 import ProductNewsSection from "@/components/productNewsSection/page";
-import ExportShippingSection from "@/components/exportShippingSection/page";
+import ImportShippingSection from "@/components/importShippingSection/page";
 import ShopSection from "@/components/shopSection/page";
 import TestimoniSection from "@/components/testimoniSection/page";
 import {
@@ -271,7 +271,7 @@ export default async function ProductDetailPage({ params, searchParams, locale =
       />
       <SearchProductClient product={product} locale={locale} />
       <div className="page-container page-grey">
-        <ExportShippingSection locale={locale} />
+        <ImportShippingSection locale={locale} />
       </div>
       <div className="page-container">
         <ProductNewsSection productId={resolvedParams.productId} locale={locale} />

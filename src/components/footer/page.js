@@ -16,6 +16,7 @@ function Footer() {
   useEffect(() => {
     const handleScroll = () => {
       const footerElement = document.querySelector('.footer');
+      if (!footerElement) return;
       const rect = footerElement.getBoundingClientRect();
       const isInView = rect.top < window.innerHeight - 150 && rect.bottom >= 0;
 
