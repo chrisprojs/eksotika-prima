@@ -334,14 +334,14 @@ export const dictionary = {
     },
     meta: {
       home: {
-        title: "Supplier Minyak Gosok Terbesar Se-Indonesia | Eksotika Prima",
+        title: "Supplier Minyak Gosok Terbesar Se-Indonesia | Mendukung Pengiriman International | Eksotika Prima",
         description:
           "Supplier minyak gosok terbesar di Indonesia. Menyediakan minyak gosok berkualitas dengan harga termurah dan bisa nego untuk pembelian besar.",
         openGraphDescription:
           "Supplier minyak gosok terbesar di Indonesia. Harga termurah, kualitas terjamin, bisa nego untuk pembelian besar.",
       },
       product: {
-        title: "Cari Minyak Gosok Termurah Se-Indonesia | Eksotika Prima",
+        title: "Cari Minyak Gosok Termurah Se-Indonesia | Mendukung Pengiriman International | Eksotika Prima",
         description:
           "Cari minyak gosok termurah di Indonesia. Menyediakan minyak gosok berkualitas dengan harga termurah dan bisa nego untuk pembelian besar.",
         twitterDescription:
@@ -607,14 +607,14 @@ export const dictionary = {
     },
     meta: {
       home: {
-        title: "Indonesia Massage Oil Supplier | Eksotika Prima",
+        title: "Indonesia's Large Massage Oil Supplier | Support International Shipping | Eksotika Prima",
         description:
           "Eksotika Prima supplies quality massage oil in Indonesia with low prices, safe packing, and wholesale order support.",
         openGraphDescription:
           "Quality massage oil supplier in Indonesia. Low prices, trusted quality, and wholesale orders can be discussed.",
       },
       product: {
-        title: "Find Affordable Massage Oil Products | Eksotika Prima",
+        title: "Find Affordable Massage Oil Products | Support International Shipping | Eksotika Prima",
         description:
           "Find quality massage oil products from Eksotika Prima. Low prices, safe packing, and wholesale orders can be discussed.",
         twitterDescription:
