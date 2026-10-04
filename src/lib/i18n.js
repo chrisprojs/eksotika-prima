@@ -298,6 +298,7 @@ export const dictionary = {
       wholesaleSuffix: "grosir",
       wholesalePriceText: "Harga grosir nego via WhatsApp",
       priceLabel: "Harga",
+      internationalShippingSuffix: "Mendukung Pengiriman Internasional",
       buyWhatsAppButton: "Beli via WhatsApp",
       buyWhatsAppMessage(productTitle, variantSize, quantityText, priceText) {
         return `Halo, saya mau beli ${productTitle} - ${variantSize} (${quantityText}). Harga: ${priceText}.`;
@@ -571,6 +572,7 @@ export const dictionary = {
       wholesaleSuffix: "wholesale",
       wholesalePriceText: "Wholesale price: negotiate via WhatsApp",
       priceLabel: "Price",
+      internationalShippingSuffix: "Support International Shipping",
       buyWhatsAppButton: "Buy via WhatsApp",
       buyWhatsAppMessage(productTitle, variantSize, quantityText, priceText) {
         return `Hello, I want to buy ${productTitle} - ${variantSize} (${quantityText}). Price: ${priceText}.`;
