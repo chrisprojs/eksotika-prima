@@ -9,7 +9,6 @@ import { formatCurrency, getTranslations } from "@/lib/i18n";
 import { cleanProductHtml } from "@/lib/newsHtml";
 import { ContactInformation } from "@/data/ContactInformation";
 import { getProductImageSrc } from "@/lib/productImageSrc";
-import { getProductDetailPageTitleText } from "@/lib/getProductDetailPageTitleText";
 
 const WHOLESALE_QUANTITY = "wholesale";
 
@@ -128,14 +127,6 @@ export default function SearchProduct({ product = null, locale = "id" }) {
     const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
     router.replace(newUrl, { scroll: false });
   };
-
-  // Update document title when selection changes
-  useEffect(() => {
-    if (!currentProduct || !selectedVariant) return;
-    
-    const titleText = getProductDetailPageTitleText(currentProduct, selectedVariant, selectedQuantity, text);
-    document.title = titleText;
-  }, [currentProduct, selectedVariant, selectedQuantity, text]);
 
   function getTagTitleText(product, variant, quantity) {
     if (!product || !variant) return product?.title || "";
