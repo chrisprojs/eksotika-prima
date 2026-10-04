@@ -135,7 +135,7 @@ export default function SearchProduct({ product = null, locale = "id" }) {
     
     const titleText = getProductDetailPageTitleText(currentProduct, selectedVariant, selectedQuantity, text);
     document.title = titleText;
-  }, [currentProduct, selectedVariant, selectedQuantity]);
+  }, [currentProduct, selectedVariant, selectedQuantity, text]);
 
   function getTagTitleText(product, variant, quantity) {
     if (!product || !variant) return product?.title || "";
