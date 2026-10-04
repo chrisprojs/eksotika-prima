@@ -136,8 +136,9 @@ export default function SearchProduct({ product = null, locale = "id" }) {
     document.title = titleText;
   }, [currentProduct, selectedVariant, selectedQuantity]);
 
-  function getTitleText(product, variantSize, quantity) {
-    if (!product || !variantSize) return product?.title || "";
+  function getTitleText(product, variant, quantity) {
+    if (!product || !variant) return product?.title || "";
+    const variantSize = typeof variant === "object" ? variant?.size : variant;
     let quantityText = "";
 
     if (quantity === "12") {
