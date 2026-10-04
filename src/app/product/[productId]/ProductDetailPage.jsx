@@ -102,18 +102,47 @@ function getOfferPrice(price) {
     : null;
 }
 
+function getSelectedPrice(variant, quantity) {
+  if (!variant) return null;
+
+  if (quantity === "12") {
+    return (
+      getOfferPrice(variant.importDozenPrice) ??
+      getOfferPrice(variant.dozenPrice) ??
+      getOfferPrice(variant.importPrice) ??
+      getOfferPrice(variant.price)
+    );
+  }
+
+  return getOfferPrice(variant.importPrice) ?? getOfferPrice(variant.price);
+}
+
+function formatOfferPrice(value) {
+  // Google requires the price as a number without currency symbols or
+  // thousands separators. A string with a decimal point is the safe form.
+  return String(value);
+}
+
+function getPriceValidUntil() {
+  const validUntil = new Date();
+  validUntil.setFullYear(validUntil.getFullYear() + 1);
+  return validUntil.toISOString().split("T")[0];
+}
+
 function getProductOffers(product, pagePath, locale, text) {
   const pageUrl = getLocalizedUrl(pagePath, locale);
   const variants = Array.isArray(product?.variants) ? product.variants : [];
   // Offer prices are derived from the import price, which follows the locale
   // currency (IDR for Bahasa, USD for English).
   const offerCurrency = product?.importCurrency || "IDR";
+  const priceValidUntil = getPriceValidUntil();
 
   return variants.flatMap((variant) => {
     const baseOffer = {
       "@type": "Offer",
       url: pageUrl,
       priceCurrency: offerCurrency,
+      priceValidUntil,
       availability: "https://schema.org/InStock",
       itemCondition: "https://schema.org/NewCondition",
     };
@@ -126,7 +155,7 @@ function getProductOffers(product, pagePath, locale, text) {
         ...baseOffer,
         name: `${product.title} - ${variant.size}`,
         sku: `${product.productId}-${variant.size}-1`,
-        price: singlePrice,
+        price: formatOfferPrice(singlePrice),
       });
     }
 
@@ -135,12 +164,36 @@ function getProductOffers(product, pagePath, locale, text) {
         ...baseOffer,
         name: `${product.title} - ${variant.size} - ${text.dozenSuffix}`,
         sku: `${product.productId}-${variant.size}-12`,
-        price: dozenPrice,
+        price: formatOfferPrice(dozenPrice),
       });
     }
 
     return offers;
   });
+}
+
+// Builds the `offers` value for the Product schema. Google shows a single
+// price in the search snippet. With one offer we emit that Offer directly;
+// with several we wrap them in an AggregateOffer so Google has a clear
+// low/high price to display (like the "Rp 33.000" line in a rich result).
+function buildOffersValue(offers, offerCurrency, pageUrl) {
+  if (offers.length === 0) return undefined;
+  if (offers.length === 1) return offers[0];
+
+  const prices = offers.map((offer) => Number(offer.price));
+  const lowPrice = Math.min(...prices);
+  const highPrice = Math.max(...prices);
+
+  return {
+    "@type": "AggregateOffer",
+    url: pageUrl,
+    priceCurrency: offerCurrency,
+    lowPrice: formatOfferPrice(lowPrice),
+    highPrice: formatOfferPrice(highPrice),
+    offerCount: offers.length,
+    availability: "https://schema.org/InStock",
+    offers,
+  };
 }
 
 function getProductJsonLd({ product, description, pagePath, locale, text }) {
@@ -152,14 +205,17 @@ function getProductJsonLd({ product, description, pagePath, locale, text }) {
         .map(getProductImageUrl)
     )
   );
+  const pageUrl = getLocalizedUrl(pagePath, locale);
+  const offerCurrency = product?.importCurrency || "IDR";
   const offers = getProductOffers(product, pagePath, locale, text);
+  const offersValue = buildOffersValue(offers, offerCurrency, pageUrl);
   const brandName = cleanSentenceEnd(product.merk);
   const producerName = cleanSentenceEnd(product.produsen);
 
   return {
     "@context": "https://schema.org",
     "@type": "Product",
-    "@id": `${getLocalizedUrl(pagePath, locale)}#product`,
+    "@id": `${pageUrl}#product`,
     productID: String(product.productId),
     name: cleanText(product.title),
     image: images,
@@ -176,9 +232,7 @@ function getProductJsonLd({ product, description, pagePath, locale, text }) {
           name: producerName,
         }
       : undefined,
-    ...(offers.length > 0
-      ? { offers: offers.length > 1 ? offers : offers[0] }
-      : {}),
+    ...(offersValue ? { offers: offersValue } : {}),
   };
 }
 
@@ -215,6 +269,9 @@ export async function generateProductDetailMetadata({
   const image = selectedVariant
     ? getProductImageUrl(selectedVariant.picture)
     : `${siteUrl}/favicon.ico`;
+  const price = getSelectedPrice(selectedVariant, quantity);
+  const priceCurrency = product.importCurrency || "IDR";
+  const hasPrice = price !== null;
 
   return {
     metadataBase: new URL(siteUrl),
@@ -233,7 +290,23 @@ export async function generateProductDetailMetadata({
       title,
       description,
       images: [image],
+      ...(hasPrice
+        ? {
+            label1: text.priceLabel || "Price",
+            data1: `${priceCurrency} ${price}`,
+          }
+        : {}),
     },
+    ...(hasPrice
+      ? {
+          other: {
+            "product:price:amount": String(price),
+            "product:price:currency": priceCurrency,
+            "og:price:amount": String(price),
+            "og:price:currency": priceCurrency,
+          },
+        }
+      : {}),
     alternates: getMetadataAlternates(pagePath, locale),
   };
 }
