@@ -136,19 +136,24 @@ export default function SearchProduct({ product = null, locale = "id" }) {
     document.title = titleText;
   }, [currentProduct, selectedVariant, selectedQuantity]);
 
-  const getTitleText = (productItem, variant, quantityOption) => {
-    if (!productItem || !variant) return "";
+  function getTitleText(product, variantSize, quantity) {
+    if (!product || !variantSize) return product?.title || "";
     let quantityText = "";
 
-    if (quantityOption === 12) {
+    if (quantity === "12") {
       quantityText = ` - ${text.dozenSuffix}`;
     }
 
-    if (quantityOption === WHOLESALE_QUANTITY) {
+    if (quantity === "wholesale") {
       quantityText = ` - ${text.wholesaleSuffix}`;
     }
-    return `${productItem.title} - ${variant.size}${quantityText}`;
-  };
+
+    const shippingText = text.internationalShippingSuffix
+      ? ` | ${text.internationalShippingSuffix}`
+      : "";
+
+    return `${product.title} - ${variantSize}${quantityText}${shippingText} | Eksotika Prima`;
+  }
 
   const changePrice = (quantityOption = 1, variant = null) => {
     const targetVariant = variant || selectedVariant;

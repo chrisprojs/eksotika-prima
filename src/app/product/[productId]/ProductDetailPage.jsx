@@ -59,7 +59,7 @@ function getSelectedProductOptions(product, query = {}) {
   return { selectedVariant, quantity };
 }
 
-function getTitleText(product, variantSize, quantity, text) {
+function getTitleText(product, variantSize, quantity, text, locale = "id") {
   if (!product || !variantSize) return product?.title || "";
   let quantityText = "";
 
@@ -70,7 +70,12 @@ function getTitleText(product, variantSize, quantity, text) {
   if (quantity === "wholesale") {
     quantityText = ` - ${text.wholesaleSuffix}`;
   }
-  return `${product.title} - ${variantSize}${quantityText}`;
+
+  const shippingText = text.internationalShippingSuffix
+    ? ` | ${text.internationalShippingSuffix}`
+    : "";
+
+  return `${product.title} - ${variantSize}${quantityText}${shippingText} | Eksotika Prima`;
 }
 
 function getProductDescription(product, variantSize, locale) {
@@ -260,7 +265,7 @@ export async function generateProductDetailMetadata({
 
   const { selectedVariant, quantity } = getSelectedProductOptions(product, query);
   const pagePath = `/product/${productId}`;
-  const title = getTitleText(product, selectedVariant?.size, quantity, text);
+  const title = getTitleText(product, selectedVariant?.size, quantity, text, locale);
   const description = getProductDescription(
     product,
     selectedVariant?.size || "",
