@@ -9,6 +9,7 @@ import { formatCurrency, getTranslations } from "@/lib/i18n";
 import { cleanProductHtml } from "@/lib/newsHtml";
 import { ContactInformation } from "@/data/ContactInformation";
 import { getProductImageSrc } from "@/lib/productImageSrc";
+import { getProductDetailPageTitleText } from "@/lib/getProductDetailPageTitleText";
 
 const WHOLESALE_QUANTITY = "wholesale";
 
@@ -132,11 +133,11 @@ export default function SearchProduct({ product = null, locale = "id" }) {
   useEffect(() => {
     if (!currentProduct || !selectedVariant) return;
     
-    const titleText = getTitleText(currentProduct, selectedVariant, selectedQuantity);
+    const titleText = getProductDetailPageTitleText(currentProduct, selectedVariant, selectedQuantity, text);
     document.title = titleText;
   }, [currentProduct, selectedVariant, selectedQuantity]);
 
-  function getTitleText(product, variant, quantity) {
+  function getTagTitleText(product, variant, quantity) {
     if (!product || !variant) return product?.title || "";
     const variantSize = typeof variant === "object" ? variant?.size : variant;
     let quantityText = "";
@@ -149,11 +150,7 @@ export default function SearchProduct({ product = null, locale = "id" }) {
       quantityText = ` - ${text.wholesaleSuffix}`;
     }
 
-    const shippingText = text.internationalShippingSuffix
-      ? ` | ${text.internationalShippingSuffix}`
-      : "";
-
-    return `${product.title} - ${variantSize}${quantityText}${shippingText} | Eksotika Prima`;
+    return `${product.title} - ${variantSize}${quantityText}`;
   }
 
   const changePrice = (quantityOption = 1, variant = null) => {
@@ -188,7 +185,7 @@ export default function SearchProduct({ product = null, locale = "id" }) {
       ? Math.round(((fromPriceTotal - selectedPrice) / fromPriceTotal) * 100)
       : 0;
 
-  const tagTitle = getTitleText(currentProduct, selectedVariant, selectedQuantity);
+  const tagTitle = getTagTitleText(currentProduct, selectedVariant, selectedQuantity);
   const selectedQuantityText = isWholesale
     ? text.wholesaleSuffix
     : selectedQuantity === 12
