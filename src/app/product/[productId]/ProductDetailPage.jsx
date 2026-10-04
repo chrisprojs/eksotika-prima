@@ -15,6 +15,7 @@ import { htmlToPlainText } from "@/lib/newsHtml";
 import { siteUrl } from "@/lib/site";
 import { getAbsoluteProductImageSrc } from "@/lib/productImageSrc";
 import FaqSection from "@/components/faqSection/page";
+import { getProductDetailPageTitleText } from "@/lib/getProductDetailPageTitleText";
 
 function getSingleSearchParam(value) {
   return Array.isArray(value) ? value[0] : value;
@@ -57,25 +58,6 @@ function getSelectedProductOptions(product, query = {}) {
       : "1";
 
   return { selectedVariant, quantity };
-}
-
-function getTitleText(product, variantSize, quantity, text, locale = "id") {
-  if (!product || !variantSize) return product?.title || "";
-  let quantityText = "";
-
-  if (quantity === "12") {
-    quantityText = ` - ${text.dozenSuffix}`;
-  }
-
-  if (quantity === "wholesale") {
-    quantityText = ` - ${text.wholesaleSuffix}`;
-  }
-
-  const shippingText = text.internationalShippingSuffix
-    ? ` | ${text.internationalShippingSuffix}`
-    : "";
-
-  return `${product.title} - ${variantSize}${quantityText}${shippingText} | Eksotika Prima`;
 }
 
 function getProductDescription(product, variantSize, locale) {
@@ -265,7 +247,7 @@ export async function generateProductDetailMetadata({
 
   const { selectedVariant, quantity } = getSelectedProductOptions(product, query);
   const pagePath = `/product/${productId}`;
-  const title = getTitleText(product, selectedVariant?.size, quantity, text, locale);
+  const title = getProductDetailPageTitleText(product, selectedVariant?.size, quantity, text);
   const description = getProductDescription(
     product,
     selectedVariant?.size || "",
