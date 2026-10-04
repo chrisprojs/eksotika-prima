@@ -5,7 +5,7 @@ import ReasonSection from "@/components/reasonSection/page";
 import ShopSection from "@/components/shopSection/page";
 import { getTranslations } from "@/lib/i18n";
 import FaqSection from "@/components/faqSection/page";
-import ExportShippingSection from "@/components/exportShippingSection/page";
+import ImportShippingSection from "@/components/importShippingSection/page";
 
 export default function ProductClient({ locale = "id" }) {
   const text = getTranslations(locale).productList;
@@ -17,7 +17,7 @@ export default function ProductClient({ locale = "id" }) {
         <CardLoad searchable locale={locale} />
       </div>
       <div className="page-container">
-        <ExportShippingSection locale={locale} />
+        <ImportShippingSection locale={locale} />
       </div>
       <div className="page-container page-grey">
         <ReasonSection locale={locale}/>

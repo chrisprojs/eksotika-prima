@@ -4,37 +4,37 @@ import "./page.css";
 
 const exportImageUrl = "/asset/ready_to_ship.jpg";
 
-export default function ExportShippingSection({ locale = "id" }) {
-  const text = getTranslations(locale).exportShipping;
+export default function ImportShippingSection({ locale = "id" }) {
+  const text = getTranslations(locale).importShipping;
 
   return (
-    <section className="export-shipping-section" aria-labelledby="export-shipping-heading">
-      <div className="export-shipping-content">
-        <p className="export-shipping-label">{text.label}</p>
-        <h2 id="export-shipping-heading" className="export-shipping-heading">
+    <section className="import-shipping-section" aria-labelledby="import-shipping-heading">
+      <div className="import-shipping-content">
+        <p className="import-shipping-label">{text.label}</p>
+        <h2 id="import-shipping-heading" className="import-shipping-heading">
           {text.heading}
         </h2>
-        <div className="export-shipping-description">
+        <div className="import-shipping-description">
           {text.description.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
         </div>
-        <div className="export-shipping-regions" aria-label={text.regionsLabel}>
+        <div className="import-shipping-regions" aria-label={text.regionsLabel}>
           {text.regions.map((region) => (
             <span key={region}>{region}</span>
           ))}
         </div>
-        <div className="export-shipping-note">
+        <div className="import-shipping-note">
           <strong>{text.noteTitle}</strong>
           <span>{text.noteText}</span>
         </div>
       </div>
 
-      <div className="export-shipping-visual">
+      <div className="import-shipping-visual">
         <Image
           src={exportImageUrl}
           alt={text.imageAlt}
-          className="export-shipping-image"
+          className="import-shipping-image"
           width={900}
           height={600}
         />

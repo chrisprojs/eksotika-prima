@@ -5,7 +5,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import "./page.css";
 import Loading from "@/components/loading/page";
 import DiscountBadge from "@/components/discount/page";
-import { formatIdr, getTranslations } from "@/lib/i18n";
+import { formatCurrency, getTranslations } from "@/lib/i18n";
 import { cleanProductHtml } from "@/lib/newsHtml";
 import { ContactInformation } from "@/data/ContactInformation";
 import { getProductImageSrc } from "@/lib/productImageSrc";
@@ -22,16 +22,24 @@ function getValidQuantity(quantity, variant) {
   return quantity === 12 && variant?.dozenPrice ? 12 : 1;
 }
 
-function getVariantPrice(variant, quantity) {
+function getVariantPrice(variant, quantity, priceType = "import") {
   if (!variant) return 0;
 
   if (quantity === WHOLESALE_QUANTITY) return null;
 
-  if (quantity === 12 && variant.dozenPrice !== undefined && variant.dozenPrice !== null) {
+  if (quantity === 12 && priceType === "import" && variant.importDozenPrice !== null && variant.importDozenPrice !== undefined) {
+    return variant.importDozenPrice;
+  }
+  
+  if (quantity === 12 && priceType === "local" && variant.dozenPrice !== null && variant.dozenPrice !== undefined) {
     return variant.dozenPrice;
   }
 
-  return variant.price ?? 0;
+  const basePrice = priceType === "import" ? 
+    (variant.importPrice || variant.price) : 
+    variant.price;
+    
+  return basePrice ?? 0;
 }
 
 function getWhatsAppNumber(phoneNumber = "") {
@@ -43,23 +51,26 @@ export default function SearchProduct({ product = null, locale = "id" }) {
   const router = useRouter();
   const pathname = usePathname();
   const text = getTranslations(locale).productDetail;
+  const importCurrency = product?.importCurrency || "IDR";
   const firstVariant = getFirstVariant(product);
   const [currentProduct] = useState(product);
   const [selectedVariant, setSelectedVariant] = useState(firstVariant);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+  // Default price type is always "import" regardless of locale; the user can
+  // switch between import and local pricing via the toggle below.
+  const [priceType, setPriceType] = useState("import");
   const [selectedPrice, setSelectedPrice] = useState(() =>
     getVariantPrice(firstVariant, 1)
   );
 
+  // Read params from URL and update state (run once on mount and when URL changes)
   useEffect(() => {
     if (!currentProduct || !currentProduct.variants || currentProduct.variants.length === 0) return;
 
     const variantSize = searchParams.get("variant");
     const quantityParam = searchParams.get("quantity");
 
-    if (!variantSize && !quantityParam) return;
-
-    let targetVariant = currentProduct.variants[0];
+    let targetVariant = firstVariant;
     if (variantSize) {
       const variantFromUrl = currentProduct.variants.find((v) => v.size === variantSize);
       if (variantFromUrl) {
@@ -67,22 +78,63 @@ export default function SearchProduct({ product = null, locale = "id" }) {
       }
     }
 
-    const parsedQuantity =
-      quantityParam === WHOLESALE_QUANTITY
-        ? WHOLESALE_QUANTITY
-        : parseInt(quantityParam, 10);
-    const targetQuantity = getValidQuantity(parsedQuantity, targetVariant);
+    let targetQuantity = 1;
+    if (quantityParam) {
+      const parsedQuantity =
+        quantityParam === WHOLESALE_QUANTITY
+          ? WHOLESALE_QUANTITY
+          : parseInt(quantityParam, 10);
+      targetQuantity = getValidQuantity(parsedQuantity, targetVariant);
+    }
 
-    setSelectedVariant(targetVariant);
-    setSelectedQuantity(targetQuantity);
-    setSelectedPrice(getVariantPrice(targetVariant, targetQuantity));
-    router.replace(pathname, { scroll: false });
-  }, [currentProduct, searchParams, pathname, router]);
+    // Only update state if values actually changed (compare by size, not object reference)
+    const currentVariantSize = selectedVariant?.size;
+    const targetVariantSize = targetVariant?.size;
+    
+    if (currentVariantSize !== targetVariantSize || selectedQuantity !== targetQuantity) {
+      setSelectedVariant(targetVariant);
+      setSelectedQuantity(targetQuantity);
+      setSelectedPrice(getVariantPrice(targetVariant, targetQuantity, priceType));
+    }
+    // priceType intentionally omitted: the price toggle recomputes selectedPrice
+    // in the effect below without re-running URL reconciliation.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentProduct, searchParams, firstVariant]); // Removed selectedVariant, selectedQuantity from deps to avoid loops
 
   useEffect(() => {
     if (!selectedVariant) return;
-    setSelectedPrice(getVariantPrice(selectedVariant, selectedQuantity));
-  }, [selectedVariant, selectedQuantity]);
+    setSelectedPrice(getVariantPrice(selectedVariant, selectedQuantity, priceType));
+  }, [selectedVariant, selectedQuantity, priceType]);
+
+  // Update URL when user makes a selection change
+  const updateUrlForSelection = (variant, quantity) => {
+    const params = new URLSearchParams();
+    
+    // Always include variant in URL
+    if (variant?.size) {
+      params.set('variant', variant.size);
+    }
+    
+    // Include quantity if not default (1)
+    if (quantity !== 1) {
+      if (quantity === WHOLESALE_QUANTITY) {
+        params.set('quantity', WHOLESALE_QUANTITY);
+      } else {
+        params.set('quantity', quantity.toString());
+      }
+    }
+    
+    const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
+    router.replace(newUrl, { scroll: false });
+  };
+
+  // Update document title when selection changes
+  useEffect(() => {
+    if (!currentProduct || !selectedVariant) return;
+    
+    const titleText = getTitleText(currentProduct, selectedVariant, selectedQuantity);
+    document.title = titleText;
+  }, [currentProduct, selectedVariant, selectedQuantity]);
 
   const getTitleText = (productItem, variant, quantityOption) => {
     if (!productItem || !variant) return "";
@@ -104,7 +156,8 @@ export default function SearchProduct({ product = null, locale = "id" }) {
 
     setSelectedVariant(targetVariant);
     setSelectedQuantity(targetQuantity);
-    setSelectedPrice(getVariantPrice(targetVariant, targetQuantity));
+    setSelectedPrice(getVariantPrice(targetVariant, targetQuantity, priceType));
+    updateUrlForSelection(targetVariant, targetQuantity);
   };
 
   if (!currentProduct || !selectedVariant) {
@@ -112,9 +165,18 @@ export default function SearchProduct({ product = null, locale = "id" }) {
   }
 
   const isWholesale = selectedQuantity === WHOLESALE_QUANTITY;
+  // Local prices always stay in IDR; import prices follow the locale currency.
+  const activeCurrency = priceType === "import" ? importCurrency : "IDR";
+  // fromPrice is converted to the import currency; for the local view use the
+  // preserved IDR reference (fromPriceLocal) so the strike-through currency
+  // matches the displayed local price.
+  const activeFromPrice =
+    priceType === "import"
+      ? selectedVariant.fromPrice
+      : selectedVariant.fromPriceLocal ?? selectedVariant.fromPrice;
   const fromPriceTotal = isWholesale
     ? 0
-    : selectedQuantity * (selectedVariant.fromPrice || 0);
+    : selectedQuantity * (activeFromPrice || 0);
   const discountPercentage =
     !isWholesale && fromPriceTotal > 0
       ? Math.round(((fromPriceTotal - selectedPrice) / fromPriceTotal) * 100)
@@ -128,7 +190,7 @@ export default function SearchProduct({ product = null, locale = "id" }) {
       : text.single;
   const selectedPriceText = isWholesale
     ? text.wholesalePriceText
-    : formatIdr(selectedPrice, locale);
+    : formatCurrency(selectedPrice, activeCurrency);
   const buyMessage =
     typeof text.buyWhatsAppMessage === "function"
       ? text.buyWhatsAppMessage(
@@ -172,13 +234,13 @@ export default function SearchProduct({ product = null, locale = "id" }) {
             </div>
           ) : (
             <p className="searchProduct-price">
-              {formatIdr(selectedPrice, locale)}{" "}
+              {formatCurrency(selectedPrice, activeCurrency)}{" "}
               <DiscountBadge
                 discountPercentage={discountPercentage}
                 isLarge={true}
               />{" "}
               <span className="searchProduct-fromPrice">
-                {formatIdr(fromPriceTotal, locale)}
+                {formatCurrency(fromPriceTotal, activeCurrency)}
               </span>
             </p>
           )}
@@ -198,6 +260,29 @@ export default function SearchProduct({ product = null, locale = "id" }) {
             />
             {text.buyWhatsAppButton}
           </a>
+
+          <p className="searchProduct-text">
+            <strong>{text.priceTypeLabel}</strong>
+          </p>
+
+          <div className="searchProduct-badge-box">
+            <span
+              className={`searchProduct-badge ${
+                priceType === "import" ? "selected" : ""
+              }`}
+              onClick={() => setPriceType("import")}
+            >
+              {text.importPrice}
+            </span>
+            <span
+              className={`searchProduct-badge ${
+                priceType === "local" ? "selected" : ""
+              }`}
+              onClick={() => setPriceType("local")}
+            >
+              {text.localPrice}
+            </span>
+          </div>
 
           <p className="searchProduct-text">
             <strong>{text.quantityLabel}</strong>
