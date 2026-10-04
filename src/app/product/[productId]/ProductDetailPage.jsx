@@ -15,7 +15,6 @@ import { htmlToPlainText } from "@/lib/newsHtml";
 import { siteUrl } from "@/lib/site";
 import { getAbsoluteProductImageSrc } from "@/lib/productImageSrc";
 import FaqSection from "@/components/faqSection/page";
-import { getProductDetailPageTitleText } from "@/lib/getProductDetailPageTitleText";
 
 function getSingleSearchParam(value) {
   return Array.isArray(value) ? value[0] : value;
@@ -181,6 +180,25 @@ function buildOffersValue(offers, offerCurrency, pageUrl) {
     availability: "https://schema.org/InStock",
     offers,
   };
+}
+
+function getProductDetailPageTitleText(product, variantSize, quantity, text) {
+  if (!product || !variantSize) return product?.title || "";
+  let quantityText = "";
+
+  if (quantity === "12") {
+    quantityText = ` - ${text.dozenSuffix}`;
+  }
+
+  if (quantity === "wholesale") {
+    quantityText = ` - ${text.wholesaleSuffix}`;
+  }
+
+  const shippingText = text.internationalShippingSuffix
+    ? ` | ${text.internationalShippingSuffix}`
+    : "";
+
+  return `${product.title} - ${variantSize}${quantityText}${shippingText} | Eksotika Prima`;
 }
 
 function getProductJsonLd({ product, description, pagePath, locale, text }) {
