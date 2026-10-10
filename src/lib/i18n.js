@@ -57,9 +57,9 @@ export function getMetadataAlternates(path = "/", locale = defaultLocale) {
 }
 
 export function formatCurrency(price, currency = "IDR") {
-  // IDR is a whole-unit currency; foreign currencies (e.g. USD) keep up to two
-  // decimals so small converted amounts stay readable.
-  const fractionDigits = currency === "IDR" ? 0 : 2;
+  // IDR and JPY are whole-unit currencies; other foreign currencies (e.g. USD)
+  // keep up to two decimals so small converted amounts stay readable.
+  const fractionDigits = currency === "IDR" || currency === "JPY" ? 0 : 2;
 
   return `${new Intl.NumberFormat("en-US", {
     minimumFractionDigits: 0,
@@ -91,6 +91,7 @@ export const dictionary = {
       news: "Berita",
       contact: "Kontak",
       languageLabel: "Pilih bahasa",
+      currencyLabel: "Pilih mata uang",
       indonesia: "ID",
       english: "EN",
     },
@@ -287,6 +288,9 @@ export const dictionary = {
       importPrice: "Harga Impor",
       localPrice: "Harga Lokal",
       quantityLabel: "Ukuran:",
+      customQuantityLabel: "Jumlah custom:",
+      customQuantityPlaceholder: "Masukkan jumlah",
+      pieceSuffix: "pcs",
       variantLabel: "Paket:",
       brandLabel: "Merk:",
       producerLabel: "Produsen:",
@@ -365,6 +369,7 @@ export const dictionary = {
       news: "News",
       contact: "Contact",
       languageLabel: "Choose language",
+      currencyLabel: "Choose currency",
       indonesia: "ID",
       english: "EN",
     },
@@ -375,7 +380,7 @@ export const dictionary = {
       prompt: "Want to bargain or buy? Please contact:",
     },
     home: {
-      heroTitle: "Indonesia's Large Massage Oil Supplier",
+      heroTitle: "Indonesia's Largest Massage Oil Supplier",
       heroSubtitle: "Low Prices, Open to Bargain",
       blast: "Buy More, Bargain More!",
       location: contactAddress,
@@ -493,7 +498,7 @@ export const dictionary = {
         {
           question: "Why choose Eksotika Prima as your massage oil supplier?",
           answer:
-            "Eksotika Prima is known as one of Indonesia's large massage oil suppliers. We offer many traditional health products, good stock availability, and service for retail and wholesale purchases.",
+            "Eksotika Prima is known as one of Indonesia's largest massage oil suppliers. We offer many traditional health products, good stock availability, and service for retail and wholesale purchases.",
         },
       ],
     },
@@ -561,6 +566,9 @@ export const dictionary = {
       importPrice: "Import Price",
       localPrice: "Local Price",
       quantityLabel: "Quantity:",
+      customQuantityLabel: "Custom quantity:",
+      customQuantityPlaceholder: "Enter quantity",
+      pieceSuffix: "pcs",
       variantLabel: "Package:",
       brandLabel: "Brand:",
       producerLabel: "Producer:",
@@ -607,7 +615,7 @@ export const dictionary = {
     },
     meta: {
       home: {
-        title: "Indonesia's Large Massage Oil Supplier | Support International Shipping | Eksotika Prima",
+        title: "Indonesia's Largest Massage Oil Supplier | Support International Shipping | Eksotika Prima",
         description:
           "Eksotika Prima supplies quality massage oil in Indonesia with low prices, safe packing, and wholesale order support.",
         openGraphDescription:

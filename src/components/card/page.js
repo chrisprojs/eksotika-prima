@@ -1,31 +1,40 @@
+"use client";
 import React from "react";
 import "./page.css";
 import Link from "next/link";
 import Image from "next/image";
 import DiscountBadge from "../discount/page";
-import { formatCurrency, getLocalizedPath } from "@/lib/i18n";
+import { getLocalizedPath } from "@/lib/i18n";
 import { getProductImageSrc } from "@/lib/productImageSrc";
+import { useCurrency } from "@/components/currencyProvider/CurrencyProvider";
 
 function Card({ product, locale = "id" }) {
-  const importCurrency = product.importCurrency || "IDR";
-  const prices = product.variants.map((variant) => variant.importPrice || variant.price);
+  const { formatImport } = useCurrency();
+  // Compute from the raw IDR fields so the selected currency converts live.
+  const prices = product.variants.map(
+    (variant) => variant.importPriceIdr ?? variant.price
+  );
   const minPrice = Math.min(...prices);
   const maxPrice = Math.max(...prices);
 
-  const fromPrices = product.variants.map((variant) => variant.fromPrice);
+  const fromPrices = product.variants.map(
+    (variant) => variant.fromPriceIdr ?? variant.fromPrice
+  );
   const minFromPrice = Math.min(...fromPrices);
   const maxFromPrice = Math.max(...fromPrices);
 
+  // Discount ratio is currency-independent, so compute it on the IDR numbers
+  // to avoid rounding drift across converted currencies.
   const discountPercentage = Math.round(((minFromPrice - minPrice) / minFromPrice) * 100);
 
   const priceText =
     minPrice === maxPrice
-      ? formatCurrency(minPrice, importCurrency)
-      : `${formatCurrency(minPrice, importCurrency)}-${formatCurrency(maxPrice, importCurrency)}`;
+      ? formatImport(minPrice)
+      : `${formatImport(minPrice)}-${formatImport(maxPrice)}`;
   const fromPriceText =
     minFromPrice === maxFromPrice
-      ? formatCurrency(minFromPrice, importCurrency)
-      : `${formatCurrency(minFromPrice, importCurrency)}-${formatCurrency(maxFromPrice, importCurrency)}`;
+      ? formatImport(minFromPrice)
+      : `${formatImport(minFromPrice)}-${formatImport(maxFromPrice)}`;
 
   return (
     <Link href={getLocalizedPath(`/product/${product.productId}`, locale)} className="card-container">

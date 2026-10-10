@@ -8,8 +8,7 @@ import {
 } from "@/lib/dbLocalization";
 import { defaultLocale, normalizeLocale } from "@/lib/i18n";
 import {
-  getImportCurrency,
-  getImportConversionRate,
+  resolveImportConversion,
   applyImportCurrencyToProducts,
 } from "@/lib/currency";
 
@@ -188,8 +187,7 @@ async function applyImportCurrencyToNewsList(newsList = [], locale = defaultLoca
     return newsList;
   }
 
-  const importCurrency = getImportCurrency(locale);
-  const rate = await getImportConversionRate(locale);
+  const { importCurrency, rate } = await resolveImportConversion(locale);
 
   return Promise.all(
     newsList.map((news) => applyImportCurrencyToNews(news, rate, importCurrency))
@@ -246,8 +244,7 @@ export async function getPublishedNewsBySlug(
     });
 
     const localizedNews = localizeNews(news, locale);
-    const importCurrency = getImportCurrency(locale);
-    const rate = await getImportConversionRate(locale);
+    const { importCurrency, rate } = await resolveImportConversion(locale);
 
     return applyImportCurrencyToNews(localizedNews, rate, importCurrency);
   } catch (error) {

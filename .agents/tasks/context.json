@@ -1,0 +1,29 @@
+{
+  "project_type": "Next.js 16 App Router web app (Eksotika Prima), server + client components, Prisma/libsql data layer",
+  "language": "JavaScript (NOT TypeScript); .js/.jsx; 2-space indent; double quotes; import alias @/ -> src/",
+  "build_system": "Next.js (next build). ES modules (package.json \"type\":\"module\"). React 19, next ^16.3.8.",
+  "test_framework": "NONE installed. No unit/integration test runner in the repo (only transitive tests inside node_modules). Automated gates are lint + build only.",
+  "build_command": "npm run build",
+  "test_command": "npm run lint  (and npm run build as the authoritative compile/SSR check)",
+  "verification_instructions": "Run `npm run lint` then `npm run build`; both must succeed (lint may show only pre-existing warnings). There is no unit runner, so additionally do manual dev-server checks with `npm run dev` on http://localhost:3000: confirm the currency dropdown converts import prices live with no reload, persists across reloads/navigation via localStorage, keeps local price in IDR, and that server-rendered JSON-LD/metadata prices stay on the locale default (view-source / curl shows USD for /en, IDR for id regardless of browser selection).",
+  "snapshot_or_generated_files": null,
+  "environment_constraints": "Work only inside the worktree d:\\react project in SSD\\Eksotika Prima\\eksotika-prima-next\\.worktrees\\currency-selector on branch feat/currency-selector. cwd is the parent workspace, so reference every file with the absolute worktree path. Never read localStorage/window during server render. The branch is based on v-6.0 (mainline did not exist). No new heavy dependencies; a tiny dependency-free React context only. Frankfurter API (api.frankfurter.dev) must be reachable at build/runtime for live rates; code must fall back to hardcoded rates when it is not.",
+  "contribution_requirements": "No AGENTS.md/CONTRIBUTING.md in the repo. Match existing code style: JavaScript only, 2-space indent, double quotes, @/ alias, functional React components, 'use client' at top of client files.",
+  "key_patterns": "Server data flow: productService/newsService call applyImportCurrency*(.., locale) from src/lib/currency.js, which converts IDR import prices to the LOCALE default currency (id->IDR, en->USD) and OVERWRITES variant.importPrice/importDozenPrice/fromPrice, preserving raw IDR fromPrice as variant.fromPriceLocal and attaching product.importCurrency. Client price components currently read these pre-converted values. i18n: formatCurrency(price, currency) in src/lib/i18n.js (IDR 0 decimals, others up to 2); getTranslations(locale).nav holds navbar labels for both locales; getLocaleFromPathname/getLocalizedPath used by the navbar. Frankfurter v2 (VERIFIED): ?base=idr&quotes=usd,eur,gbp,... accepts a comma list and returns a FLAT ARRAY of {date,base,quote,rate} objects.",
+  "relevant_files": [
+    "src/lib/currency.js (extend: supported list, getDefaultCurrencyForLocale, multi-currency fetch + rate map, convertFromIdr, getCurrencyFractionDigits, add raw-IDR fields importPriceIdr/importDozenPriceIdr/fromPriceIdr in convertVariantImportPrices without changing existing overwrite behavior)",
+    "src/lib/i18n.js (formatCurrency: add JPY to whole-unit branch; nav dictionary: add currencyLabel to id and en)",
+    "src/app/api/currency/route.js (NEW: GET returns IDR->X rate map + supported list, revalidate 3600)",
+    "src/components/currencyProvider/CurrencyProvider.jsx (NEW: 'use client' context+provider+useCurrency; locale-default first paint, localStorage reconcile in effect, fetch /api/currency, expose currency/setCurrency/rates/supportedCurrencies/convertImport/formatImport)",
+    "src/app/layout.js (wrap Navbar+children+Footer in CurrencyProvider; stays a server component)",
+    "src/components/navbar/page.js (add accessible <select> after .navbar-logo Link, bound to context; aria-label from nav.currencyLabel)",
+    "src/components/navbar/page.css (style .navbar-currency for desktop + <=768px mobile; select is a child of .navbar-box, not .navbar-menu)",
+    "src/components/card/page.js (make 'use client'; render from raw IDR fields via useCurrency formatImport; discount computed on IDR)",
+    "src/components/cardLoad/CardLoadClient.jsx (already a client component; renders Card)",
+    "src/app/product/[productId]/SearchProductClient.jsx (import branch uses selected currency via formatImport on raw IDR; local branch stays IDR; discount, strike-through, and WhatsApp message price reflect active currency)",
+    "src/app/product/[productId]/ProductDetailPage.jsx (SERVER: metadata/twitter price/JSON-LD offers MUST stay on locale default via product.importCurrency + pre-converted importPrice; do NOT change)",
+    "src/app/news/[slug]/NewsDetailPage.jsx (SERVER: getProductPrice MUST stay on locale default; do NOT change)",
+    "src/components/discount/page.js (DiscountBadge, unchanged)"
+  ],
+  "directory_structure": "src/app = App Router routes + api route handlers (api/products, api/news, api/currency[new]); src/components = UI (navbar, card, cardLoad, discount, footer, currencyProvider[new], ...); src/lib = shared logic (i18n.js, currency.js, dbLocalization.js, site.js, prisma.js). Price-rendering CLIENT components: card/page.js (via cardLoad), product/[productId]/SearchProductClient.jsx. Price-rendering SERVER components (SEO, keep locale default): product/[productId]/ProductDetailPage.jsx, news/[slug]/NewsDetailPage.jsx."
+}

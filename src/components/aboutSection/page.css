@@ -1,5 +1,6 @@
 .about-section,
 .home-about-container .about-section {
+  position: relative;
   width: 100%;
   display: flex !important;
   align-items: flex-start;
@@ -24,7 +25,7 @@
 
 .about-heading {
   margin: 0;
-  color: #253342;
+  color: #ffffff;
   font-size: 2.1rem;
   line-height: 1.2;
   font-weight: var(--var-font-bold);
@@ -33,7 +34,7 @@
 
 .about-description {
   margin: 18px 0 0;
-  color: #4d5965;
+  color: #f0e6d9cc;
   font-size: 1rem;
   line-height: 1.75;
 }
@@ -90,9 +91,7 @@
 
   .about-video-box,
   .home-about-container .about-video-box {
-    flex-basis: auto;
-    width: 150px;
-    max-width: 100%;
+    display: none;
   }
 }
 

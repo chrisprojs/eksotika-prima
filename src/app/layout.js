@@ -2,6 +2,8 @@ import Script from "next/script";
 import Footer from "@/components/footer/page";
 import "./globals.css";
 import Navbar from "@/components/navbar/page";
+import { CurrencyProvider } from "@/components/currencyProvider/CurrencyProvider";
+import CurrencyNotice from "@/components/currencyNotice/CurrencyNotice";
 
 export const metadata = {
   authors: [{ name: "Eksotika Prima" }],
@@ -26,9 +28,12 @@ export default function RootLayout({ children }) {
     <html lang="id" suppressHydrationWarning>
       <body>
         <div className="app-container">
-          <Navbar />
-          <div className="page-layout">{children}</div>
-          <Footer />
+          <CurrencyProvider>
+            <Navbar />
+            <div className="page-layout">{children}</div>
+            <Footer />
+            <CurrencyNotice />
+          </CurrencyProvider>
         </div>
         <Script
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7470776396597629"

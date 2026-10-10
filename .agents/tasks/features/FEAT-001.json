@@ -1,0 +1,29 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Client-side currency conversion foundation: extend the currency lib with the wider supported list and a multi-currency IDR->X rate map (preserving raw IDR import values on each variant so no client renderer loses its IDR number), expose rates to the client via a new /api/currency route, add a CurrencyProvider React context, and mount it in the root layout. This feature does NOT change any visible UI yet; it is the dependency base for FEAT-002. It leaves the app fully buildable with server SEO behavior unchanged.",
+  "status": "pending",
+  "steps": [
+    "Extend src/lib/currency.js. Add `export const SUPPORTED_CURRENCIES = [\"IDR\",\"USD\",\"EUR\",\"GBP\",\"SGD\",\"MYR\",\"AUD\",\"JPY\",\"CNY\"]`. Add `getDefaultCurrencyForLocale(locale)` returning the locale default (id->IDR, en->USD) reusing the existing importCurrencyByLocale map. Change EXCHANGE_RATE_ENDPOINT to `https://api.frankfurter.dev/v2/rates?base=idr&quotes=usd,eur,gbp,sgd,myr,aud,jpy,cny`. Replace parseRateFromPayload with parseRatesFromPayload(payload) that walks the FLAT ARRAY of {quote,rate} objects (VERIFIED Frankfurter v2 shape) into an uppercase-keyed map {USD,EUR,...}, tolerant of the legacy {rates:{...}} object. Add a FALLBACK_RATES map (keep USD 0.000056; add sensible IDR->X fallbacks for EUR,GBP,SGD,MYR,AUD,JPY,CNY) used when the API fails or a symbol is missing. Convert the hourly single-rate cache to cache the whole map (cachedRates), keeping the same TTL and in-flight dedupe. Add getIdrRateMap() returning {IDR:1, ...fetched}. Keep getIdrToUsdRate() working by deriving from the map. Add pure client-safe helpers convertFromIdr(amountIdr, rate) (amount*rate rounded to 2 decimals; pass through null/non-finite) and getCurrencyFractionDigits(currency) (0 for IDR and JPY, else 2). In convertVariantImportPrices, BEFORE overwriting, attach raw IDR fields from the original variant: importPriceIdr = variant.importPrice ?? variant.price, importDozenPriceIdr = variant.importDozenPrice, fromPriceIdr = variant.fromPrice. Keep the existing overwrite of importPrice/importDozenPrice/fromPrice and the fromPriceLocal preservation EXACTLY as-is. Do not change applyImportCurrency/applyImportCurrencyToProducts/getImportConversionRate signatures.",
+    "In src/lib/i18n.js, extend formatCurrency so JPY is also whole-unit: fractionDigits = (currency === \"IDR\" || currency === \"JPY\") ? 0 : 2.",
+    "In src/lib/i18n.js, add `currencyLabel` to the nav section of BOTH locales: id -> \"Pilih mata uang\", en -> \"Choose currency\" (place next to languageLabel).",
+    "Create src/app/api/currency/route.js: export `const revalidate = 3600;` and an async GET handler that calls getIdrRateMap() and returns Response.json({ base: \"IDR\", rates, supported: SUPPORTED_CURRENCIES }). No cookies/localStorage access.",
+    "Create src/components/currencyProvider/CurrencyProvider.jsx ('use client'). Create a context, a CurrencyProvider component, and a useCurrency() hook. Initialize `currency` state to getDefaultCurrencyForLocale(getLocaleFromPathname(usePathname()||\"/\")) so FIRST paint matches SSR locale default (no hydration mismatch). In a mount useEffect (guard typeof window !== 'undefined'): read localStorage 'ep.currency'; if present and in SUPPORTED_CURRENCIES, setCurrency it. Load rates in a mount effect: use cached localStorage 'ep.rates'/'ep.ratesAt' if < 1h old, else fetch('/api/currency'), then cache rates+timestamp in localStorage and set state. setCurrency(next) updates state and writes localStorage 'ep.currency'. Context value: { currency, setCurrency, rates, supportedCurrencies: SUPPORTED_CURRENCIES, convertImport(amountIdr)=convertFromIdr(amountIdr, rates[currency] ?? 1), formatImport(amountIdr)=formatCurrency(convertImport(amountIdr), currency) }. useCurrency() must return safe defaults (currency 'IDR', identity convertImport, formatImport using IDR) when no provider is mounted so nothing throws.",
+    "In src/app/layout.js, import CurrencyProvider and wrap <Navbar/>, the page-layout div with {children}, and <Footer/> inside .app-container. layout.js stays a server component. Keep suppressHydrationWarning on <html>."
+  ],
+  "acceptance_criteria": [
+    "`npm run build` completes successfully.",
+    "`npm run lint` passes (no new errors introduced; pre-existing warnings allowed).",
+    "GET http://localhost:3000/api/currency returns JSON where rates.IDR === 1, rates.USD is a finite positive number, and supported has 9 entries.",
+    "Server-rendered product pages still render the locale-default import currency (id -> IDR, en -> USD) because the server conversion path and product.importCurrency are unchanged.",
+    "No window/localStorage access occurs during server render (build does not fail with ReferenceError)."
+  ],
+  "verification": [
+    "Run `npm run lint` in the worktree and confirm it passes.",
+    "Run `npm run build` in the worktree and confirm it completes with no errors.",
+    "Run `npm run dev`, then GET http://localhost:3000/api/currency and confirm rates.IDR===1, rates.USD finite>0, supported.length===9.",
+    "Load http://localhost:3000/en/product/<id> and http://localhost:3000/product/<id> and confirm pages still render (server import price USD for /en, IDR for id) with no hydration error in the console."
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

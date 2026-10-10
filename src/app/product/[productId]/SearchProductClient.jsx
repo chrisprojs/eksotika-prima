@@ -9,6 +9,7 @@ import { formatCurrency, getTranslations } from "@/lib/i18n";
 import { cleanProductHtml } from "@/lib/newsHtml";
 import { ContactInformation } from "@/data/ContactInformation";
 import { getProductImageSrc } from "@/lib/productImageSrc";
+import { useCurrency } from "@/components/currencyProvider/CurrencyProvider";
 
 const WHOLESALE_QUANTITY = "wholesale";
 
@@ -19,7 +20,43 @@ function getFirstVariant(product) {
 function getValidQuantity(quantity, variant) {
   if (quantity === WHOLESALE_QUANTITY) return WHOLESALE_QUANTITY;
 
-  return quantity === 12 && variant?.dozenPrice ? 12 : 1;
+  // Any positive integer is a valid custom quantity; non-positive / NaN
+  // values fall back to a single unit. (The `variant` argument is kept for
+  // call-site compatibility.)
+  const n = Math.floor(Number(quantity));
+  return Number.isFinite(n) && n >= 1 ? n : 1;
+}
+
+// Pick the raw-IDR single and dozen unit prices that match the active price
+// type. A null/undefined dozen field means the variant has no dozen price.
+function getRawUnitPrices(variant, priceType = "import") {
+  if (priceType === "import") {
+    return {
+      singleIdr: variant.importPriceIdr ?? variant.price ?? 0,
+      dozenIdr: variant.importDozenPriceIdr ?? null,
+    };
+  }
+
+  return {
+    singleIdr: variant.price ?? 0,
+    dozenIdr: variant.dozenPrice ?? null,
+  };
+}
+
+// Pure helper: compute a custom-quantity total in raw IDR by combining the
+// dozen price and the single price. When no dozen price exists, every unit is
+// charged at the single price.
+function computeCustomTotal({ singlePrice, dozenPrice, quantity }) {
+  const n = Math.max(1, Math.floor(Number(quantity) || 1));
+  const single = Number(singlePrice) || 0;
+
+  if (typeof dozenPrice === "number" && Number.isFinite(dozenPrice) && dozenPrice > 0) {
+    const dozens = Math.floor(n / 12);
+    const remainder = n % 12;
+    return dozens * dozenPrice + remainder * single;
+  }
+
+  return n * single;
 }
 
 function getVariantPrice(variant, quantity, priceType = "import") {
@@ -27,16 +64,27 @@ function getVariantPrice(variant, quantity, priceType = "import") {
 
   if (quantity === WHOLESALE_QUANTITY) return null;
 
-  if (quantity === 12 && priceType === "import" && variant.importDozenPrice !== null && variant.importDozenPrice !== undefined) {
-    return variant.importDozenPrice;
+  // Prices are kept internally in IDR; the import branch reads the raw-IDR
+  // fields so the selected display currency can convert them live, while the
+  // local branch always stays in IDR.
+  if (quantity === 12 && priceType === "import" && variant.importDozenPriceIdr !== null && variant.importDozenPriceIdr !== undefined) {
+    return variant.importDozenPriceIdr;
   }
   
   if (quantity === 12 && priceType === "local" && variant.dozenPrice !== null && variant.dozenPrice !== undefined) {
     return variant.dozenPrice;
   }
 
+  // Custom quantities (any positive integer other than the single/dozen
+  // exact-field cases above) are priced dynamically from the raw-IDR single
+  // and dozen fields that match the active price type.
+  if (typeof quantity === "number" && quantity !== 1) {
+    const { singleIdr, dozenIdr } = getRawUnitPrices(variant, priceType);
+    return computeCustomTotal({ singlePrice: singleIdr, dozenPrice: dozenIdr, quantity });
+  }
+
   const basePrice = priceType === "import" ? 
-    (variant.importPrice || variant.price) : 
+    (variant.importPriceIdr ?? variant.price) : 
     variant.price;
     
   return basePrice ?? 0;
@@ -51,11 +99,15 @@ export default function SearchProduct({ product = null, locale = "id" }) {
   const router = useRouter();
   const pathname = usePathname();
   const text = getTranslations(locale).productDetail;
-  const importCurrency = product?.importCurrency || "IDR";
+  const { formatImport } = useCurrency();
   const firstVariant = getFirstVariant(product);
   const [currentProduct] = useState(product);
   const [selectedVariant, setSelectedVariant] = useState(firstVariant);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+  // Controlled string backing the custom-quantity <input>, held separately so
+  // the field can be transiently empty/invalid while typing without breaking
+  // the numeric price math.
+  const [quantityInput, setQuantityInput] = useState("1");
   // Default price type is always "import" regardless of locale; the user can
   // switch between import and local pricing via the toggle below.
   const [priceType, setPriceType] = useState("import");
@@ -106,6 +158,15 @@ export default function SearchProduct({ product = null, locale = "id" }) {
     setSelectedPrice(getVariantPrice(selectedVariant, selectedQuantity, priceType));
   }, [selectedVariant, selectedQuantity, priceType]);
 
+  // Keep the visible custom-quantity field in sync when the quantity changes
+  // from a badge click, a URL load, or a single/dozen selection. The input is
+  // disabled in wholesale mode, so leave it untouched there.
+  useEffect(() => {
+    if (selectedQuantity !== WHOLESALE_QUANTITY) {
+      setQuantityInput(String(selectedQuantity));
+    }
+  }, [selectedQuantity]);
+
   // Update URL when user makes a selection change
   const updateUrlForSelection = (variant, quantity) => {
     const params = new URLSearchParams();
@@ -154,23 +215,42 @@ export default function SearchProduct({ product = null, locale = "id" }) {
     updateUrlForSelection(targetVariant, targetQuantity);
   };
 
+  const onCustomQuantityChange = (e) => {
+    const raw = e.target.value;
+    setQuantityInput(raw);
+
+    // Allow the field to be cleared mid-edit without resetting the price;
+    // keep the last valid quantity until a valid number is entered.
+    if (raw === "") return;
+
+    const n = parseInt(raw, 10);
+    if (Number.isFinite(n) && n >= 1) {
+      changePrice(n, selectedVariant);
+    }
+  };
+
   if (!currentProduct || !selectedVariant) {
     return <Loading />;
   }
 
   const isWholesale = selectedQuantity === WHOLESALE_QUANTITY;
-  // Local prices always stay in IDR; import prices follow the locale currency.
-  const activeCurrency = priceType === "import" ? importCurrency : "IDR";
-  // fromPrice is converted to the import currency; for the local view use the
-  // preserved IDR reference (fromPriceLocal) so the strike-through currency
-  // matches the displayed local price.
+  // All amounts here are raw IDR. The import branch renders them in the
+  // selected display currency via formatImport; the local branch always
+  // renders them in IDR via formatCurrency.
+  const formatActivePrice = (amountIdr) =>
+    priceType === "import"
+      ? formatImport(amountIdr)
+      : formatCurrency(amountIdr, "IDR");
+  // Strike-through reference: raw-IDR fromPrice for the import branch, the
+  // preserved IDR reference (fromPriceLocal) for the local branch.
   const activeFromPrice =
     priceType === "import"
-      ? selectedVariant.fromPrice
+      ? selectedVariant.fromPriceIdr ?? selectedVariant.fromPrice
       : selectedVariant.fromPriceLocal ?? selectedVariant.fromPrice;
   const fromPriceTotal = isWholesale
     ? 0
     : selectedQuantity * (activeFromPrice || 0);
+  // Discount ratio is computed on IDR totals (currency-independent).
   const discountPercentage =
     !isWholesale && fromPriceTotal > 0
       ? Math.round(((fromPriceTotal - selectedPrice) / fromPriceTotal) * 100)
@@ -179,12 +259,14 @@ export default function SearchProduct({ product = null, locale = "id" }) {
   const tagTitle = getTagTitleText(currentProduct, selectedVariant, selectedQuantity);
   const selectedQuantityText = isWholesale
     ? text.wholesaleSuffix
-    : selectedQuantity === 12
-      ? text.dozenSuffix
-      : text.single;
+    : selectedQuantity === 1
+      ? text.single
+      : selectedQuantity === 12
+        ? text.dozenSuffix
+        : `${selectedQuantity} ${text.pieceSuffix}`;
   const selectedPriceText = isWholesale
     ? text.wholesalePriceText
-    : formatCurrency(selectedPrice, activeCurrency);
+    : formatActivePrice(selectedPrice);
   const buyMessage =
     typeof text.buyWhatsAppMessage === "function"
       ? text.buyWhatsAppMessage(
@@ -228,13 +310,13 @@ export default function SearchProduct({ product = null, locale = "id" }) {
             </div>
           ) : (
             <p className="searchProduct-price">
-              {formatCurrency(selectedPrice, activeCurrency)}{" "}
+              {formatActivePrice(selectedPrice)}{" "}
               <DiscountBadge
                 discountPercentage={discountPercentage}
                 isLarge={true}
               />{" "}
               <span className="searchProduct-fromPrice">
-                {formatCurrency(fromPriceTotal, activeCurrency)}
+                {formatActivePrice(fromPriceTotal)}
               </span>
             </p>
           )}
@@ -309,6 +391,24 @@ export default function SearchProduct({ product = null, locale = "id" }) {
             >
               {text.wholesale}
             </span>
+          </div>
+
+          <div className="searchProduct-badge-box">
+            <label className="searchProduct-quantity-label">
+              {text.customQuantityLabel}
+              <input
+                type="number"
+                min="1"
+                step="1"
+                inputMode="numeric"
+                className="searchProduct-quantity-input"
+                value={isWholesale ? "" : quantityInput}
+                onChange={onCustomQuantityChange}
+                disabled={isWholesale}
+                placeholder={text.customQuantityPlaceholder}
+                aria-label={text.customQuantityLabel}
+              />
+            </label>
           </div>
 
           <p className="searchProduct-text">

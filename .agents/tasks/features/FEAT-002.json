@@ -1,0 +1,29 @@
+{
+  "id": "FEAT-002",
+  "type": "feat",
+  "description": "Wire the currency selector into the UI and make all CLIENT import-price renderers react live to it. Depends on FEAT-001 (SUPPORTED_CURRENCIES, raw-IDR variant fields, and the CurrencyProvider/useCurrency hook must already exist). Adds the navbar <select> beside the logo with styling for desktop and mobile, and switches the product Card and the product-detail client view to convert raw IDR import prices via the context. Local price stays IDR everywhere, and the server-rendered SEO price path is explicitly left untouched and verified.",
+  "status": "pending",
+  "steps": [
+    "In src/components/navbar/page.js, import useCurrency from the CurrencyProvider. Render an accessible <select className=\"navbar-currency\"> IMMEDIATELY AFTER the .navbar-logo <Link>, still inside .navbar-box and before .navbar-menu. Bind value={currency}, onChange sets setCurrency(e.target.value), aria-label={text.currencyLabel}, and map supportedCurrencies to <option value={c}>{c}</option>. Do not place it inside .navbar-menu (so the mobile menu collapse never hides it).",
+    "In src/components/navbar/page.css, add .navbar-currency styling (compact, readable against the green navbar) and add rules inside the existing @media (max-width: 768px) block so the select stays visible and tappable beside the logo image when .navbar-logo-name is hidden and the hamburger shows; prevent overflow of the 95%-width .navbar-box on narrow screens.",
+    "In src/components/card/page.js, add 'use client' and use useCurrency(). Compute minPrice/maxPrice from raw IDR (variant.importPriceIdr ?? variant.price) and minFromPrice/maxFromPrice from (variant.fromPriceIdr ?? variant.fromPrice). Compute discountPercentage from the IDR numbers (currency-independent ratio). Replace every formatCurrency(x, importCurrency) with formatImport(xIdr) so price range and strike-through from-price display in the selected currency and update live. Keep DiscountBadge and the rest of the markup unchanged.",
+    "In src/app/product/[productId]/SearchProductClient.jsx, use useCurrency(). Change getVariantPrice import-branch reads to raw IDR fields (variant.importPriceIdr ?? variant.price for single; variant.importDozenPriceIdr for dozen); keep the local branch on variant.price/variant.dozenPrice (IDR). Keep selectedPrice as the raw IDR amount internally. For DISPLAY: when priceType === 'import', format selectedPrice, fromPriceTotal, and the WhatsApp selectedPriceText via formatImport(amountIdr); when priceType === 'local', keep formatCurrency(amount, 'IDR'). Base activeFromPrice on fromPriceIdr for import and fromPriceLocal for local. Compute discountPercentage from IDR totals. Ensure the WhatsApp buyMessage price reflects the active currency for import and stays IDR for local.",
+    "Verify (and do NOT modify) the SERVER SEO path: src/app/product/[productId]/ProductDetailPage.jsx (metadata twitter price, product:price:* / og:price:*, JSON-LD offers) and src/app/news/[slug]/NewsDetailPage.jsx getProductPrice must keep reading product.importCurrency + the pre-converted importPrice/importDozenPrice (locale default). If any earlier edit accidentally changed these, revert that part here. Never add a client/localStorage read to these server files."
+  ],
+  "acceptance_criteria": [
+    "`npm run build` completes successfully and `npm run lint` passes (no new errors).",
+    "The currency dropdown renders beside the Eksotika Prima logo on desktop and at <=768px, and remains visible whether the mobile hamburger menu is open or closed.",
+    "Changing the dropdown converts every product Card's price range and strike-through from-price to the selected currency instantly with no page reload; the discount % is stable across currencies.",
+    "On the product detail page, the import-branch price, strike-through from-price, discount %, and the WhatsApp link price all reflect the selected currency; switching to Local Price always shows IDR regardless of the selector.",
+    "Server-rendered JSON-LD/metadata prices remain locale-default (USD for /en, IDR for id) independent of the browser's selected currency."
+  ],
+  "verification": [
+    "Run `npm run lint` and `npm run build` in the worktree; both succeed.",
+    "Run `npm run dev`: on /product change the navbar currency and confirm all card prices + from-prices switch live with no reload and discount % unchanged.",
+    "On /en/product/<id>: switch currency and confirm import price, strike-through, discount %, and the WhatsApp href text= price all reflect it; toggle Local Price and confirm it stays IDR.",
+    "View-source/curl /en/product/<id> and /product/<id> and confirm JSON-LD offers.priceCurrency is USD and IDR respectively regardless of any selection; check a news detail page related-product price stays locale-default.",
+    "Resize to ~375px and confirm logo image + currency select + hamburger coexist on one row and opening/closing the menu does not hide the select."
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}
