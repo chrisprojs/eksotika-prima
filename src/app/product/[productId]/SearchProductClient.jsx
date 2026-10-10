@@ -9,6 +9,7 @@ import { formatCurrency, getTranslations } from "@/lib/i18n";
 import { cleanProductHtml } from "@/lib/newsHtml";
 import { ContactInformation } from "@/data/ContactInformation";
 import { getProductImageSrc } from "@/lib/productImageSrc";
+import { useCurrency } from "@/components/currencyProvider/CurrencyProvider";
 
 const WHOLESALE_QUANTITY = "wholesale";
 
@@ -27,8 +28,11 @@ function getVariantPrice(variant, quantity, priceType = "import") {
 
   if (quantity === WHOLESALE_QUANTITY) return null;
 
-  if (quantity === 12 && priceType === "import" && variant.importDozenPrice !== null && variant.importDozenPrice !== undefined) {
-    return variant.importDozenPrice;
+  // Prices are kept internally in IDR; the import branch reads the raw-IDR
+  // fields so the selected display currency can convert them live, while the
+  // local branch always stays in IDR.
+  if (quantity === 12 && priceType === "import" && variant.importDozenPriceIdr !== null && variant.importDozenPriceIdr !== undefined) {
+    return variant.importDozenPriceIdr;
   }
   
   if (quantity === 12 && priceType === "local" && variant.dozenPrice !== null && variant.dozenPrice !== undefined) {
@@ -36,7 +40,7 @@ function getVariantPrice(variant, quantity, priceType = "import") {
   }
 
   const basePrice = priceType === "import" ? 
-    (variant.importPrice || variant.price) : 
+    (variant.importPriceIdr ?? variant.price) : 
     variant.price;
     
   return basePrice ?? 0;
@@ -51,7 +55,7 @@ export default function SearchProduct({ product = null, locale = "id" }) {
   const router = useRouter();
   const pathname = usePathname();
   const text = getTranslations(locale).productDetail;
-  const importCurrency = product?.importCurrency || "IDR";
+  const { formatImport } = useCurrency();
   const firstVariant = getFirstVariant(product);
   const [currentProduct] = useState(product);
   const [selectedVariant, setSelectedVariant] = useState(firstVariant);
@@ -159,18 +163,23 @@ export default function SearchProduct({ product = null, locale = "id" }) {
   }
 
   const isWholesale = selectedQuantity === WHOLESALE_QUANTITY;
-  // Local prices always stay in IDR; import prices follow the locale currency.
-  const activeCurrency = priceType === "import" ? importCurrency : "IDR";
-  // fromPrice is converted to the import currency; for the local view use the
-  // preserved IDR reference (fromPriceLocal) so the strike-through currency
-  // matches the displayed local price.
+  // All amounts here are raw IDR. The import branch renders them in the
+  // selected display currency via formatImport; the local branch always
+  // renders them in IDR via formatCurrency.
+  const formatActivePrice = (amountIdr) =>
+    priceType === "import"
+      ? formatImport(amountIdr)
+      : formatCurrency(amountIdr, "IDR");
+  // Strike-through reference: raw-IDR fromPrice for the import branch, the
+  // preserved IDR reference (fromPriceLocal) for the local branch.
   const activeFromPrice =
     priceType === "import"
-      ? selectedVariant.fromPrice
+      ? selectedVariant.fromPriceIdr ?? selectedVariant.fromPrice
       : selectedVariant.fromPriceLocal ?? selectedVariant.fromPrice;
   const fromPriceTotal = isWholesale
     ? 0
     : selectedQuantity * (activeFromPrice || 0);
+  // Discount ratio is computed on IDR totals (currency-independent).
   const discountPercentage =
     !isWholesale && fromPriceTotal > 0
       ? Math.round(((fromPriceTotal - selectedPrice) / fromPriceTotal) * 100)
@@ -184,7 +193,7 @@ export default function SearchProduct({ product = null, locale = "id" }) {
       : text.single;
   const selectedPriceText = isWholesale
     ? text.wholesalePriceText
-    : formatCurrency(selectedPrice, activeCurrency);
+    : formatActivePrice(selectedPrice);
   const buyMessage =
     typeof text.buyWhatsAppMessage === "function"
       ? text.buyWhatsAppMessage(
@@ -228,13 +237,13 @@ export default function SearchProduct({ product = null, locale = "id" }) {
             </div>
           ) : (
             <p className="searchProduct-price">
-              {formatCurrency(selectedPrice, activeCurrency)}{" "}
+              {formatActivePrice(selectedPrice)}{" "}
               <DiscountBadge
                 discountPercentage={discountPercentage}
                 isLarge={true}
               />{" "}
               <span className="searchProduct-fromPrice">
-                {formatCurrency(fromPriceTotal, activeCurrency)}
+                {formatActivePrice(fromPriceTotal)}
               </span>
             </p>
           )}

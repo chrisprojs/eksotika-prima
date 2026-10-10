@@ -10,9 +10,11 @@ import {
   getPathWithoutLocale,
   getTranslations,
 } from "@/lib/i18n";
+import { useCurrency } from "@/components/currencyProvider/CurrencyProvider";
 
 function Navbar() {
   const [isClicked, setClicked] = useState(false);
+  const { currency, setCurrency, supportedCurrencies } = useCurrency();
   const location = usePathname() || "/";
   const locale = getLocaleFromPathname(location);
   const text = getTranslations(locale).nav;
@@ -39,6 +41,19 @@ function Navbar() {
           <Image src="/asset/logo.jpg" alt="logo" className="navbar-logo-image" width={100} height={100} />
           <span className="navbar-logo-name">Eksotika Prima</span>
         </Link>
+
+        <select
+          className="navbar-currency"
+          value={currency}
+          onChange={(event) => setCurrency(event.target.value)}
+          aria-label={text.currencyLabel}
+        >
+          {supportedCurrencies.map((code) => (
+            <option key={code} value={code}>
+              {code}
+            </option>
+          ))}
+        </select>
 
         <ul className={`navbar-menu ${isClicked ? "active" : ""}`}>
           <li className="navbar-item">

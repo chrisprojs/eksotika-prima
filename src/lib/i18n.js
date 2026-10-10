@@ -57,9 +57,9 @@ export function getMetadataAlternates(path = "/", locale = defaultLocale) {
 }
 
 export function formatCurrency(price, currency = "IDR") {
-  // IDR is a whole-unit currency; foreign currencies (e.g. USD) keep up to two
-  // decimals so small converted amounts stay readable.
-  const fractionDigits = currency === "IDR" ? 0 : 2;
+  // IDR and JPY are whole-unit currencies; other foreign currencies (e.g. USD)
+  // keep up to two decimals so small converted amounts stay readable.
+  const fractionDigits = currency === "IDR" || currency === "JPY" ? 0 : 2;
 
   return `${new Intl.NumberFormat("en-US", {
     minimumFractionDigits: 0,
@@ -91,6 +91,7 @@ export const dictionary = {
       news: "Berita",
       contact: "Kontak",
       languageLabel: "Pilih bahasa",
+      currencyLabel: "Pilih mata uang",
       indonesia: "ID",
       english: "EN",
     },
@@ -365,6 +366,7 @@ export const dictionary = {
       news: "News",
       contact: "Contact",
       languageLabel: "Choose language",
+      currencyLabel: "Choose currency",
       indonesia: "ID",
       english: "EN",
     },

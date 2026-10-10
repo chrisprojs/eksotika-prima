@@ -1,0 +1,7 @@
+{
+  "task_id": "task-navbar-currency-selector",
+  "task_description": "Add a navbar currency selector (next to the Eksotika Prima logo) that converts ONLY the displayed import price client-side and live across the site, from a wider currency list (IDR, USD, EUR, GBP, SGD, MYR, AUD, JPY, CNY). The choice persists in localStorage and overrides the language default (id->IDR, en->USD) while local price always stays IDR and server-rendered SEO (JSON-LD, metadata, news server price) keeps using the locale-default currency.",
+  "status": "pending",
+  "feature_order": ["FEAT-001", "FEAT-002"],
+  "blocked_reason": null
+}

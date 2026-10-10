@@ -4,45 +4,118 @@ import { defaultLocale, englishLocale, normalizeLocale } from "@/lib/i18n";
 // mapped per localization language: Bahasa (id) -> IDR, English (en) -> USD.
 export const baseCurrency = "IDR";
 
+// The full list of currencies the client currency selector can switch between.
+// IDR is first because it is the base/local currency.
+export const SUPPORTED_CURRENCIES = [
+  "IDR",
+  "USD",
+  "EUR",
+  "GBP",
+  "SGD",
+  "MYR",
+  "AUD",
+  "JPY",
+  "CNY",
+];
+
 const importCurrencyByLocale = {
   [defaultLocale]: "IDR",
   [englishLocale]: "USD",
 };
 
 const EXCHANGE_RATE_ENDPOINT =
-  "https://api.frankfurter.dev/v2/rates?base=idr&quotes=usd";
+  "https://api.frankfurter.dev/v2/rates?base=idr&quotes=usd,eur,gbp,sgd,myr,aud,jpy,cny";
 
-// Rate used when the exchange rate API is unreachable. Kept conservative and
-// updated with the latest observed IDR -> USD rate.
-const FALLBACK_IDR_TO_USD_RATE = 0.000056;
+// Rates used when the exchange rate API is unreachable, or when a particular
+// symbol is missing from the API response. Kept conservative and updated with
+// the latest observed IDR -> X rates.
+const FALLBACK_RATES = {
+  USD: 0.000056,
+  EUR: 0.000052,
+  GBP: 0.000044,
+  SGD: 0.000076,
+  MYR: 0.00026,
+  AUD: 0.000094,
+  JPY: 0.0091,
+  CNY: 0.00041,
+};
 
-// Cache the fetched rate for an hour so we do not hit the API on every request.
+// Cache the fetched rate map for an hour so we do not hit the API on every
+// request.
 const RATE_CACHE_TTL_MS = 60 * 60 * 1000;
 
-let cachedRate = null;
-let cachedRateTimestamp = 0;
-let inFlightRateRequest = null;
+let cachedRates = null;
+let cachedRatesTimestamp = 0;
+let inFlightRatesRequest = null;
 
 export function getImportCurrency(locale = defaultLocale) {
   return importCurrencyByLocale[normalizeLocale(locale)] || baseCurrency;
 }
 
-function parseRateFromPayload(payload) {
-  // The Frankfurter v2 rates endpoint returns an array of quote objects:
-  // [{ "date": "...", "base": "IDR", "quote": "USD", "rate": 5.6e-05 }]
+// Returns the default import currency for a locale (id -> IDR, en -> USD),
+// reusing the same locale map as getImportCurrency.
+export function getDefaultCurrencyForLocale(locale = defaultLocale) {
+  return importCurrencyByLocale[normalizeLocale(locale)] || baseCurrency;
+}
+
+// Number of fraction digits a currency should display: IDR and JPY are
+// whole-unit currencies, everything else keeps up to two decimals.
+export function getCurrencyFractionDigits(currency) {
+  return currency === "IDR" || currency === "JPY" ? 0 : 2;
+}
+
+// Pure, client-safe conversion from an IDR amount using a precomputed rate.
+// Rounds to two decimals; passes through null/undefined/non-finite values.
+export function convertFromIdr(amountIdr, rate) {
+  if (amountIdr === null || amountIdr === undefined) {
+    return amountIdr;
+  }
+
+  const numericAmount = Number(amountIdr);
+  const numericRate = Number(rate);
+
+  if (!Number.isFinite(numericAmount) || !Number.isFinite(numericRate)) {
+    return amountIdr;
+  }
+
+  return Math.round(numericAmount * numericRate * 100) / 100;
+}
+
+function parseRatesFromPayload(payload) {
+  const rates = {};
+
+  // The Frankfurter v2 rates endpoint returns a FLAT ARRAY of quote objects:
+  // [{ "date": "...", "base": "IDR", "quote": "USD", "rate": 5.6e-05 }, ...]
   if (Array.isArray(payload)) {
-    const quote = payload.find(
-      (item) => String(item?.quote).toUpperCase() === "USD"
-    );
-    return Number(quote?.rate);
+    for (const item of payload) {
+      const quote = String(item?.quote || "").toUpperCase();
+      const rate = Number(item?.rate);
+
+      if (quote && Number.isFinite(rate) && rate > 0) {
+        rates[quote] = rate;
+      }
+    }
+
+    return rates;
   }
 
   // Be tolerant of the legacy object shape: { rates: { USD: 5.6e-05 } }
-  const legacyRate = payload?.rates?.USD;
-  return Number(legacyRate);
+  const legacyRates = payload?.rates;
+
+  if (legacyRates && typeof legacyRates === "object") {
+    for (const [quote, value] of Object.entries(legacyRates)) {
+      const rate = Number(value);
+
+      if (Number.isFinite(rate) && rate > 0) {
+        rates[String(quote).toUpperCase()] = rate;
+      }
+    }
+  }
+
+  return rates;
 }
 
-async function fetchIdrToUsdRate() {
+async function fetchIdrRates() {
   const response = await fetch(EXCHANGE_RATE_ENDPOINT, {
     // Let Next.js cache the upstream response and revalidate hourly.
     next: { revalidate: 3600 },
@@ -53,39 +126,48 @@ async function fetchIdrToUsdRate() {
   }
 
   const payload = await response.json();
-  const rate = parseRateFromPayload(payload);
+  const rates = parseRatesFromPayload(payload);
 
-  if (!Number.isFinite(rate) || rate <= 0) {
+  if (!Number.isFinite(Number(rates.USD)) || Number(rates.USD) <= 0) {
     throw new Error("Exchange rate response did not contain a valid USD rate");
   }
 
-  return rate;
+  return rates;
 }
 
-export async function getIdrToUsdRate() {
+// Returns an IDR -> X rate map including IDR itself (always 1). Fetched symbols
+// override the fallbacks; missing symbols fall back to FALLBACK_RATES.
+export async function getIdrRateMap() {
   const now = Date.now();
 
-  if (cachedRate && now - cachedRateTimestamp < RATE_CACHE_TTL_MS) {
-    return cachedRate;
+  if (cachedRates && now - cachedRatesTimestamp < RATE_CACHE_TTL_MS) {
+    return cachedRates;
   }
 
-  if (!inFlightRateRequest) {
-    inFlightRateRequest = fetchIdrToUsdRate()
-      .then((rate) => {
-        cachedRate = rate;
-        cachedRateTimestamp = Date.now();
-        return rate;
+  if (!inFlightRatesRequest) {
+    inFlightRatesRequest = fetchIdrRates()
+      .then((fetched) => {
+        cachedRates = { IDR: 1, ...FALLBACK_RATES, ...fetched };
+        cachedRatesTimestamp = Date.now();
+        return cachedRates;
       })
       .catch((error) => {
-        console.error("Falling back to default IDR -> USD rate:", error);
-        return cachedRate || FALLBACK_IDR_TO_USD_RATE;
+        console.error("Falling back to default IDR rate map:", error);
+        return cachedRates || { IDR: 1, ...FALLBACK_RATES };
       })
       .finally(() => {
-        inFlightRateRequest = null;
+        inFlightRatesRequest = null;
       });
   }
 
-  return inFlightRateRequest;
+  return inFlightRatesRequest;
+}
+
+export async function getIdrToUsdRate() {
+  const rates = await getIdrRateMap();
+  const usd = Number(rates?.USD);
+
+  return Number.isFinite(usd) && usd > 0 ? usd : FALLBACK_RATES.USD;
 }
 
 // Returns the multiplier that converts an IDR amount into the import currency
@@ -127,6 +209,11 @@ function convertVariantImportPrices(variant, rate) {
 
   return {
     ...variant,
+    // Preserve the raw IDR import values so client renderers can convert them
+    // to any selected currency without losing the original IDR number.
+    importPriceIdr: variant.importPrice ?? variant.price,
+    importDozenPriceIdr: variant.importDozenPrice,
+    fromPriceIdr: variant.fromPrice,
     // Local price fields (price, dozenPrice) are left untouched so the
     // explicit "Local Price" option always stays in IDR.
     importPrice: convertAmount(variant.importPrice, rate),
