@@ -23,7 +23,10 @@ const importCurrencyByLocale = {
   [englishLocale]: "USD",
 };
 
-const EXCHANGE_RATE_ENDPOINT =
+// Direct Frankfurter v2 endpoint. Exported so the client provider can fetch it
+// straight from the browser (Frankfurter is a public, CORS-enabled API) without
+// going through an in-app proxy route.
+export const EXCHANGE_RATE_ENDPOINT =
   "https://api.frankfurter.dev/v2/rates?base=idr&quotes=usd,eur,gbp,sgd,myr,aud,jpy,cny";
 
 // Rates used when the exchange rate API is unreachable, or when a particular
@@ -81,7 +84,10 @@ export function convertFromIdr(amountIdr, rate) {
   return Math.round(numericAmount * numericRate * 100) / 100;
 }
 
-function parseRatesFromPayload(payload) {
+// Parses the Frankfurter v2 payload into an uppercase-keyed IDR->X rate map.
+// Pure and client-safe, so both the server fetch and the client provider can
+// reuse it. Exported for the client provider.
+export function parseRatesFromPayload(payload) {
   const rates = {};
 
   // The Frankfurter v2 rates endpoint returns a FLAT ARRAY of quote objects:

@@ -3,10 +3,12 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
+  EXCHANGE_RATE_ENDPOINT,
   FALLBACK_RATES,
   SUPPORTED_CURRENCIES,
   convertFromIdr,
   getDefaultCurrencyForLocale,
+  parseRatesFromPayload,
 } from "@/lib/currency";
 import { formatCurrency, getLocaleFromPathname } from "@/lib/i18n";
 
@@ -117,22 +119,32 @@ export function CurrencyProvider({ children }) {
 
     async function loadRates() {
       try {
-        const response = await fetch("/api/currency");
+        // Fetch the IDR->X rates straight from the public Frankfurter API in
+        // the browser. No in-app proxy route and no server-only fetch options
+        // (the `next: { revalidate }` hint is omitted here on purpose).
+        const response = await fetch(EXCHANGE_RATE_ENDPOINT);
 
         if (!response.ok) {
           return;
         }
 
         const payload = await response.json();
+        const parsed = parseRatesFromPayload(payload);
 
-        if (cancelled || !payload?.rates) {
+        if (cancelled || !Number.isFinite(Number(parsed?.USD)) || Number(parsed.USD) <= 0) {
+          // Keep the current rates (locale default / cached) if the response
+          // did not yield a usable rate map.
           return;
         }
 
-        setRates(payload.rates);
+        // Seed with the real IDR->X fallbacks so a symbol missing from the
+        // response never silently converts by 1. IDR is always the base (1).
+        const nextRates = { IDR: 1, ...FALLBACK_RATES, ...parsed };
+
+        setRates(nextRates);
         window.localStorage.setItem(
           RATES_STORAGE_KEY,
-          JSON.stringify(payload.rates)
+          JSON.stringify(nextRates)
         );
         window.localStorage.setItem(
           RATES_AT_STORAGE_KEY,
