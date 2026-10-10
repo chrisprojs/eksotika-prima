@@ -90,9 +90,7 @@
 
   .about-video-box,
   .home-about-container .about-video-box {
-    flex-basis: auto;
-    width: 150px;
-    max-width: 100%;
+    display: none;
   }
 }
 
