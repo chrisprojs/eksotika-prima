@@ -33,14 +33,14 @@ export default function HomePage({ locale = "id" }) {
           <p>{text.blast}</p>
         </div>
       </div>
-      <div className="home-location-box">
+      <div className="home-location-box page-brown">
         <p className="home-location-text">{text.location}</p>
       </div>
-      <div className="page-container home-about-container">
+      <div className="page-container home-about-container page-brown">
         <AboutSection locale={locale}/>
       </div>
-      <div className="page-container">
-        <p className="page-heading">{text.productsHeading}</p>
+      <div className="page-container page-brown">
+        <p className="page-heading text-white">{text.productsHeading}</p>
         <CardLoad locale={locale}/>
       </div>
       <div className="page-container">

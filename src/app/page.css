@@ -45,6 +45,7 @@
 .home-location-text{
   margin: 0px 50px;
   text-align: center;
+  color: #f0e6d9cc;
   font-size: 1rem;
   font-weight: var(--var-font-semibold);
   text-shadow: var(--var-text-shadow-heading);
@@ -96,4 +97,26 @@
 
 .home-about-container {
   display: block;
+  position: relative;
+  padding-left: 5%;
+  padding-right: 5%;
+  overflow: hidden; /* Prevents pseudo-element overflow */
+}
+
+.home-about-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/asset/about_section_template.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+/* Ensures content sits above the translucent background */
+.home-about-container > * {
+  position: relative;
+  z-index: 1;
 }

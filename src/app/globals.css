@@ -28,6 +28,10 @@ body{
   background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
 }
 
+.page-brown{
+  background-color: #2A1D11;
+}
+
 .page-layout {
   padding-top: 80px;
 }
@@ -38,6 +42,14 @@ body{
   font-size: var(--var-font-size-heading);
   font-weight: var(--var-font-bold);
   text-shadow: var(--var-text-shadow-heading);
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.text-cream {
+  color: #f0e6d9cc;
 }
 
 .app-container {

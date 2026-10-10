@@ -1,20 +1,30 @@
 'use client'
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./page.css";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   getLocaleFromPathname,
   getLocalizedPath,
   getPathWithoutLocale,
   getTranslations,
+  locales,
 } from "@/lib/i18n";
 import { useCurrency } from "@/components/currencyProvider/CurrencyProvider";
 
+const localeOptions = {
+  id: { flag: "/asset/flags/id.svg", label: "ID", alt: "Bendera Indonesia" },
+  en: { flag: "/asset/flags/gb.svg", label: "EN", alt: "United Kingdom flag" },
+};
+
 function Navbar() {
   const [isClicked, setClicked] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
   const { currency, setCurrency, supportedCurrencies } = useCurrency();
+  const router = useRouter();
+  const langRef = useRef(null);
+  const currencyRef = useRef(null);
   const location = usePathname() || "/";
   const locale = getLocaleFromPathname(location);
   const text = getTranslations(locale).nav;
@@ -25,10 +35,50 @@ function Navbar() {
     pathWithoutLocale === "/news" || pathWithoutLocale.startsWith("/news/");
   const closeMenu = () => setClicked(false);
   const localizedPath = (path) => getLocalizedPath(path, locale);
+  const toggleDropdown = (name) =>
+    setOpenDropdown((current) => (current === name ? null : name));
+  const selectLocale = (code) => {
+    closeMenu();
+    setOpenDropdown(null);
+    if (code !== locale) {
+      router.push(getLocalizedPath(pathWithoutLocale, code));
+    }
+  };
+  const selectCurrency = (code) => {
+    setOpenDropdown(null);
+    if (code !== currency) {
+      setCurrency(code);
+    }
+  };
 
   useEffect(() => {
     document.documentElement.lang = getTranslations(locale).htmlLang;
   }, [locale]);
+
+  useEffect(() => {
+    if (!openDropdown) {
+      return undefined;
+    }
+    const handlePointerDown = (event) => {
+      const insideLang = langRef.current && langRef.current.contains(event.target);
+      const insideCurrency =
+        currencyRef.current && currencyRef.current.contains(event.target);
+      if (!insideLang && !insideCurrency) {
+        setOpenDropdown(null);
+      }
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [openDropdown]);
 
   return (
     <nav className="navbar-bg">
@@ -42,18 +92,84 @@ function Navbar() {
           <span className="navbar-logo-name">Eksotika Prima</span>
         </Link>
 
-        <select
-          className="navbar-currency"
-          value={currency}
-          onChange={(event) => setCurrency(event.target.value)}
-          aria-label={text.currencyLabel}
-        >
-          {supportedCurrencies.map((code) => (
-            <option key={code} value={code}>
-              {code}
-            </option>
-          ))}
-        </select>
+        <div className="navbar-dropdown navbar-dropdown-language" ref={langRef}>
+          <button
+            type="button"
+            className="navbar-dropdown-toggle"
+            onClick={() => toggleDropdown("language")}
+            aria-haspopup="listbox"
+            aria-expanded={openDropdown === "language"}
+            aria-label={text.languageLabel}
+          >
+            <Image
+              src={localeOptions[locale].flag}
+              alt={localeOptions[locale].alt}
+              className="navbar-dropdown-flag"
+              width={24}
+              height={18}
+              unoptimized
+            />
+            <span className="navbar-dropdown-label">{localeOptions[locale].label}</span>
+            <span className="navbar-dropdown-caret" aria-hidden="true" />
+          </button>
+
+          {openDropdown === "language" && (
+            <ul className="navbar-dropdown-list" role="listbox">
+              {locales.map((code) => {
+                const option = localeOptions[code];
+                return (
+                  <li key={code} role="option" aria-selected={code === locale}>
+                    <button
+                      type="button"
+                      className={`navbar-dropdown-item ${code === locale ? "active" : ""}`}
+                      onClick={() => selectLocale(code)}
+                    >
+                      <Image
+                        src={option.flag}
+                        alt={option.alt}
+                        className="navbar-dropdown-flag"
+                        width={24}
+                        height={18}
+                        unoptimized
+                      />
+                      <span className="navbar-dropdown-label">{option.label}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+
+        <div className="navbar-dropdown navbar-dropdown-currency" ref={currencyRef}>
+          <button
+            type="button"
+            className="navbar-dropdown-toggle"
+            onClick={() => toggleDropdown("currency")}
+            aria-haspopup="listbox"
+            aria-expanded={openDropdown === "currency"}
+            aria-label={text.currencyLabel}
+          >
+            <span className="navbar-dropdown-label">{currency}</span>
+            <span className="navbar-dropdown-caret" aria-hidden="true" />
+          </button>
+
+          {openDropdown === "currency" && (
+            <ul className="navbar-dropdown-list" role="listbox">
+              {supportedCurrencies.map((code) => (
+                <li key={code} role="option" aria-selected={code === currency}>
+                  <button
+                    type="button"
+                    className={`navbar-dropdown-item ${code === currency ? "active" : ""}`}
+                    onClick={() => selectCurrency(code)}
+                  >
+                    <span className="navbar-dropdown-label">{code}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
         <ul className={`navbar-menu ${isClicked ? "active" : ""}`}>
           <li className="navbar-item">
@@ -90,23 +206,6 @@ function Navbar() {
               onClick={closeMenu}
             >
               {text.contact}
-            </Link>
-          </li>
-          <li className="navbar-item navbar-language" aria-label={text.languageLabel}>
-            <Link
-              href={getLocalizedPath(pathWithoutLocale, "id")}
-              className={`navbar-language-option ${locale === "id" ? "active" : ""}`}
-              onClick={closeMenu}
-            >
-              {text.indonesia}
-            </Link>
-            <span className="navbar-language-divider">/</span>
-            <Link
-              href={getLocalizedPath(pathWithoutLocale, "en")}
-              className={`navbar-language-option ${locale === "en" ? "active" : ""}`}
-              onClick={closeMenu}
-            >
-              {text.english}
             </Link>
           </li>
         </ul>
