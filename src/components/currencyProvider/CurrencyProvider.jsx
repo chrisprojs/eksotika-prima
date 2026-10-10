@@ -3,23 +3,51 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
+  FALLBACK_RATES,
   SUPPORTED_CURRENCIES,
   convertFromIdr,
   getDefaultCurrencyForLocale,
 } from "@/lib/currency";
 import { formatCurrency, getLocaleFromPathname } from "@/lib/i18n";
 
-const CURRENCY_STORAGE_KEY = "ep.currency";
+// Per-language override is namespaced by locale (ep.currency.id, ep.currency.en)
+// so a choice made while viewing one language never bleeds into the other.
+const CURRENCY_STORAGE_PREFIX = "ep.currency";
 const RATES_STORAGE_KEY = "ep.rates";
 const RATES_AT_STORAGE_KEY = "ep.ratesAt";
 const RATES_TTL_MS = 60 * 60 * 1000;
 
-const DEFAULT_RATES = { IDR: 1 };
+// Seed the rate map with the IDR->X fallbacks so a non-IDR selection converts
+// with a real exchange rate from first interaction, even before the live
+// Frankfurter map has loaded. IDR itself is always 1 (base currency).
+const DEFAULT_RATES = { IDR: 1, ...FALLBACK_RATES };
 
 const CurrencyContext = createContext(null);
 
+function getCurrencyStorageKey(locale) {
+  return `${CURRENCY_STORAGE_PREFIX}.${locale}`;
+}
+
+// Reads the stored override for a specific locale. Returns null when there is
+// no valid stored value (so the caller falls back to that locale's default).
+function readStoredCurrencyForLocale(locale) {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const stored = window.localStorage.getItem(getCurrencyStorageKey(locale));
+
+  return stored && SUPPORTED_CURRENCIES.includes(stored) ? stored : null;
+}
+
 function buildContextValue(currency, rates, setCurrency) {
-  const activeRate = rates?.[currency] ?? 1;
+  // The live conversion is always raw IDR x rates[selectedCurrency], where
+  // rates is the Frankfurter-backed IDR->X map. For a non-IDR currency that is
+  // somehow missing from the map, fall back to the IDR->X fallback rate rather
+  // than 1, so we never display an unconverted IDR amount under a foreign
+  // currency label.
+  const activeRate =
+    rates?.[currency] ?? (currency === "IDR" ? 1 : FALLBACK_RATES[currency] ?? 1);
 
   return {
     currency,
@@ -37,26 +65,28 @@ function buildContextValue(currency, rates, setCurrency) {
 
 export function CurrencyProvider({ children }) {
   const pathname = usePathname();
+  const locale = getLocaleFromPathname(pathname || "/");
   // First paint matches the SSR locale default so there is no hydration
-  // mismatch; localStorage reconciliation happens in an effect after mount.
-  const localeDefault = getDefaultCurrencyForLocale(
-    getLocaleFromPathname(pathname || "/")
-  );
+  // mismatch; the per-locale localStorage override is reconciled in an effect
+  // after mount.
+  const localeDefault = getDefaultCurrencyForLocale(locale);
 
   const [currency, setCurrencyState] = useState(localeDefault);
   const [rates, setRates] = useState(DEFAULT_RATES);
 
+  // Reselect the active currency whenever the locale changes: use that
+  // locale's own stored override if present, otherwise that locale's default.
+  // Runs after mount (post-hydration), so the first paint stays on the SSR
+  // locale default. Navigating between /id and /en re-runs this and swaps to
+  // the correct per-language value without the other language leaking in.
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
 
-    const stored = window.localStorage.getItem(CURRENCY_STORAGE_KEY);
-
-    if (stored && SUPPORTED_CURRENCIES.includes(stored)) {
-      setCurrencyState(stored);
-    }
-  }, []);
+    const stored = readStoredCurrencyForLocale(locale);
+    setCurrencyState(stored ?? getDefaultCurrencyForLocale(locale));
+  }, [locale]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -120,6 +150,8 @@ export function CurrencyProvider({ children }) {
     };
   }, []);
 
+  // Persist the override for the CURRENT locale only, so the choice applies to
+  // this language without touching the other language's stored value.
   function setCurrency(next) {
     if (!SUPPORTED_CURRENCIES.includes(next)) {
       return;
@@ -128,13 +160,16 @@ export function CurrencyProvider({ children }) {
     setCurrencyState(next);
 
     if (typeof window !== "undefined") {
-      window.localStorage.setItem(CURRENCY_STORAGE_KEY, next);
+      window.localStorage.setItem(getCurrencyStorageKey(locale), next);
     }
   }
 
   const value = useMemo(
     () => buildContextValue(currency, rates, setCurrency),
-    [currency, rates]
+    // setCurrency is stable per render except for the locale it closes over,
+    // which is captured through the locale dependency below.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currency, rates, locale]
   );
 
   return (

@@ -29,7 +29,7 @@ const EXCHANGE_RATE_ENDPOINT =
 // Rates used when the exchange rate API is unreachable, or when a particular
 // symbol is missing from the API response. Kept conservative and updated with
 // the latest observed IDR -> X rates.
-const FALLBACK_RATES = {
+export const FALLBACK_RATES = {
   USD: 0.000056,
   EUR: 0.000052,
   GBP: 0.000044,
@@ -207,23 +207,42 @@ function convertVariantImportPrices(variant, rate) {
     return variant;
   }
 
+  // Capture the genuine raw IDR DB amounts BEFORE anything is converted.
+  // These `*Idr` fields are the single source of truth the client uses to
+  // convert into the user-selected currency (raw IDR x Frankfurter rate), so
+  // they must never carry a value that has already been through a conversion.
+  // Guard against a variant that was passed through this helper more than once
+  // by preferring an existing raw-IDR snapshot over the (possibly already
+  // overwritten) importPrice/fromPrice fields.
+  const importPriceIdr =
+    variant.importPriceIdr ?? variant.importPrice ?? variant.price;
+  const importDozenPriceIdr =
+    variant.importDozenPriceIdr ?? variant.importDozenPrice;
+  const fromPriceIdr = variant.fromPriceIdr ?? variant.fromPrice;
+
   return {
     ...variant,
-    // Preserve the raw IDR import values so client renderers can convert them
-    // to any selected currency without losing the original IDR number.
-    importPriceIdr: variant.importPrice ?? variant.price,
-    importDozenPriceIdr: variant.importDozenPrice,
-    fromPriceIdr: variant.fromPrice,
+    // Raw IDR values preserved for the live client conversion.
+    importPriceIdr,
+    importDozenPriceIdr,
+    fromPriceIdr,
     // Local price fields (price, dozenPrice) are left untouched so the
     // explicit "Local Price" option always stays in IDR.
-    importPrice: convertAmount(variant.importPrice, rate),
-    importDozenPrice: convertAmount(variant.importDozenPrice, rate),
+    //
+    // The server-side locale-default conversion is applied to importPrice/
+    // importDozenPrice/fromPrice. These are ONLY consumed by the server SEO
+    // renderers (metadata, JSON-LD offers, news related-product price), which
+    // must stay on the locale default and must not read browser state. The
+    // client never reuses these fields for its on-screen display. Convert from
+    // the raw IDR snapshot so a double pass still yields the correct result.
+    importPrice: convertAmount(importPriceIdr, rate),
+    importDozenPrice: convertAmount(importDozenPriceIdr, rate),
     // fromPrice is the strike-through reference shown alongside the import
     // price (never shown with the local price), so convert it too for a
     // coherent same-currency discount. The original IDR value is preserved
     // on fromPriceLocal for any local-price context that needs it.
-    fromPriceLocal: variant.fromPrice,
-    fromPrice: convertAmount(variant.fromPrice, rate),
+    fromPriceLocal: fromPriceIdr,
+    fromPrice: convertAmount(fromPriceIdr, rate),
   };
 }
 
