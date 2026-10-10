@@ -4,27 +4,14 @@ import { getPublishedNewsBySlug } from "@/app/api/news/newsService";
 import { htmlToPlainText, localizeNewsHtml } from "@/lib/newsHtml";
 import { apiUrl, siteUrl } from "@/lib/site";
 import {
-  formatCurrency,
   formatLocalizedDate,
   getLocalizedPath,
   getLocalizedUrl,
   getMetadataAlternates,
   getTranslations,
 } from "@/lib/i18n";
+import NewsRelatedPrice from "@/components/newsRelatedPrice/NewsRelatedPrice";
 import "@/app/news/[slug]/page.css";
-
-function getProductPrice(product, locale, text) {
-  const importCurrency = product.importCurrency || "IDR";
-  const prices = product.variants.map((variant) => variant.importPrice);
-  if (prices.length === 0) return text.priceUnavailable;
-
-  const minPrice = Math.min(...prices);
-  const maxPrice = Math.max(...prices);
-
-  return minPrice === maxPrice
-    ? formatCurrency(minPrice, importCurrency)
-    : `${formatCurrency(minPrice, importCurrency)} - ${formatCurrency(maxPrice, importCurrency)}`;
-}
 
 function getNewsCoverImageUrl(coverImage) {
   const image = String(coverImage || "").trim();
@@ -172,7 +159,10 @@ export default async function NewsDetailPage({ params, locale = "id" }) {
                   <img src={imageUrl} alt={product.title} className="news-product-image" />
                   <div>
                     <h3>{product.title}</h3>
-                    <p>{getProductPrice(product, locale, text)}</p>
+                    <NewsRelatedPrice
+                      product={product}
+                      priceUnavailable={text.priceUnavailable}
+                    />
                     <span>{text.seeProduct}</span>
                   </div>
                 </Link>
