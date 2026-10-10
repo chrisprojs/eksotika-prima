@@ -20,7 +20,43 @@ function getFirstVariant(product) {
 function getValidQuantity(quantity, variant) {
   if (quantity === WHOLESALE_QUANTITY) return WHOLESALE_QUANTITY;
 
-  return quantity === 12 && variant?.dozenPrice ? 12 : 1;
+  // Any positive integer is a valid custom quantity; non-positive / NaN
+  // values fall back to a single unit. (The `variant` argument is kept for
+  // call-site compatibility.)
+  const n = Math.floor(Number(quantity));
+  return Number.isFinite(n) && n >= 1 ? n : 1;
+}
+
+// Pick the raw-IDR single and dozen unit prices that match the active price
+// type. A null/undefined dozen field means the variant has no dozen price.
+function getRawUnitPrices(variant, priceType = "import") {
+  if (priceType === "import") {
+    return {
+      singleIdr: variant.importPriceIdr ?? variant.price ?? 0,
+      dozenIdr: variant.importDozenPriceIdr ?? null,
+    };
+  }
+
+  return {
+    singleIdr: variant.price ?? 0,
+    dozenIdr: variant.dozenPrice ?? null,
+  };
+}
+
+// Pure helper: compute a custom-quantity total in raw IDR by combining the
+// dozen price and the single price. When no dozen price exists, every unit is
+// charged at the single price.
+function computeCustomTotal({ singlePrice, dozenPrice, quantity }) {
+  const n = Math.max(1, Math.floor(Number(quantity) || 1));
+  const single = Number(singlePrice) || 0;
+
+  if (typeof dozenPrice === "number" && Number.isFinite(dozenPrice) && dozenPrice > 0) {
+    const dozens = Math.floor(n / 12);
+    const remainder = n % 12;
+    return dozens * dozenPrice + remainder * single;
+  }
+
+  return n * single;
 }
 
 function getVariantPrice(variant, quantity, priceType = "import") {
@@ -37,6 +73,14 @@ function getVariantPrice(variant, quantity, priceType = "import") {
   
   if (quantity === 12 && priceType === "local" && variant.dozenPrice !== null && variant.dozenPrice !== undefined) {
     return variant.dozenPrice;
+  }
+
+  // Custom quantities (any positive integer other than the single/dozen
+  // exact-field cases above) are priced dynamically from the raw-IDR single
+  // and dozen fields that match the active price type.
+  if (typeof quantity === "number" && quantity !== 1) {
+    const { singleIdr, dozenIdr } = getRawUnitPrices(variant, priceType);
+    return computeCustomTotal({ singlePrice: singleIdr, dozenPrice: dozenIdr, quantity });
   }
 
   const basePrice = priceType === "import" ? 
@@ -60,6 +104,10 @@ export default function SearchProduct({ product = null, locale = "id" }) {
   const [currentProduct] = useState(product);
   const [selectedVariant, setSelectedVariant] = useState(firstVariant);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+  // Controlled string backing the custom-quantity <input>, held separately so
+  // the field can be transiently empty/invalid while typing without breaking
+  // the numeric price math.
+  const [quantityInput, setQuantityInput] = useState("1");
   // Default price type is always "import" regardless of locale; the user can
   // switch between import and local pricing via the toggle below.
   const [priceType, setPriceType] = useState("import");
@@ -110,6 +158,15 @@ export default function SearchProduct({ product = null, locale = "id" }) {
     setSelectedPrice(getVariantPrice(selectedVariant, selectedQuantity, priceType));
   }, [selectedVariant, selectedQuantity, priceType]);
 
+  // Keep the visible custom-quantity field in sync when the quantity changes
+  // from a badge click, a URL load, or a single/dozen selection. The input is
+  // disabled in wholesale mode, so leave it untouched there.
+  useEffect(() => {
+    if (selectedQuantity !== WHOLESALE_QUANTITY) {
+      setQuantityInput(String(selectedQuantity));
+    }
+  }, [selectedQuantity]);
+
   // Update URL when user makes a selection change
   const updateUrlForSelection = (variant, quantity) => {
     const params = new URLSearchParams();
@@ -158,6 +215,20 @@ export default function SearchProduct({ product = null, locale = "id" }) {
     updateUrlForSelection(targetVariant, targetQuantity);
   };
 
+  const onCustomQuantityChange = (e) => {
+    const raw = e.target.value;
+    setQuantityInput(raw);
+
+    // Allow the field to be cleared mid-edit without resetting the price;
+    // keep the last valid quantity until a valid number is entered.
+    if (raw === "") return;
+
+    const n = parseInt(raw, 10);
+    if (Number.isFinite(n) && n >= 1) {
+      changePrice(n, selectedVariant);
+    }
+  };
+
   if (!currentProduct || !selectedVariant) {
     return <Loading />;
   }
@@ -188,9 +259,11 @@ export default function SearchProduct({ product = null, locale = "id" }) {
   const tagTitle = getTagTitleText(currentProduct, selectedVariant, selectedQuantity);
   const selectedQuantityText = isWholesale
     ? text.wholesaleSuffix
-    : selectedQuantity === 12
-      ? text.dozenSuffix
-      : text.single;
+    : selectedQuantity === 1
+      ? text.single
+      : selectedQuantity === 12
+        ? text.dozenSuffix
+        : `${selectedQuantity} ${text.pieceSuffix}`;
   const selectedPriceText = isWholesale
     ? text.wholesalePriceText
     : formatActivePrice(selectedPrice);
@@ -318,6 +391,24 @@ export default function SearchProduct({ product = null, locale = "id" }) {
             >
               {text.wholesale}
             </span>
+          </div>
+
+          <div className="searchProduct-badge-box">
+            <label className="searchProduct-quantity-label">
+              {text.customQuantityLabel}
+              <input
+                type="number"
+                min="1"
+                step="1"
+                inputMode="numeric"
+                className="searchProduct-quantity-input"
+                value={isWholesale ? "" : quantityInput}
+                onChange={onCustomQuantityChange}
+                disabled={isWholesale}
+                placeholder={text.customQuantityPlaceholder}
+                aria-label={text.customQuantityLabel}
+              />
+            </label>
           </div>
 
           <p className="searchProduct-text">
