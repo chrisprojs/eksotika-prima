@@ -380,7 +380,7 @@ export const dictionary = {
       prompt: "Want to bargain or buy? Please contact:",
     },
     home: {
-      heroTitle: "Indonesia's Large Massage Oil Supplier",
+      heroTitle: "Indonesia's Largest Massage Oil Supplier",
       heroSubtitle: "Low Prices, Open to Bargain",
       blast: "Buy More, Bargain More!",
       location: contactAddress,
@@ -498,7 +498,7 @@ export const dictionary = {
         {
           question: "Why choose Eksotika Prima as your massage oil supplier?",
           answer:
-            "Eksotika Prima is known as one of Indonesia's large massage oil suppliers. We offer many traditional health products, good stock availability, and service for retail and wholesale purchases.",
+            "Eksotika Prima is known as one of Indonesia's largest massage oil suppliers. We offer many traditional health products, good stock availability, and service for retail and wholesale purchases.",
         },
       ],
     },
@@ -615,7 +615,7 @@ export const dictionary = {
     },
     meta: {
       home: {
-        title: "Indonesia's Large Massage Oil Supplier | Support International Shipping | Eksotika Prima",
+        title: "Indonesia's Largest Massage Oil Supplier | Support International Shipping | Eksotika Prima",
         description:
           "Eksotika Prima supplies quality massage oil in Indonesia with low prices, safe packing, and wholesale order support.",
         openGraphDescription:
