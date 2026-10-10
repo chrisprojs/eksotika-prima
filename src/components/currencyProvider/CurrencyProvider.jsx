@@ -4,7 +4,6 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   EXCHANGE_RATE_ENDPOINT,
-  FALLBACK_RATES,
   SUPPORTED_CURRENCIES,
   convertFromIdr,
   getDefaultCurrencyForLocale,
@@ -19,10 +18,10 @@ const RATES_STORAGE_KEY = "ep.rates";
 const RATES_AT_STORAGE_KEY = "ep.ratesAt";
 const RATES_TTL_MS = 60 * 60 * 1000;
 
-// Seed the rate map with the IDR->X fallbacks so a non-IDR selection converts
-// with a real exchange rate from first interaction, even before the live
-// Frankfurter map has loaded. IDR itself is always 1 (base currency).
-const DEFAULT_RATES = { IDR: 1, ...FALLBACK_RATES };
+// The only always-known rate is IDR itself (base currency, always 1). There is
+// no hardcoded fallback table: until the live Frankfurter map loads, any
+// non-IDR selection is shown unconverted in IDR rather than guessed.
+const DEFAULT_RATES = { IDR: 1 };
 
 const CurrencyContext = createContext(null);
 
@@ -42,25 +41,32 @@ function readStoredCurrencyForLocale(locale) {
   return stored && SUPPORTED_CURRENCIES.includes(stored) ? stored : null;
 }
 
-function buildContextValue(currency, rates, setCurrency) {
+function buildContextValue(currency, rates, setCurrency, ratesUnavailable) {
   // The live conversion is always raw IDR x rates[selectedCurrency], where
-  // rates is the Frankfurter-backed IDR->X map. For a non-IDR currency that is
-  // somehow missing from the map, fall back to the IDR->X fallback rate rather
-  // than 1, so we never display an unconverted IDR amount under a foreign
-  // currency label.
-  const activeRate =
-    rates?.[currency] ?? (currency === "IDR" ? 1 : FALLBACK_RATES[currency] ?? 1);
+  // rates is the Frankfurter-backed IDR->X map. A rate is usable only when it
+  // is a finite positive number (IDR is always 1). When the selected currency
+  // has no usable rate it is NOT converted: the raw IDR amount is shown with an
+  // IDR label, never an unconverted number under a foreign-currency label.
+  const selectedRate = Number(rates?.[currency]);
+  const hasRate =
+    currency === "IDR" || (Number.isFinite(selectedRate) && selectedRate > 0);
 
   return {
     currency,
     setCurrency,
     rates,
+    ratesUnavailable,
     supportedCurrencies: SUPPORTED_CURRENCIES,
     convertImport(amountIdr) {
-      return convertFromIdr(amountIdr, activeRate);
+      // No usable rate => no conversion: return the raw IDR amount.
+      return convertFromIdr(amountIdr, hasRate ? rates[currency] : 1);
     },
     formatImport(amountIdr) {
-      return formatCurrency(convertFromIdr(amountIdr, activeRate), currency);
+      // No usable rate => format the raw IDR amount with an IDR label so the
+      // number and the label always agree.
+      return hasRate
+        ? formatCurrency(convertFromIdr(amountIdr, rates[currency]), currency)
+        : formatCurrency(amountIdr, "IDR");
     },
   };
 }
@@ -75,6 +81,10 @@ export function CurrencyProvider({ children }) {
 
   const [currency, setCurrencyState] = useState(localeDefault);
   const [rates, setRates] = useState(DEFAULT_RATES);
+  // Starts false so the server render and the first client paint agree; it only
+  // ever flips to true inside the post-mount fetch effect, keeping the render
+  // hydration-safe. True means a live fetch failed with no fresh cache.
+  const [ratesUnavailable, setRatesUnavailable] = useState(false);
 
   // Reselect the active currency whenever the locale changes: use that
   // locale's own stored override if present, otherwise that locale's default.
@@ -99,6 +109,7 @@ export function CurrencyProvider({ children }) {
 
     const cachedRates = window.localStorage.getItem(RATES_STORAGE_KEY);
     const cachedAt = Number(window.localStorage.getItem(RATES_AT_STORAGE_KEY));
+    let hasFreshCache = false;
 
     if (
       cachedRates &&
@@ -110,10 +121,19 @@ export function CurrencyProvider({ children }) {
 
         if (parsed && typeof parsed === "object") {
           setRates(parsed);
+          hasFreshCache = true;
           return;
         }
       } catch {
         // Ignore malformed cache and fall through to a fresh fetch.
+      }
+    }
+
+    // Marks live rates as unavailable, but only when there is no fresh cache to
+    // fall back to. This is what the currency-unavailable popup listens to.
+    function markUnavailable() {
+      if (!cancelled && !hasFreshCache) {
+        setRatesUnavailable(true);
       }
     }
 
@@ -125,23 +145,31 @@ export function CurrencyProvider({ children }) {
         const response = await fetch(EXCHANGE_RATE_ENDPOINT);
 
         if (!response.ok) {
+          markUnavailable();
           return;
         }
 
         const payload = await response.json();
         const parsed = parseRatesFromPayload(payload);
 
-        if (cancelled || !Number.isFinite(Number(parsed?.USD)) || Number(parsed.USD) <= 0) {
-          // Keep the current rates (locale default / cached) if the response
-          // did not yield a usable rate map.
+        if (cancelled) {
           return;
         }
 
-        // Seed with the real IDR->X fallbacks so a symbol missing from the
-        // response never silently converts by 1. IDR is always the base (1).
-        const nextRates = { IDR: 1, ...FALLBACK_RATES, ...parsed };
+        if (!Number.isFinite(Number(parsed?.USD)) || Number(parsed.USD) <= 0) {
+          // The response did not yield a usable rate map; keep IDR only and
+          // flag unavailability (unless a fresh cache already covered us).
+          markUnavailable();
+          return;
+        }
+
+        // No hardcoded fallbacks: only IDR (base, always 1) plus the live
+        // Frankfurter rates. A symbol missing from the response simply stays
+        // unconverted (shown in IDR) rather than guessed.
+        const nextRates = { IDR: 1, ...parsed };
 
         setRates(nextRates);
+        setRatesUnavailable(false);
         window.localStorage.setItem(
           RATES_STORAGE_KEY,
           JSON.stringify(nextRates)
@@ -151,7 +179,9 @@ export function CurrencyProvider({ children }) {
           String(Date.now())
         );
       } catch {
-        // Keep the current rates (locale default / cached) on failure.
+        // Network/parse failure: keep IDR only and flag unavailability unless a
+        // fresh cache already covered us.
+        markUnavailable();
       }
     }
 
@@ -177,11 +207,11 @@ export function CurrencyProvider({ children }) {
   }
 
   const value = useMemo(
-    () => buildContextValue(currency, rates, setCurrency),
+    () => buildContextValue(currency, rates, setCurrency, ratesUnavailable),
     // setCurrency is stable per render except for the locale it closes over,
     // which is captured through the locale dependency below.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currency, rates, locale]
+    [currency, rates, locale, ratesUnavailable]
   );
 
   return (
@@ -203,6 +233,7 @@ export function useCurrency() {
     currency: "IDR",
     setCurrency() {},
     rates: DEFAULT_RATES,
+    ratesUnavailable: false,
     supportedCurrencies: SUPPORTED_CURRENCIES,
     convertImport(amountIdr) {
       return convertFromIdr(amountIdr, 1);

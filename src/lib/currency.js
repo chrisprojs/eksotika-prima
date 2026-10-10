@@ -15,7 +15,10 @@ export const SUPPORTED_CURRENCIES = [
   "MYR",
   "AUD",
   "JPY",
+  "KRW",
   "CNY",
+  "AED",
+  "SAR"
 ];
 
 const importCurrencyByLocale = {
@@ -27,21 +30,7 @@ const importCurrencyByLocale = {
 // straight from the browser (Frankfurter is a public, CORS-enabled API) without
 // going through an in-app proxy route.
 export const EXCHANGE_RATE_ENDPOINT =
-  "https://api.frankfurter.dev/v2/rates?base=idr&quotes=usd,eur,gbp,sgd,myr,aud,jpy,cny";
-
-// Rates used when the exchange rate API is unreachable, or when a particular
-// symbol is missing from the API response. Kept conservative and updated with
-// the latest observed IDR -> X rates.
-export const FALLBACK_RATES = {
-  USD: 0.000056,
-  EUR: 0.000052,
-  GBP: 0.000044,
-  SGD: 0.000076,
-  MYR: 0.00026,
-  AUD: 0.000094,
-  JPY: 0.0091,
-  CNY: 0.00041,
-};
+  "https://api.frankfurter.dev/v2/rates?base=idr&quotes=usd,eur,gbp,sgd,myr,aud,jpy,krw,cny,aed,sar";
 
 // Cache the fetched rate map for an hour so we do not hit the API on every
 // request.
@@ -141,8 +130,10 @@ async function fetchIdrRates() {
   return rates;
 }
 
-// Returns an IDR -> X rate map including IDR itself (always 1). Fetched symbols
-// override the fallbacks; missing symbols fall back to FALLBACK_RATES.
+// Returns an IDR -> X rate map including IDR itself (always 1). Only the live
+// Frankfurter rates are merged in; there is NO hardcoded fallback table. When
+// the API is unreachable (and nothing is cached) the map is exactly { IDR: 1 },
+// so any currency without a live rate is simply not converted.
 export async function getIdrRateMap() {
   const now = Date.now();
 
@@ -153,13 +144,13 @@ export async function getIdrRateMap() {
   if (!inFlightRatesRequest) {
     inFlightRatesRequest = fetchIdrRates()
       .then((fetched) => {
-        cachedRates = { IDR: 1, ...FALLBACK_RATES, ...fetched };
+        cachedRates = { IDR: 1, ...fetched };
         cachedRatesTimestamp = Date.now();
         return cachedRates;
       })
       .catch((error) => {
-        console.error("Falling back to default IDR rate map:", error);
-        return cachedRates || { IDR: 1, ...FALLBACK_RATES };
+        console.error("Exchange rate fetch failed; using IDR only:", error);
+        return cachedRates || { IDR: 1 };
       })
       .finally(() => {
         inFlightRatesRequest = null;
@@ -169,21 +160,28 @@ export async function getIdrRateMap() {
   return inFlightRatesRequest;
 }
 
+// Returns the live IDR -> USD rate, or null when no usable USD rate is
+// available. Callers must treat null as "no conversion" (effective rate 1,
+// IDR label) rather than substituting a guessed number.
 export async function getIdrToUsdRate() {
   const rates = await getIdrRateMap();
   const usd = Number(rates?.USD);
 
-  return Number.isFinite(usd) && usd > 0 ? usd : FALLBACK_RATES.USD;
+  return Number.isFinite(usd) && usd > 0 ? usd : null;
 }
 
 // Returns the multiplier that converts an IDR amount into the import currency
-// for the given locale. For IDR this is 1 (no conversion).
+// for the given locale. For IDR this is 1 (no conversion). For a USD locale
+// with no live USD rate, this is also 1 (no conversion) so the amount stays in
+// IDR instead of being multiplied by a guessed number.
 export async function getImportConversionRate(locale = defaultLocale) {
   if (getImportCurrency(locale) !== "USD") {
     return 1;
   }
 
-  return getIdrToUsdRate();
+  const usd = await getIdrToUsdRate();
+
+  return Number.isFinite(usd) && usd > 0 ? usd : 1;
 }
 
 function convertAmount(amount, rate) {
@@ -208,7 +206,7 @@ function convertAmount(amount, rate) {
   return Math.round(converted * 100) / 100;
 }
 
-function convertVariantImportPrices(variant, rate) {
+export function convertVariantImportPrices(variant, rate) {
   if (!variant || typeof variant !== "object") {
     return variant;
   }
@@ -275,23 +273,33 @@ export async function applyImportCurrency(product, localeOrConversion = defaultL
 
 // Resolves the conversion rate and currency label from either a locale string
 // or a precomputed { rate, importCurrency } object (so a shared rate can be
-// reused across many products without refetching).
-async function resolveImportConversion(localeOrConversion = defaultLocale) {
+// reused across many products without refetching). The label is forced to IDR
+// whenever the effective rate is 1 (no real conversion happened), so a
+// foreign-currency label can never sit on an unconverted IDR amount.
+export async function resolveImportConversion(localeOrConversion = defaultLocale) {
   if (
     localeOrConversion &&
     typeof localeOrConversion === "object" &&
     "rate" in localeOrConversion
   ) {
+    const rate = localeOrConversion.rate;
+    const converted = Number.isFinite(Number(rate)) && Number(rate) !== 1;
+
     return {
-      rate: localeOrConversion.rate,
-      importCurrency: localeOrConversion.importCurrency || baseCurrency,
+      rate,
+      importCurrency: converted
+        ? localeOrConversion.importCurrency || baseCurrency
+        : baseCurrency,
     };
   }
 
   const locale = localeOrConversion;
+  const rate = await getImportConversionRate(locale);
+  const converted = Number.isFinite(Number(rate)) && Number(rate) !== 1;
+
   return {
-    importCurrency: getImportCurrency(locale),
-    rate: await getImportConversionRate(locale),
+    importCurrency: converted ? getImportCurrency(locale) : baseCurrency,
+    rate,
   };
 }
 

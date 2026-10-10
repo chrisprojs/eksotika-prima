@@ -3,6 +3,7 @@ import Footer from "@/components/footer/page";
 import "./globals.css";
 import Navbar from "@/components/navbar/page";
 import { CurrencyProvider } from "@/components/currencyProvider/CurrencyProvider";
+import CurrencyNotice from "@/components/currencyNotice/CurrencyNotice";
 
 export const metadata = {
   authors: [{ name: "Eksotika Prima" }],
@@ -31,6 +32,7 @@ export default function RootLayout({ children }) {
             <Navbar />
             <div className="page-layout">{children}</div>
             <Footer />
+            <CurrencyNotice />
           </CurrencyProvider>
         </div>
         <Script
