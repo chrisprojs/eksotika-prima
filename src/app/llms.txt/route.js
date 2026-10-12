@@ -30,15 +30,15 @@ const DESCRIPTION_MAX_LENGTH = 280;
 
 const HEADER = `# Eksotika Prima
 
-> Supplier of minyak gosok (traditional Indonesian rub/massage oils). Retail, wholesale, and international shipping. Official website of the Eksotika Prima brand.
+> Indonesia's Largest Massage Oil Supplier. Retail, wholesale, and international shipping. Official website of the Eksotika Prima brand.
 
-Eksotika Prima is one of Indonesia's largest suppliers of minyak gosok, minyak urut, and minyak pijat (traditional Indonesian rub, massage, and herbal body-care oils). We serve personal customers, shops, resellers, and wholesale buyers, with support for international shipping.
+Eksotika Prima is one of Indonesia's largest suppliers of traditional Indonesian rub, massage, and herbal body-care oils. We serve personal customers, shops, resellers, and wholesale buyers, with support for international shipping.
 
 Canonical URL: ${siteUrl}
 
 ## Summary
 
-- **Business:** Eksotika Prima is a supplier and distributor of traditional Indonesian health and body-care oils, including minyak gosok (rub oil), minyak urut and minyak pijat (massage oil), minyak kayu putih (cajuput oil), minyak telon (baby oil), and herbal balsem (balm).
+- **Business:** Eksotika Prima supplies massage oil and herbal body care oil for personal use, shops, resellers, and wholesale buyers. We help customers get quality products with low prices, safe packing, and fast service. Our products are made with good quality standards and selected herbal ingredients that are well known in Indonesian traditional care. This makes Eksotika Prima a trusted choice for customers who want natural body care products.
 - **Customers:** Personal buyers, retail shops, resellers, and wholesale/bulk buyers, within Indonesia and internationally.
 - **Offering:** Competitive and negotiable wholesale pricing, safe packing, and fast service. Prices can be discussed for large orders.
 - **International shipping:** Supports export to the USA, Europe, Australia, Southeast Asia, East Asia, the Middle East, Africa, Latin America, and other regions, subject to shipping rules.
