@@ -9,12 +9,14 @@ import FaqSection from "@/components/faqSection/page";
 import { getTranslations } from "@/lib/i18n";
 import "@/app/page.css";
 import ImportShippingSection from "@/components/importShippingSection/page";
+import OrganizationJsonLd from "@/components/structuredData/OrganizationJsonLd";
 
 export default function HomePage({ locale = "id" }) {
   const text = getTranslations(locale).home;
 
   return (
     <>
+      <OrganizationJsonLd locale={locale} />
       <div className="home-img-container">
         <Image
           src="/asset/home_template_1.jpg"

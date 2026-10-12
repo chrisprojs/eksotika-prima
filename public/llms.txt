@@ -1,0 +1,17 @@
+# Eksotika Prima
+
+> Supplier of minyak gosok (traditional Indonesian rub/massage oils). Retail, wholesale, and international shipping.
+
+Eksotika Prima is one of Indonesia's largest suppliers of minyak gosok, minyak urut, and minyak pijat (traditional Indonesian rub, massage, and herbal body-care oils). We serve personal customers, shops, resellers, and wholesale buyers, with support for international shipping.
+
+Canonical URL: https://eksotikaprima.com
+
+## Key sections
+
+- [Products](https://eksotikaprima.com/product): Full catalog of massage and rub oils with variants and sizes.
+- [News](https://eksotikaprima.com/news): Product information, tips, and updates.
+- [Contact](https://eksotikaprima.com/contact): Address, phone, WhatsApp, and marketplace stores.
+
+## Reference
+
+- [Sitemap](https://eksotikaprima.com/sitemap.xml)
