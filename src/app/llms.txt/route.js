@@ -58,7 +58,7 @@ ${locales
     const label = localeLabels[locale] || locale;
     return [
       `- [Products (${label})](${getLocalizedUrl("/product", locale)}): Full catalog of massage and rub oils with variants and sizes.`,
-      `- [News (${label})](${getLocalizedUrl("/news", locale)}): Product information, tips, and updates.`,
+      `- [News (${label})](${getLocalizedUrl("/news", locale)}): News from Eksotika Prima with tips and update.`,
       `- [Contact (${label})](${getLocalizedUrl("/contact", locale)}): Address, phone, WhatsApp, and marketplace stores.`,
     ].join("\n");
   })
