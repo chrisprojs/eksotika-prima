@@ -328,6 +328,25 @@ export async function getSitemapNewsList(now = new Date()) {
   }
 }
 
+export async function getLlmsNewsList(now = new Date()) {
+  try {
+    const publicCondition = getPublicNewsCondition(now);
+    const rows = await prisma.$queryRaw`
+      SELECT n."slug", n."title", n."summary", n."createdAt", n."updatedAt"
+      FROM "News" n
+      ${getWhereSql(publicCondition ? [publicCondition] : [])}
+      ORDER BY datetime(n."updatedAt") DESC
+    `;
+
+    return rows;
+  } catch (error) {
+    if (!isMissingNewsTable(error)) {
+      console.error("Failed to build llms.txt news list:", error);
+    }
+    return [];
+  }
+}
+
 export async function createNews(data) {
   return prisma.news.create({
     data: {
