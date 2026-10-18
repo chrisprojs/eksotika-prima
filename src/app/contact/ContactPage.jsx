@@ -51,7 +51,7 @@ export default function ContactPage({ locale = "id" }) {
                 rel="noopener noreferrer"
                 className="contact-info-link"
               >
-                <Image src="/asset/whatsapp-logo.png" alt="WhatsApp" className="contact-icon" width={100} height={100}/> {formatPhoneNumber(ContactInformation.whatsappNumber)} &#40;{ContactInformation.phoneNumberOwner}&#41;
+                <Image src="/asset/whatsapp-logo.png" alt="WhatsApp" className="contact-icon" width={30} height={30}/> {formatPhoneNumber(ContactInformation.whatsappNumber)} &#40;{ContactInformation.phoneNumberOwner}&#41;
               </a>
             </div>
           </div>
