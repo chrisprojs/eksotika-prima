@@ -11,16 +11,7 @@ export const metadata = {
   metadataBase: new URL(siteUrl),
   title: meta.title,
   description: meta.description,
-  keywords: [
-    "supplier minyak gosok",
-    "minyak gosok murah",
-    "pabrik minyak gosok",
-    "grosir minyak gosok",
-    "minyak gosok terbesar",
-    "Eksotika Prima",
-    "minyak urut",
-    "minyak pijat",
-  ],
+  keywords: meta.keywords,
   openGraph: {
     title: meta.title,
     description: meta.description,

@@ -48,11 +48,6 @@
   margin: 0 0;
 }
 
-.icon-image{
-  width: 30px;
-  height: 30px;
-}
-
 @media (max-width:768px) {
   .reminder-bg {
     height: 60px;

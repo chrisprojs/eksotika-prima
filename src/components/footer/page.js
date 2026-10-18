@@ -39,19 +39,19 @@ function Footer() {
           <div className="footer-icon-box">
             <div className="footer-contact-column">
               <a href={ContactInformation.tokopediaLink} target="_blank" rel="noreferrer" className="icon-logo">
-                <Image src="/asset/ecommerce/tokopedia-logo.png" alt="Tokopedia" className="icon-image" width={100} height={100}/>
+                <Image src="/asset/ecommerce/tokopedia-logo.png" alt="Tokopedia" className="icon-image" width={30} height={30}/>
               </a>
               <a href={ContactInformation.shopeeLink} target="_blank" rel="noreferrer" className="icon-logo">
-                <Image src="/asset/ecommerce/shopee-logo.png" alt="Shopee" className="icon-image" width={100} height={100}/>
+                <Image src="/asset/ecommerce/shopee-logo.png" alt="Shopee" className="icon-image" width={30} height={30}/>
               </a>
               <a href={ContactInformation.blibliLink} target="_blank" rel="noreferrer" className="icon-logo">
-                <Image src="/asset/ecommerce/blibli-logo.png" alt="Blibli" className="icon-image" width={100} height={100}/>
+                <Image src="/asset/ecommerce/blibli-logo.png" alt="Blibli" className="icon-image" width={30} height={30}/>
               </a>
             </div>
             <div className="footer-contact-column footer-icon-text-box">
               <a href={`https://wa.me/${ContactInformation.whatsappNumber}`} target="_blank" rel="noreferrer" className="icon-text">
                 <p className="footer-icon-text">
-                  <Image src="/asset/whatsapp-logo.png" alt="WhatsApp" className="icon-image" width={100} height={100}/>
+                  <Image src="/asset/whatsapp-logo.png" alt="WhatsApp" className="icon-image" width={30} height={30}/>
                   <span className="footer-phonenumber">{formatPhoneNumber(ContactInformation.whatsappNumber)} &#40;{ContactInformation.phoneNumberOwner}&#41;</span>
                 </p>
               </a>

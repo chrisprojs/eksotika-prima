@@ -21,7 +21,7 @@ export default function ContactPage({ locale = "id" }) {
                 rel="noopener noreferrer"
                 className="contact-info-link"
               >
-                <Image src="/asset/ecommerce/tokopedia-logo.png" alt="Tokopedia" className="contact-icon" width={100} height={100}/> {ContactInformation.tokopediaLink}
+                <Image src="/asset/ecommerce/tokopedia-logo.png" alt="Tokopedia" className="contact-icon" width={30} height={30}/> {ContactInformation.tokopediaLink}
               </a>
             </div>
             <div>
@@ -31,7 +31,7 @@ export default function ContactPage({ locale = "id" }) {
                 rel="noopener noreferrer"
                 className="contact-info-link"
               >
-                <Image src="/asset/ecommerce/shopee-logo.png" alt="Shopee" className="contact-icon" width={100} height={100}/> {ContactInformation.shopeeLink}
+                <Image src="/asset/ecommerce/shopee-logo.png" alt="Shopee" className="contact-icon" width={30} height={30}/> {ContactInformation.shopeeLink}
               </a>
             </div>
             <div>
@@ -41,7 +41,7 @@ export default function ContactPage({ locale = "id" }) {
                 rel="noopener noreferrer"
                 className="contact-info-link"
               >
-                <Image src="/asset/ecommerce/blibli-logo.png" alt="Blibli" className="contact-icon" width={100} height={100}/> {ContactInformation.blibliLink}
+                <Image src="/asset/ecommerce/blibli-logo.png" alt="Blibli" className="contact-icon" width={30} height={30}/> {ContactInformation.blibliLink}
               </a>
             </div>
             <div>

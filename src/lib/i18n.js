@@ -110,21 +110,21 @@ export const dictionary = {
     },
     about: {
       label: "Tentang Eksotika Prima",
-      heading: "Supplier Minyak Gosok Terpercaya di Indonesia",
+      heading: "Situs Resmi & Supplier Minyak Gosok Terpercaya di Indonesia",
       description: [
-        "Eksotika Prima adalah supplier minyak gosok, minyak urut, dan minyak pijat untuk kebutuhan pribadi, toko, reseller, dan pembelian grosir. Kami membantu pelanggan mendapatkan produk berkualitas dengan harga murah, packing aman, dan layanan cepat.",
-        "Produk-produk yang kami tawarkan diproduksi dengan standar kualitas yang baik dan menggabungkan bahan-bahan herbal pilihan yang telah lama dikenal dalam pengobatan tradisional Indonesia. Hal ini menjadikan produk Eksotika Prima sebagai pilihan bagi masyarakat yang menginginkan perawatan tubuh secara alami dengan kualitas yang terpercaya.",
+        "Eksotika Prima adalah situs resmi dan supplier minyak gosok, minyak urut, minyak pijat, minyak kayu putih, dan balsem untuk kebutuhan pribadi, toko, reseller, dan pembelian grosir. Kami menyediakan produk asli dari brand ternama seperti Tawon, Beruang, Rejeki Jaya, dan Kuda Bangau dengan harga murah, packing aman, dan layanan cepat.",
+        "Setiap produk yang kami jual diproduksi oleh pabrik resmi dengan bahan herbal pilihan yang telah lama dipercaya dalam perawatan tradisional Indonesia. Hal ini menjadikan Eksotika Prima pilihan utama bagi masyarakat yang mencari minyak gosok dan minyak kayu putih asli dengan kualitas terpercaya dan harga grosir.",
       ],
       points: ["Harga grosir", "Bisa nego", "Siap Impor"],
       pointsLabel: "Keunggulan Eksotika Prima",
-      videoLabel: "Video profil Eksotika Prima supplier minyak gosok",
+      videoLabel: "Video Minyak Gosok Cap Beruang Roll On",
       videoFallback: "Browser Anda tidak bisa memutar video ini.",
     },
     importShipping: {
       label: "Layanan Impor",
       heading: "Melayani Pengiriman Minyak ke Berbagai Negara",
       description: [
-        "Eksotika Prima melayani kebutuhan pengiriman produk minyak gosok, minyak urut, dan produk kesehatan tradisional untuk pembeli internasional. Kami dapat membantu pelanggan, toko, reseller, dan pembeli grosir yang ingin mengirim produk ke luar Indonesia.",
+        "Eksotika Prima melayani pengiriman minyak gosok, minyak urut, minyak pijat, minyak kayu putih, dan balsem dari brand Tawon, Beruang, Rejeki Jaya, dan Kuda Bangau untuk pembeli internasional. Kami membantu pelanggan, toko, reseller, dan pembeli grosir yang ingin mengirim produk ke luar Indonesia.",
         "Area tujuan dapat mencakup Amerika Serikat, Eropa, Australia, Asia Tenggara, Asia Timur, Timur Tengah, Afrika, Amerika Latin, dan wilayah lain sesuai aturan pengiriman yang berlaku. Tim kami membantu memberi informasi stok, packing, jumlah pesanan, dan proses pengiriman.",
       ],
       regionsLabel: "Wilayah tujuan impor",
@@ -141,7 +141,7 @@ export const dictionary = {
       ],
       noteTitle: "Siap Bantu Impor",
       noteText: "Diskusikan negara tujuan, jumlah pesanan, dan kebutuhan packing dengan tim kami.",
-      imageAlt: "Produk minyak Eksotika Prima siap untuk pengiriman impor",
+      imageAlt: "Minyak gosok dan minyak kayu putih Tawon, Beruang, Rejeki Jaya, dan Kuda Bangau dari Eksotika Prima siap pengiriman impor",
     },
     reason: {
       heading: "Alasan Belanja di Toko Kami",
@@ -150,7 +150,7 @@ export const dictionary = {
           icon: String.fromCodePoint(0x1f4b0),
           title: "Harga Termurah Se-Indonesia",
           description:
-            "Sebagai supplier terbesar, kami menawarkan harga yang paling kompetitif di seluruh Indonesia. Dapatkan kualitas terbaik dengan harga yang terjangkau tanpa mengurangi kualitas produk.",
+            "Sebagai supplier minyak gosok terbesar, kami menawarkan harga yang paling kompetitif di seluruh Indonesia. Dapatkan minyak gosok dan minyak kayu putih asli dengan harga terjangkau tanpa mengurangi kualitas produk.",
         },
         {
           icon: String.fromCodePoint(0x1f91d),
@@ -175,42 +175,77 @@ export const dictionary = {
         {
           question: "Apa itu Eksotika Prima?",
           answer:
-            "Eksotika Prima adalah supplier produk minyak gosok dan produk kesehatan tradisional. Kami menyediakan produk untuk konsumen, toko, reseller, dan pembelian dalam jumlah besar. Kami melayani pelanggan di Indonesia dan pelanggan internasional sesuai aturan pengiriman yang berlaku.",
+            "Eksotika Prima adalah situs resmi dan supplier minyak gosok, minyak urut, minyak pijat, minyak kayu putih, dan balsem di Indonesia. Kami menjual produk asli dari brand Tawon, Beruang (Bear), Rejeki Jaya, dan Kuda Bangau untuk konsumen, toko, reseller, dan pembelian grosir, serta melayani pelanggan di seluruh Indonesia dan pembeli internasional sesuai aturan pengiriman yang berlaku.",
+        },
+        {
+          question: "Apakah Eksotika Prima toko resmi untuk minyak Tawon, Beruang, Rejeki Jaya, dan Kuda Bangau?",
+          answer:
+            "Ya. Eksotika Prima adalah toko dan situs resmi yang menjual minyak gosok, minyak kayu putih, dan balsem asli dari brand Tawon, Beruang (Bear), Rejeki Jaya, dan Kuda Bangau. Semua produk kami bersumber langsung dan dijamin asli, bukan tiruan.",
+        },
+        {
+          question: "Apakah produk minyak di Eksotika Prima 100% asli?",
+          answer:
+            "Ya. Semua minyak gosok, minyak kayu putih, minyak cengkeh, dan balsem yang dijual Eksotika Prima dijamin 100% asli dan bersumber dari produsen resmi masing-masing brand, yaitu Tawon, Beruang, Rejeki Jaya, dan Kuda Bangau.",
+        },
+        {
+          question: "Brand apa saja yang tersedia di Eksotika Prima?",
+          answer:
+            "Eksotika Prima menyediakan produk dari empat brand utama: Tawon (diproduksi PT. Tawon Jaya Makassar), Beruang atau Bear (diproduksi PT. Granindo, Makassar), Rejeki Jaya (diproduksi UD Rejeki Jaya), dan Kuda Bangau (diproduksi Perusahaan Jamu Gunung Alam, Makassar-Sulawesi).",
         },
         {
           question: "Apa saja produk yang tersedia di Eksotika Prima?",
           answer:
-            "Eksotika Prima menyediakan produk kesehatan tradisional dan perawatan tubuh, seperti minyak gosok, minyak angin, minyak telon, dan produk terkait lainnya. Produk tersedia dalam berbagai ukuran dan kemasan.",
+            "Eksotika Prima menyediakan minyak gosok, minyak urut, minyak pijat, minyak kayu putih, minyak cengkeh, minyak angin, minyak telon, dan balsem. Produk tersedia dalam berbagai ukuran dan kemasan serta dapat dibeli satuan maupun grosir.",
         },
         {
-          question: "Apa saja jenis minyak gosok yang tersedia di Eksotika Prima?",
+          question: "Apa itu Minyak Cap Tawon dan apa kegunaannya?",
           answer:
-            "Eksotika Prima menyediakan berbagai jenis minyak gosok dengan karakteristik dan manfaat yang berbeda. Setiap produk dibuat untuk memberi sensasi hangat dan nyaman saat digunakan. Informasi varian dan ukuran kemasan dapat dilihat pada halaman produk.",
+            "Minyak Cap Tawon adalah minyak gosok tradisional produksi PT. Tawon Jaya Makassar yang umum dipakai untuk pijat, mengurut, serta memberi sensasi hangat pada badan. Eksotika Prima menyediakan Minyak Cap Tawon Reguler, Minyak Cap Tawon Super, dan Balsem Cap Tawon.",
+        },
+        {
+          question: "Apa beda Minyak Cap Tawon Reguler dan Super?",
+          answer:
+            "Minyak Cap Tawon tersedia dalam varian Reguler dan Super. Varian Super umumnya memberi sensasi hangat yang lebih kuat dibanding varian Reguler. Detail ukuran dan pilihan kemasan tiap varian dapat dilihat pada halaman produk Eksotika Prima.",
+        },
+        {
+          question: "Apa itu minyak gosok Cap Beruang (Bear)?",
+          answer:
+            "Minyak gosok Cap Beruang (Bear) diproduksi oleh PT. Granindo, Makassar. Di Eksotika Prima tersedia Balsem Cap Beruang, Minyak Gosok Cap Beruang (Reguler dan Super), Minyak Gosok Roll On Cap Beruang, dan Minyak Kayu Putih Cap Beruang Grizzly.",
+        },
+        {
+          question: "Apa keunggulan Minyak Kayu Putih Rejeki Jaya dari Pulau Buru?",
+          answer:
+            "Minyak Kayu Putih Rejeki Jaya diproduksi UD Rejeki Jaya dan bahan bakunya bersumber dari Pulau Buru, Namlea, Ambon, yang dikenal sebagai sentra kayu putih. Tersedia dalam varian Reguler dan Super di Eksotika Prima.",
+        },
+        {
+          question: "Apa itu minyak Cap Kuda Bangau?",
+          answer:
+            "Minyak Cap Kuda Bangau diproduksi oleh Perusahaan Jamu Gunung Alam, Makassar-Sulawesi. Eksotika Prima menyediakan Minyak Cengkeh Cap Kuda Bangau dan Minyak Kayu Putih Cap Kuda Bangau dalam varian Reguler dan Super.",
         },
         {
           question: "Bagaimana cara memesan produk di Eksotika Prima?",
           answer:
-            "Pemesanan dapat dilakukan melalui WhatsApp yang tersedia di website resmi Eksotika Prima. Tim kami akan membantu memberi informasi produk, harga, jumlah pesanan, dan proses pengiriman.",
+            "Pemesanan dapat dilakukan melalui WhatsApp yang tersedia di situs resmi Eksotika Prima. Tim kami membantu memberi informasi produk, harga, jumlah pesanan, dan proses pengiriman. Produk kami juga tersedia di Tokopedia, Shopee, dan Blibli.",
         },
         {
-          question: "Apakah Eksotika Prima melayani seluruh Indonesia?",
+          question: "Apakah Eksotika Prima menyediakan harga grosir dan bisa nego?",
           answer:
-            "Ya. Eksotika Prima melayani pengiriman produk ke berbagai wilayah di Indonesia. Layanan pengiriman dapat disesuaikan dengan lokasi tujuan dan jenis pesanan.",
+            "Ya. Eksotika Prima adalah supplier grosir dan melayani pembelian dalam jumlah besar dengan harga lebih murah dibanding satuan. Harga bisa dinego, semakin banyak pembelian semakin besar potongan harganya. Hubungi tim penjualan untuk harga grosir dan minimum pemesanan.",
+        },
+        {
+          question: "Apakah bisa beli minyak gosok grosir dari Indonesia untuk diekspor?",
+          answer:
+            "Bisa. Eksotika Prima melayani pembelian grosir untuk ekspor dan mendukung pengiriman internasional ke berbagai negara sesuai aturan yang berlaku. Prosesnya meliputi pemilihan produk, konfirmasi jumlah, persiapan dokumen, packing, lalu pengiriman via laut atau udara.",
         },
         {
           question: "Apakah Eksotika Prima menerima pengiriman internasional?",
           answer:
-            "Ya. Eksotika Prima dapat membantu pelanggan dari luar negeri sesuai aturan pengiriman yang berlaku. Untuk tujuan pengiriman, ketersediaan produk, dan syarat impor, pelanggan dapat menghubungi tim Eksotika Prima.",
+            "Ya. Eksotika Prima mendukung pengiriman ke Amerika Serikat, Eropa, Australia, Asia Tenggara, Asia Timur, Timur Tengah, Afrika, Amerika Latin, dan wilayah lain sesuai aturan pengiriman. Hubungi tim kami untuk tujuan pengiriman, ketersediaan produk, dan syarat impor.",
         },
         {
-          question: "Bagaimana proses impor minyak gosok dari Indonesia?",
+          question: "Apakah Eksotika Prima melayani seluruh Indonesia?",
           answer:
-            "Proses impor dimulai dari pemilihan produk, konfirmasi jumlah pesanan, persiapan dokumen impor sesuai negara tujuan, pengemasan, lalu pengiriman melalui laut atau udara. Tim Eksotika Prima dapat membantu memberi informasi sesuai kebutuhan pelanggan.",
-        },
-        {
-          question: "Apakah Eksotika Prima menyediakan harga grosir?",
-          answer:
-            "Ya. Eksotika Prima melayani pembelian dalam jumlah besar dengan harga yang lebih kompetitif dibandingkan pembelian satuan. Untuk harga grosir dan minimum pemesanan, pelanggan dapat menghubungi tim penjualan.",
+            "Ya. Eksotika Prima melayani pengiriman produk ke seluruh wilayah Indonesia. Layanan pengiriman disesuaikan dengan lokasi tujuan dan jenis pesanan.",
         },
         {
           question: "Di mana lokasi pusat Eksotika Prima?",
@@ -220,7 +255,7 @@ export const dictionary = {
         {
           question: "Mengapa memilih Eksotika Prima sebagai supplier minyak gosok?",
           answer:
-            "Eksotika Prima dikenal sebagai salah satu supplier minyak gosok terbesar di Indonesia. Kami memiliki banyak pilihan produk kesehatan tradisional, stok yang memadai, dan layanan untuk pembelian eceran maupun grosir.",
+            "Eksotika Prima adalah situs resmi dan salah satu supplier minyak gosok terbesar di Indonesia. Kami menjamin produk asli dari brand Tawon, Beruang, Rejeki Jaya, dan Kuda Bangau, menawarkan harga grosir yang bisa nego, stok memadai, packing aman, serta melayani pembelian eceran, grosir, dan ekspor.",
         },
       ],
     },
@@ -338,26 +373,70 @@ export const dictionary = {
     },
     meta: {
       home: {
-        title: "Supplier Minyak Gosok Terbesar Se-Indonesia | Mendukung Pengiriman International | Eksotika Prima",
+        title: "Supplier Minyak Gosok Terbesar di Indonesia | Situs Resmi Eksotika Prima",
         description:
-          "Supplier minyak gosok terbesar di Indonesia. Menyediakan minyak gosok berkualitas dengan harga termurah dan bisa nego untuk pembelian besar.",
+          "Situs resmi Eksotika Prima, supplier minyak gosok terbesar di Indonesia. Jual minyak gosok, minyak kayu putih & balsem asli Tawon, Beruang, Rejeki Jaya, Kuda Bangau. Harga grosir bisa nego, siap kirim ke seluruh dunia.",
         openGraphDescription:
-          "Supplier minyak gosok terbesar di Indonesia. Harga termurah, kualitas terjamin, bisa nego untuk pembelian besar.",
+          "Situs resmi & supplier grosir minyak gosok terbesar di Indonesia. Minyak gosok, minyak kayu putih, dan balsem asli Tawon, Beruang, Rejeki Jaya, Kuda Bangau. Harga nego, dukung pengiriman internasional.",
+        keywords: [
+          "Eksotika Prima",
+          "situs resmi Eksotika Prima",
+          "supplier minyak gosok",
+          "grosir minyak gosok",
+          "distributor minyak gosok",
+          "jual minyak gosok asli",
+          "minyak tawon",
+          "balsem tawon",
+          "minyak gosok beruang",
+          "minyak kayu putih beruang",
+          "minyak kayu putih rejeki jaya",
+          "minyak kuda bangau",
+          "minyak cengkeh kuda bangau",
+          "minyak kayu putih",
+          "minyak urut",
+          "minyak pijat",
+          "minyak gosok murah",
+          "grosir minyak urut",
+          "supplier minyak kayu putih",
+          "minyak gosok terbesar Indonesia",
+        ],
       },
       product: {
-        title: "Cari Minyak Gosok Termurah Se-Indonesia | Mendukung Pengiriman International | Eksotika Prima",
+        title: "Jual Minyak Gosok Dan Balsem Asli | Situs Resmi Eksotika Prima",
         description:
-          "Cari minyak gosok termurah di Indonesia. Menyediakan minyak gosok berkualitas dengan harga termurah dan bisa nego untuk pembelian besar.",
+          "Jual minyak gosok, minyak urut, minyak pijat, minyak kayu putih & balsem asli Tawon, Beruang, Rejeki Jaya, Kuda Bangau. Harga grosir termurah bisa nego, dukung pengiriman internasional.",
         twitterDescription:
-          "Supplier minyak gosok termurah. Kualitas terbaik dan bisa nego pembelian besar.",
+          "Minyak gosok, minyak kayu putih & balsem asli Tawon, Beruang, Rejeki Jaya, Kuda Bangau. Harga grosir bisa nego di Eksotika Prima.",
+        keywords: [
+          "Eksotika Prima",
+          "jual minyak gosok asli",
+          "supplier minyak gosok",
+          "grosir minyak gosok",
+          "distributor minyak gosok",
+          "minyak tawon",
+          "minyak cap tawon super",
+          "balsem tawon",
+          "minyak gosok beruang",
+          "minyak kayu putih beruang grizzly",
+          "minyak kayu putih rejeki jaya",
+          "minyak kuda bangau",
+          "minyak cengkeh kuda bangau",
+          "minyak kayu putih",
+          "minyak urut",
+          "minyak pijat",
+          "balsem",
+          "minyak gosok murah",
+        ],
       },
       contact: {
-        title: "Kontak Kami | Eksotika Prima",
-        description: "Kontak Kami | Eksotika Prima",
+        title: "Kontak & Pemesanan Minyak Gosok | Situs Resmi Eksotika Prima",
+        description:
+          "Hubungi Eksotika Prima, situs resmi supplier minyak gosok Tawon, Beruang, Rejeki Jaya & Kuda Bangau. Pesan via WhatsApp untuk harga grosir, nego, dan pengiriman internasional.",
       },
       news: {
-        title: "Berita | Eksotika Prima",
-        description: "Baca berita dan info produk dari Eksotika Prima.",
+        title: "Berita & Tips Minyak Gosok | Situs Resmi Eksotika Prima",
+        description:
+          "Baca berita, tips, dan info produk minyak gosok, minyak kayu putih, dan balsem dari Eksotika Prima, supplier resmi Tawon, Beruang, Rejeki Jaya, dan Kuda Bangau.",
       },
     },
   },
@@ -388,21 +467,21 @@ export const dictionary = {
     },
     about: {
       label: "About Eksotika Prima",
-      heading: "Trusted Massage Oil Supplier in Indonesia",
+      heading: "Official Store & Trusted Massage Oil Supplier in Indonesia",
       description: [
-        "Eksotika Prima supplies massage oil and herbal body care oil for personal use, shops, resellers, and wholesale buyers. We help customers get quality products with low prices, safe packing, and fast service.",
-        "Our products are made with good quality standards and selected herbal ingredients that are well known in Indonesian traditional care. This makes Eksotika Prima a trusted choice for customers who want natural body care products.",
+        "Eksotika Prima is the official store and a leading supplier of Indonesian massage oil, rubbing oil, cajuput (eucalyptus) oil, and balm for personal use, shops, resellers, and wholesale buyers. We sell authentic products from trusted brands such as Tawon, Bear (Beruang), Rejeki Jaya, and Kuda Bangau with low prices, safe packing, and fast service.",
+        "Every product we sell is made by its official producer using selected herbal ingredients long trusted in Indonesian traditional care. This makes Eksotika Prima a trusted choice for customers looking for genuine massage oil and cajuput oil at wholesale prices.",
       ],
       points: ["Wholesale price", "Can bargain", "Ready to import"],
       pointsLabel: "Eksotika Prima benefits",
-      videoLabel: "Eksotika Prima massage oil supplier profile video",
+      videoLabel: "Bear Massage Oil Roll On's Video",
       videoFallback: "Your browser cannot play this video.",
     },
     importShipping: {
       label: "Import Service",
       heading: "Shipping Oil Products to Many Countries",
       description: [
-        "Eksotika Prima supports international shipping needs for massage oil and traditional health products. We can help customers, stores, resellers, and wholesale buyers who want to send products outside Indonesia.",
+        "Eksotika Prima supports international shipping of massage oil, rubbing oil, cajuput (eucalyptus) oil, and balm from the Tawon, Bear (Beruang), Rejeki Jaya, and Kuda Bangau brands. We can help customers, stores, resellers, and wholesale buyers who want to send products outside Indonesia.",
         "Destination areas may include USA, Europe, Australia, Southeast Asia, East Asia, the Middle East, Africa, Latin America, and other regions based on available shipping rules. Our team helps with stock information, packing, order quantity, and shipping process details.",
       ],
       regionsLabel: "Import destination regions",
@@ -419,7 +498,7 @@ export const dictionary = {
       ],
       noteTitle: "Import Support Ready",
       noteText: "Discuss destination country, order quantity, and packing needs with our team.",
-      imageAlt: "Eksotika Prima oil products ready for import shipping",
+      imageAlt: "Eksotika Prima Tawon, Bear, Rejeki Jaya, and Kuda Bangau massage and cajuput oils ready for import shipping",
     },
     reason: {
       heading: "Why Shop With Us",
@@ -428,7 +507,7 @@ export const dictionary = {
           icon: String.fromCodePoint(0x1f4b0),
           title: "Very Competitive Prices",
           description:
-            "As a large supplier, we offer competitive prices across Indonesia. You can get good quality products at affordable prices.",
+            "As a leading massage oil supplier, we offer competitive prices across Indonesia. You can get authentic massage oil and cajuput oil at affordable wholesale prices.",
         },
         {
           icon: String.fromCodePoint(0x1f91d),
@@ -453,42 +532,77 @@ export const dictionary = {
         {
           question: "What is Eksotika Prima?",
           answer:
-            "Eksotika Prima is a supplier of massage oils and traditional health products. We offer products for personal customers, stores, resellers, and bulk buyers. We serve customers across Indonesia and support international customers based on shipping rules.",
+            "Eksotika Prima is the official store and a leading supplier of Indonesian massage oil, rubbing oil, cajuput (eucalyptus) oil, and balm. We sell authentic products from the Tawon, Bear (Beruang), Rejeki Jaya, and Kuda Bangau brands to personal customers, stores, resellers, and wholesale buyers across Indonesia, and we support international shipping based on shipping rules.",
+        },
+        {
+          question: "Is Eksotika Prima the official store for Tawon, Bear, Rejeki Jaya, and Kuda Bangau oils?",
+          answer:
+            "Yes. Eksotika Prima is an official store and website selling authentic rubbing oil, cajuput oil, and balm from the Tawon, Bear (Beruang), Rejeki Jaya, and Kuda Bangau brands. Our products are sourced directly and guaranteed genuine, not counterfeit.",
+        },
+        {
+          question: "Are the oils sold by Eksotika Prima 100% authentic?",
+          answer:
+            "Yes. All massage oils, cajuput oils, clove oils, and balms sold by Eksotika Prima are guaranteed 100% authentic and sourced from the official producers of each brand: Tawon, Bear (Beruang), Rejeki Jaya, and Kuda Bangau.",
+        },
+        {
+          question: "Which brands are available at Eksotika Prima?",
+          answer:
+            "Eksotika Prima carries four main brands: Tawon (produced by PT. Tawon Jaya Makassar), Bear or Beruang (produced by PT. Granindo, Makassar), Rejeki Jaya (produced by UD Rejeki Jaya), and Kuda Bangau (produced by Perusahaan Jamu Gunung Alam, Makassar-Sulawesi).",
         },
         {
           question: "What products are available at Eksotika Prima?",
           answer:
-            "Eksotika Prima offers traditional health and body care products, including massage oils, wind oils, telon oil, and other related products. Products are available in different sizes and packaging options.",
+            "Eksotika Prima offers rubbing oil, massage oil, cajuput (eucalyptus) oil, clove oil, wind oil, telon oil, and balm. Products come in different sizes and packaging and can be bought individually or wholesale.",
         },
         {
-          question: "What types of massage oils are available at Eksotika Prima?",
+          question: "What is Tawon oil (Minyak Cap Tawon) used for?",
           answer:
-            "Eksotika Prima provides many types of massage oils with different characteristics and benefits. Each product is made to give a warm and comfortable feeling. More details about variants and package sizes are available on the product pages.",
+            "Minyak Cap Tawon is a traditional Indonesian rubbing oil made by PT. Tawon Jaya Makassar, commonly used for massage and to give a warm, soothing sensation on the body. Eksotika Prima stocks Minyak Cap Tawon Regular, Minyak Cap Tawon Super, and Balsem (Balm) Cap Tawon.",
+        },
+        {
+          question: "What is the difference between Tawon oil Regular and Super?",
+          answer:
+            "Tawon oil comes in Regular and Super variants. The Super variant generally delivers a stronger warming sensation than the Regular one. Size and packaging options for each variant are listed on the Eksotika Prima product pages.",
+        },
+        {
+          question: "What is Bear brand (Beruang) rubbing oil?",
+          answer:
+            "Bear brand (Beruang) rubbing oil is produced by PT. Granindo, Makassar. Eksotika Prima stocks Bear Balm, Bear Rubbing Oil (Regular and Super), Bear Roll On Rubbing Oil, and Bear Grizzly Cajuput (eucalyptus) Oil.",
+        },
+        {
+          question: "What makes Rejeki Jaya cajuput oil from Pulau Buru special?",
+          answer:
+            "Rejeki Jaya cajuput (eucalyptus) oil is produced by UD Rejeki Jaya, with raw material sourced from Pulau Buru, Namlea, Ambon, a well-known cajuput-producing region. It is available in Regular and Super variants at Eksotika Prima.",
+        },
+        {
+          question: "What is Kuda Bangau oil?",
+          answer:
+            "Kuda Bangau oil is produced by Perusahaan Jamu Gunung Alam in Makassar-Sulawesi. Eksotika Prima stocks Kuda Bangau Clove Oil and Kuda Bangau Cajuput (eucalyptus) Oil in Regular and Super variants.",
         },
         {
           question: "How can I place an order with Eksotika Prima?",
           answer:
-            "Orders can be placed through the WhatsApp contact on the official Eksotika Prima website. Our team will help with product information, pricing, order quantity, and shipping.",
+            "Orders can be placed through the WhatsApp contact on the official Eksotika Prima website. Our team helps with product information, pricing, order quantity, and shipping. Our products are also available on Tokopedia, Shopee, and Blibli.",
         },
         {
-          question: "Does Eksotika Prima deliver throughout Indonesia?",
+          question: "Does Eksotika Prima offer wholesale pricing and bargaining?",
           answer:
-            "Yes. Eksotika Prima delivers products to many areas in Indonesia. Shipping availability depends on the destination and the type of order.",
+            "Yes. Eksotika Prima is a wholesale supplier and offers more competitive prices for bulk purchases than single items. Prices are negotiable, and larger orders get bigger discounts. Contact the sales team for wholesale prices and minimum order quantities.",
+        },
+        {
+          question: "Can I buy massage oil wholesale from Indonesia for export?",
+          answer:
+            "Yes. Eksotika Prima serves wholesale export orders and supports international shipping to many countries based on applicable rules. The process covers product selection, quantity confirmation, document preparation, packing, and shipping by sea or air.",
         },
         {
           question: "Does Eksotika Prima offer international shipping?",
           answer:
-            "Yes. Eksotika Prima can support international customers based on shipping rules. For destination countries, product availability, and import requirements, customers can contact our team directly.",
+            "Yes. Eksotika Prima supports shipping to the USA, Europe, Australia, Southeast Asia, East Asia, the Middle East, Africa, Latin America, and other regions based on shipping rules. Contact our team for destination countries, product availability, and import requirements.",
         },
         {
-          question: "What is the import process for massage oils from Indonesia?",
+          question: "Does Eksotika Prima deliver throughout Indonesia?",
           answer:
-            "The import process usually starts with product selection, order quantity confirmation, import document preparation for the destination country, packing, and shipping by sea or air. The Eksotika Prima team can help explain the process based on customer needs.",
-        },
-        {
-          question: "Does Eksotika Prima offer wholesale pricing?",
-          answer:
-            "Yes. Eksotika Prima offers more competitive prices for bulk purchases than single-item purchases. For wholesale prices and minimum order quantities, customers can contact the sales team.",
+            "Yes. Eksotika Prima delivers products across Indonesia. Shipping availability depends on the destination and the type of order.",
         },
         {
           question: "Where is Eksotika Prima located?",
@@ -498,7 +612,7 @@ export const dictionary = {
         {
           question: "Why choose Eksotika Prima as your massage oil supplier?",
           answer:
-            "Eksotika Prima is known as one of Indonesia's largest massage oil suppliers. We offer many traditional health products, good stock availability, and service for retail and wholesale purchases.",
+            "Eksotika Prima is the official store and one of Indonesia's largest massage oil suppliers. We guarantee authentic products from Tawon, Bear (Beruang), Rejeki Jaya, and Kuda Bangau, offer negotiable wholesale prices, good stock, safe packing, and serve retail, wholesale, and export buyers.",
         },
       ],
     },
@@ -615,26 +729,66 @@ export const dictionary = {
     },
     meta: {
       home: {
-        title: "Indonesia's Largest Massage Oil Supplier | Support International Shipping | Eksotika Prima",
+        title: "Largest Massage Oil Supplier in Indonesia | Eksotika Prima's Official Website",
         description:
-          "Eksotika Prima supplies quality massage oil in Indonesia with low prices, safe packing, and wholesale order support.",
+          "Official Eksotika Prima store, Indonesia's largest massage oil supplier. Authentic Tawon, Bear, Rejeki Jaya & Kuda Bangau rubbing oil, cajuput oil & balm. Negotiable wholesale prices, worldwide shipping.",
         openGraphDescription:
-          "Quality massage oil supplier in Indonesia. Low prices, trusted quality, and wholesale orders can be discussed.",
+          "Official store & largest wholesale massage oil supplier in Indonesia. Authentic Tawon, Bear, Rejeki Jaya & Kuda Bangau rubbing oil, cajuput oil & balm. Negotiable prices, international shipping.",
+        keywords: [
+          "Eksotika Prima",
+          "official Eksotika Prima store",
+          "massage oil supplier Indonesia",
+          "wholesale massage oil supplier",
+          "rubbing oil Indonesia",
+          "Tawon oil",
+          "Tawon balm",
+          "Bear brand oil",
+          "Beruang rubbing oil",
+          "Rejeki Jaya cajuput oil",
+          "Kuda Bangau oil",
+          "clove oil Kuda Bangau",
+          "cajuput oil",
+          "eucalyptus oil",
+          "massage oil wholesale Indonesia",
+          "buy massage oil Indonesia",
+          "authentic Indonesian massage oil",
+          "herbal oil Indonesia",
+        ],
       },
       product: {
-        title: "Find Affordable Massage Oil Products | Support International Shipping | Eksotika Prima",
+        title: "Buy Authentic Massage Oil & Balm | Eksotika Prima's Official Website",
         description:
-          "Find quality massage oil products from Eksotika Prima. Low prices, safe packing, and wholesale orders can be discussed.",
+          "Buy authentic Tawon, Bear, Rejeki Jaya & Kuda Bangau massage oil, rubbing oil, cajuput oil & balm from Eksotika Prima. Low wholesale prices, negotiable, with international shipping.",
         twitterDescription:
-          "Quality massage oil products with low prices and wholesale order support.",
+          "Authentic Tawon, Bear, Rejeki Jaya & Kuda Bangau massage oil, cajuput oil & balm. Negotiable wholesale prices at Eksotika Prima.",
+        keywords: [
+          "Eksotika Prima",
+          "buy massage oil Indonesia",
+          "massage oil supplier",
+          "wholesale massage oil",
+          "rubbing oil Indonesia",
+          "Tawon oil",
+          "Bear brand oil",
+          "Beruang rubbing oil",
+          "Bear Grizzly cajuput oil",
+          "Rejeki Jaya cajuput oil",
+          "Kuda Bangau oil",
+          "Kuda Bangau clove oil",
+          "cajuput oil",
+          "eucalyptus oil",
+          "balm",
+          "authentic Indonesian massage oil",
+        ],
       },
       contact: {
-        title: "Contact Us | Eksotika Prima",
-        description: "Contact Eksotika Prima through marketplace stores or WhatsApp.",
+        title: "Contact & Orders for Massage Oil | Eksotika Prima's Official Website",
+        description:
+          "Contact Eksotika Prima, the official store for Tawon, Bear, Rejeki Jaya & Kuda Bangau massage oil. Order via WhatsApp for wholesale prices, bargaining, and international shipping.",
       },
       news: {
-        title: "News | Eksotika Prima",
-        description: "Read news and product information from Eksotika Prima.",
+        title: "Massage Oil News & Tips | Eksotika Prima's Official Website",
+        description:
+          "Read news, tips, and product info on massage oil, cajuput oil, and balm from Eksotika Prima, official supplier of Tawon, Bear, Rejeki Jaya, and Kuda Bangau.",
       },
     },
   },

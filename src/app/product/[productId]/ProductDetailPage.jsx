@@ -194,11 +194,7 @@ function getProductDetailPageTitleText(product, variantSize, quantity, text) {
     quantityText = ` - ${text.wholesaleSuffix}`;
   }
 
-  const shippingText = text.internationalShippingSuffix
-    ? ` | ${text.internationalShippingSuffix}`
-    : "";
-
-  return `${product.title} - ${variantSize}${quantityText}${shippingText} | Eksotika Prima`;
+  return `${product.title} - ${variantSize}${quantityText} | Eksotika Prima`;
 }
 
 function getProductJsonLd({ product, description, pagePath, locale, text }) {

@@ -75,6 +75,7 @@
 
 .ecommerce-logo {
   max-width: 100px;
+  width: auto;
   height: auto;
   object-fit: contain;
   opacity: 0.8;
@@ -156,5 +157,7 @@
 
   .ecommerce-logo {
     max-width: 80px;
+    width: auto;
+    height: auto;
   }
 }
