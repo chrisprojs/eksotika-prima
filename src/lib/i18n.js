@@ -373,7 +373,7 @@ export const dictionary = {
     },
     meta: {
       home: {
-        title: "Minyak Gosok Tawon, Beruang, Rejeki Jaya, Kuda Bangau | Situs Resmi Eksotika Prima",
+        title: "Supplier Minyak Gosok Terbesar di Indonesia | Situs Resmi Eksotika Prima",
         description:
           "Situs resmi Eksotika Prima, supplier minyak gosok terbesar di Indonesia. Jual minyak gosok, minyak kayu putih & balsem asli Tawon, Beruang, Rejeki Jaya, Kuda Bangau. Harga grosir bisa nego, siap kirim ke seluruh dunia.",
         openGraphDescription:
@@ -402,7 +402,7 @@ export const dictionary = {
         ],
       },
       product: {
-        title: "Jual Minyak Gosok, Minyak Kayu Putih & Balsem Asli | Eksotika Prima",
+        title: "Jual Minyak Gosok Dan Balsem Asli | Situs Resmi Eksotika Prima",
         description:
           "Jual minyak gosok, minyak urut, minyak pijat, minyak kayu putih & balsem asli Tawon, Beruang, Rejeki Jaya, Kuda Bangau. Harga grosir termurah bisa nego, dukung pengiriman internasional.",
         twitterDescription:
@@ -429,12 +429,12 @@ export const dictionary = {
         ],
       },
       contact: {
-        title: "Kontak & Pemesanan Minyak Gosok | Eksotika Prima",
+        title: "Kontak & Pemesanan Minyak Gosok | Situs Resmi Eksotika Prima",
         description:
           "Hubungi Eksotika Prima, situs resmi supplier minyak gosok Tawon, Beruang, Rejeki Jaya & Kuda Bangau. Pesan via WhatsApp untuk harga grosir, nego, dan pengiriman internasional.",
       },
       news: {
-        title: "Berita & Tips Minyak Gosok | Eksotika Prima",
+        title: "Berita & Tips Minyak Gosok | Situs Resmi Eksotika Prima",
         description:
           "Baca berita, tips, dan info produk minyak gosok, minyak kayu putih, dan balsem dari Eksotika Prima, supplier resmi Tawon, Beruang, Rejeki Jaya, dan Kuda Bangau.",
       },
@@ -729,7 +729,7 @@ export const dictionary = {
     },
     meta: {
       home: {
-        title: "Tawon, Bear, Rejeki Jaya & Kuda Bangau Massage Oil | Official Eksotika Prima Store",
+        title: "Largest Massage Oil Supplier in Indonesia | Eksotika Prima's Official Website",
         description:
           "Official Eksotika Prima store, Indonesia's largest massage oil supplier. Authentic Tawon, Bear, Rejeki Jaya & Kuda Bangau rubbing oil, cajuput oil & balm. Negotiable wholesale prices, worldwide shipping.",
         openGraphDescription:
@@ -756,7 +756,7 @@ export const dictionary = {
         ],
       },
       product: {
-        title: "Buy Authentic Massage Oil, Cajuput Oil & Balm | Eksotika Prima",
+        title: "Buy Authentic Massage Oil & Balm | Eksotika Prima's Official Website",
         description:
           "Buy authentic Tawon, Bear, Rejeki Jaya & Kuda Bangau massage oil, rubbing oil, cajuput oil & balm from Eksotika Prima. Low wholesale prices, negotiable, with international shipping.",
         twitterDescription:
@@ -781,12 +781,12 @@ export const dictionary = {
         ],
       },
       contact: {
-        title: "Contact & Orders for Massage Oil | Eksotika Prima",
+        title: "Contact & Orders for Massage Oil | Eksotika Prima's Official Website",
         description:
           "Contact Eksotika Prima, the official store for Tawon, Bear, Rejeki Jaya & Kuda Bangau massage oil. Order via WhatsApp for wholesale prices, bargaining, and international shipping.",
       },
       news: {
-        title: "Massage Oil News & Tips | Eksotika Prima",
+        title: "Massage Oil News & Tips | Eksotika Prima's Official Website",
         description:
           "Read news, tips, and product info on massage oil, cajuput oil, and balm from Eksotika Prima, official supplier of Tawon, Bear, Rejeki Jaya, and Kuda Bangau.",
       },
