@@ -17,7 +17,7 @@ function Reminder() {
         <p className="icon-text">{text.prompt}</p>
         <a href={`https://wa.me/${ContactInformation.whatsappNumber}`} target="_blank" rel="noreferrer" className="icon-text">
           <p className="reminder-icon-text">
-            <Image src='/asset/whatsapp-logo.png' alt="WhatsApp" className="icon-image" width={100} height={100}/>
+            <Image src='/asset/whatsapp-logo.png' alt="WhatsApp" className="icon-image" width={30} height={30}/>
             <span className="reminder-phonenumber">{formatPhoneNumber(ContactInformation.whatsappNumber)} &#40;{ContactInformation.phoneNumberOwner}&#41;</span>
           </p>
         </a>

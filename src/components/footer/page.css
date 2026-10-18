@@ -39,11 +39,6 @@
   align-items: center;
 }
 
-.icon-image{
-  width: 40px;
-  max-height: 100px;
-}
-
 .icon-image:hover{
   opacity: 0.8;
 }

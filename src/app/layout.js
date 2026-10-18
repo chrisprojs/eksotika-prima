@@ -37,8 +37,8 @@ export default function RootLayout({ children }) {
         </div>
         <Script
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7470776396597629"
-          strategy="lazyOnload"
           crossOrigin="anonymous"
+          strategy="beforeInteractive"
         />
       </body>
     </html>

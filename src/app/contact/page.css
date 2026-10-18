@@ -22,11 +22,6 @@
   justify-content: center;
 }
 
-.contact-icon{
-  width: 2rem;
-  height: 2rem;
-}
-
 .contact-info {
   display: flex;
   flex-direction: column;
