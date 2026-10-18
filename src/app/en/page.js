@@ -11,14 +11,7 @@ export const metadata = {
   metadataBase: new URL(siteUrl),
   title: meta.title,
   description: meta.description,
-  keywords: [
-    "rubbing oil supplier",
-    "cheap rubbing oil",
-    "massage oil supplier",
-    "wholesale rubbing oil",
-    "Eksotika Prima",
-    "herbal oil Indonesia",
-  ],
+  keywords: meta.keywords,
   openGraph: {
     title: meta.title,
     description: meta.openGraphDescription,

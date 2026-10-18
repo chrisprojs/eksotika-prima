@@ -14,9 +14,22 @@ function getOrganizationJsonLd(locale) {
     "@type": "Organization",
     "@id": `${siteUrl}#organization`,
     name: "Eksotika Prima",
+    legalName: "Eksotika Prima",
+    alternateName: ["Eksotika Prima Official", "Eksotikaprima"],
     url: siteUrl,
-    logo: `${siteUrl}/asset/logo.jpg`,
+    logo: {
+      "@type": "ImageObject",
+      "@id": `${siteUrl}#logo`,
+      url: `${siteUrl}/asset/logo.jpg`,
+    },
+    image: `${siteUrl}/asset/logo.jpg`,
     description: meta.description,
+    brand: {
+      "@type": "Brand",
+      "@id": `${siteUrl}#brand`,
+      name: "Eksotika Prima",
+      logo: `${siteUrl}/asset/logo.jpg`,
+    },
     address: {
       "@type": "PostalAddress",
       streetAddress:
@@ -31,6 +44,8 @@ function getOrganizationJsonLd(locale) {
       telephone: ContactInformation.whatsappNumber,
       contactType: "customer service",
     },
+    // sameAs points to the brand's official marketplace stores so search
+    // engines can resolve the brand entity to this domain as the official site.
     sameAs: [
       ContactInformation.tokopediaLink,
       ContactInformation.shopeeLink,
@@ -46,10 +61,24 @@ function getWebSiteJsonLd(locale) {
     "@id": `${siteUrl}#website`,
     url: siteUrl,
     name: "Eksotika Prima",
+    alternateName: "Eksotika Prima Official Website",
     inLanguage:
       normalizeLocale(locale) === "en" ? "en-US" : "id-ID",
     publisher: {
       "@id": `${siteUrl}#organization`,
+    },
+    // Declares this domain as the authoritative website of the organization,
+    // and enables the sitelinks search box.
+    about: {
+      "@id": `${siteUrl}#organization`,
+    },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${siteUrl}/product?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
     },
   };
 }
